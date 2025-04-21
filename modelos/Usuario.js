@@ -1,3 +1,6 @@
+import { EstadoReserva } from '../enums/EstadoReserva.js';
+import { TipoUsuario } from '../enums/TipoUsuario.js';
+
 export class Usuario {
   constructor(nombre, email, tipo) {
     this.nombre = nombre;
@@ -10,7 +13,16 @@ export class Usuario {
     this.notificaciones.push(notificacion);
   }
 
-  cambiarEstado(reserva) {
-    
+  aceptarReserva(reserva){
+    if(this.tipo == TipoUsuario.ANFITRION) {
+      reserva.actualizarEstado(EstadoReserva.CONFIRMADA);
+    }
+  }
+  
+  // Recibir un motivo
+  cancelarReserva(reserva, motivo) {
+    if(this.tipo == TipoUsuario.HUESPED) {
+      reserva.actualizarEstado(EstadoReserva.CANCELADA, motivo)
+    }
   }
 }
