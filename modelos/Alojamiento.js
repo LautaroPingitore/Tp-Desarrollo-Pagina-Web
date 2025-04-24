@@ -24,10 +24,12 @@ export class Alojamiento {
     return this.reservas.every(res => res.estado !== EstadoReserva.CONFIRMADA && !res.rangoFechas.seSuperponeCon(rangoFecha));
   } 
 
-  
-
   tuPrecioEstaDentroDe(valorMinimo, valorMaximo) {
-    return this.precioPorNoche >= valorMinimo && this.precioPorNoche <= valorMaximo;
+    if(valorMaximo == null) {
+      return this.precioPorNoche >= valorMinimo;
+    } else {
+      return this.precioPorNoche >= valorMinimo && this.precioPorNoche <= valorMaximo;
+    }
   }
 
   tenesCaracteristica(caracteristica) {
