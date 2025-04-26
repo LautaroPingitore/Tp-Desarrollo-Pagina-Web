@@ -1,7 +1,5 @@
-import { Usuario } from './modelos/Usuario.js';
-import { Alojamiento } from './modelos/Alojamiento.js';
-import { RangoFechas } from './modelos/RangoFechas.js';
-import { Caracteristica } from '../enums/Caracteristica.js';
+import { Usuario } from './Usuario.js';
+import { RangoFechas } from './RangoFechas.js';
 
 export class SistemaBirbnb {
   constructor() {
@@ -20,7 +18,7 @@ export class SistemaBirbnb {
     this.alojamientos.push(alojamiento);
   }
 
-  validarCiudad(alojamiento, ciudad) {
+  /* validarCiudad(alojamiento, ciudad) {
     return alojamiento.direccion.ciudad.nombre == ciudad.nombre || ciudad == null;
   }
 
@@ -45,6 +43,9 @@ export class SistemaBirbnb {
   }
 
   buscarAlojamientos({ ciudad, cantHuespedes, fechaInicio, fechaFin, precioMin, precioMax, caracteristicas = [] }) {
+
+
+
     return this.alojamientos.filter(a => {
       return (
         this.validarCiudad(a, ciudad) &&
@@ -54,5 +55,51 @@ export class SistemaBirbnb {
         this.validarCaracteristicas(a, Caracteristicas)
       );
     });
-  }
+  } */
+
+
+  //////// VERSION 2 //////////
+
+  buscarAlojamientosV2( ciudad, cantHuespedes, fechaInicio, fechaFin, precioMin, precioMax, caracteristicas) {
+    let alojamientosFiltrados = this.alojamientos;
+
+    if (ciudad !== null) {
+        alojamientosFiltrados = this.filtrarPorCiudad(alojamientosFiltrados, ciudad);
+    }
+    if (cantHuespedes !== null) {
+        alojamientosFiltrados = this.filtrarPorCantidadHuespedes(alojamientosFiltrados, cantHuespedes);
+    }
+    if (fechaInicio !== null && fechaFin !== null) {
+        alojamientosFiltrados = this.filtrarPorFechas(alojamientosFiltrados, fechaInicio, fechaFin);
+    }
+    if (precioMin !== null && precioMax !== null) {
+        alojamientosFiltrados = this.filtrarPorPrecio(alojamientosFiltrados, precioMin, precioMax);
+    }
+    if (caracteristicas.length > 0) {
+        alojamientosFiltrados = this.filtrarPorCaracteristicas(alojamientosFiltrados, caracteristicas);
+    }
+
+    return alojamientosFiltrados;
+}
+
+filtrarPorCiudad(alojamientos, ciudad) {
+    return alojamientos.filter(a => a.direccion.ciudad.nombre === ciudad.nombre);
+}
+
+filtrarPorCantidadHuespedes(alojamientos, cantHuespedes) {
+    return alojamientos.filter(a => a.puedenAlojarse(cantHuespedes));
+}
+
+filtrarPorFechas(alojamientos, fechaInicio, fechaFin) {
+    const rangoFechas = new RangoFechas(fechaInicio, fechaFin);
+    return alojamientos.filter(a => a.estasDisponibleEn(rangoFechas));
+}
+
+filtrarPorPrecio(alojamientos, precioMin, precioMax) {
+    return alojamientos.filter(a => a.tuPrecioEstaDentroDe(precioMin, precioMax));
+}
+
+filtrarPorCaracteristicas(alojamientos, caracteristicas) {
+    return alojamientos.filter(a => caracteristicas.every(c => a.tenesCaracteristica(c)));
+}
 }
