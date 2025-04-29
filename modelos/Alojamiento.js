@@ -19,8 +19,7 @@ export class Alojamiento {
     this.fotos = fotos;
   }
 
-   estasDisponibleEn(rangoFecha) {
-
+  estasDisponibleEn(rangoFecha) {
     return this.reservas.every(res => res.estado !== EstadoReserva.CONFIRMADA && !res.rangoFechas.seSuperponeCon(rangoFecha));
   } 
 
@@ -40,6 +39,7 @@ export class Alojamiento {
     return cantHuespedes <= this.cantHuespedesMax;
   }
 
+  // No tendria que estar aca
   reservar(huesped, cantHuespedes, rangoFechas) {
     if (!this.puedenAlojarse(cantHuespedes)) throw new Error("Cantidad de huéspedes supera la capacidad");
     if (!this.estasDisponibleEn(rangoFechas)) throw new Error("El alojamiento no está disponible en las fechas indicadas");

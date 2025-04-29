@@ -1,0 +1,138 @@
+@startuml Birbnb
+
+class Alojamiento {
+  - anfitrion: Anfitrion
+  - nombre: String
+  - descripcion: String
+  - precioPorNoche: Double
+  - moneda: Moneda
+  - horarioCheckIn: String
+  - horarioCheckOut: String
+  - direccion: Direccion
+  - cantHuespedesMax: Number
+  - caracteristicas: Lst<Caracteristica>
+  - reservas: Lst<Reserva>
+  - fotos: Lst<Foto>
+
+  + estasDisponibleEn(rangoDeFechas): boolean
+  + tuPrecioEstaEntre(valorMinimo, valorMaximo): boolean
+  + tenesCaracteristica(caracteristica): boolean
+  + puedenAlojarse(cantHuespedes): boolean
+  + reservar(Huesped, Number, RangoFechas): Reserva
+}
+
+enum Moneda {
+    DOLAR_USA
+    PESO_ARG
+    REALES
+}
+
+enum Caracteristica {
+    WIFI
+    PISCINA
+    MASCOTAS_PERMITIDAS
+    ESTACIONAMIENTO
+}
+
+enum EstadoReserva {
+    PENDIENTE
+    CONFIRMADA
+    CANCELADA
+}
+
+class Direccion {
+  - calle: String
+  - altura: String
+  - ciudad: Ciudad
+  - lat: String
+  - long: String
+}
+
+class Ciudad {
+  - nombre: String
+  - pais: Pais
+}
+
+class Pais {
+  - nombre: String
+}
+
+class Foto {
+  - descripcion: String
+  - path: String
+}
+
+class Reserva {
+  - fechaAlta: Date
+  - huespedReservador: Usuario
+  - cantHuespedes: Number
+  - alojamiento: Alojamiento
+  - rangoFechas: RangoFechas
+  - estado: EstadoReserva
+  - precioPorNoche: Double
+
+  + actualizarEstado(EstadoReserva): void
+}
+
+class RangoFechas {
+  - fechaInicio: Date
+  - fechaFin: Date
+
+  + seSuperponeCon(RangoFechas)
+}
+
+class FactoryNotificacion {
+  + crearSegunReserva(Reserva): Notificacion
+  + crearConfirmacion(Reserva)
+  + crearCancelacion(Reserva, String)
+}
+
+class Notificacion {
+  - mensaje: String
+  - fechaAlta: Date
+  - leida: boolean
+  - fechaLeida: Date
+
+  + marcarComoLeida()
+}
+
+abstract class Usuario {
+  - nombre: String
+  - email: String
+  - notificaciones: Lst<Notificacion>
+  
+  + recibirNotificacion(Notificacion)
+}
+
+class Anfitrion {
+    + acpetarReserva(Reserva)
+}
+
+class Huesped {
+    + cancelarReserva(Reserva)
+}
+
+' Relaciones '
+Usuario --> Notificacion
+Anfitrion --|> Usuario
+Huesped --|> Usuario
+
+Alojamiento --> Direccion
+Alojamiento --> Foto
+Alojamiento --> Reserva
+Alojamiento --> Anfitrion
+Alojamiento ..> RangoFechas
+Alojamiento --> Moneda
+Alojamiento --> Caracteristica
+
+Direccion --> Ciudad
+Ciudad --> Pais
+
+Reserva --> Huesped
+Reserva --> RangoFechas
+Reserva --> EstadoReserva
+
+FactoryNotificacion ..> Notificacion
+FactoryNotificacion ..> Reserva
+
+@enduml

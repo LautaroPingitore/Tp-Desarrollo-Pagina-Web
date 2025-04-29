@@ -18,49 +18,51 @@ export class SistemaBirbnb {
     this.alojamientos.push(alojamiento);
   }
 
-  /* validarCiudad(alojamiento, ciudad) {
-    return alojamiento.direccion.ciudad.nombre == ciudad.nombre || ciudad == null;
+  validarCiudad(alojamiento, ciudad) {
+    if(ciudad == null) return true;
+    return alojamiento.direccion.ciudad.nombre == ciudad.nombre;
   }
 
   validarCantidadHuespedes(alojamiento, cantidadHuespedes) {
-    return alojamiento.puedenAlojarse(cantidadHuespedes) || cantidadHuespedes == null;
+    if(cantidadHuespedes == null) return true;
+    return alojamiento.puedenAlojarse(cantidadHuespedes);
   }
 
   validarFechas(alojamiento, fechaInicio, fechaFin) {
+    if(fechaInicio == null) return true;
     if(fechaFin == null) {
       fechaFin = new Date();
     }
     const rangoFechas = new RangoFechas(fechaInicio, fechaFin)
-    return alojamiento.estasDisponibleEn(rangoFechas) || fechaInicio == null;
+    return alojamiento.estasDisponibleEn(rangoFechas);
   }
 
   validarPrecio(alojamiento, precioMin, precioMax) {
-    return alojamiento.tuPrecioEstaDentroDe(precioMin, precioMax) || precioMin == null;
+    if(precioMin == null) return true;
+    return alojamiento.tuPrecioEstaDentroDe(precioMin, precioMax);
   }
 
   validarCaracteristicas(alojamiento, caracteristicas) {
-    return caracteristicas.every(c => alojamiento.tenesCaracteristica(c)) || caracteristicas == null;
+    if(caracteristicas == null) return true;
+    return caracteristicas.every(c => alojamiento.tenesCaracteristica(c));
   }
 
   buscarAlojamientos({ ciudad, cantHuespedes, fechaInicio, fechaFin, precioMin, precioMax, caracteristicas = [] }) {
-
-
-
     return this.alojamientos.filter(a => {
       return (
         this.validarCiudad(a, ciudad) &&
         this.validarCantidadHuespedes(a, cantHuespedes) &&
         this.validarFechas(a, fechaInicio, fechaFin) &&
         this.validarPrecio(a, precioMin, precioMax) &&
-        this.validarCaracteristicas(a, Caracteristicas)
+        this.validarCaracteristicas(a, caracteristicas)
       );
     });
-  } */
+  }
 
 
   //////// VERSION 2 //////////
 
-  buscarAlojamientosV2( ciudad, cantHuespedes, fechaInicio, fechaFin, precioMin, precioMax, caracteristicas) {
+  buscarAlojamientosV2(ciudad, cantHuespedes, fechaInicio, fechaFin, precioMin, precioMax, caracteristicas) {
     let alojamientosFiltrados = this.alojamientos;
 
     if (ciudad !== null) {

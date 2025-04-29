@@ -32,9 +32,13 @@ sistema.agregarAlojamiento(alojamiento3);
 
 
 
- var alojamientosFiltrados = sistema.buscarAlojamientosV2(new Ciudad('Villa ortuzar', 'Argentina'),4 , new Date(2023, 10, 6), new Date(2023, 11, 20), 100, 300, [Caracteristica.ESTACIONAMIENTO, Caracteristica.PISCINA]);
+var alojamientosFiltrados = sistema.buscarAlojamientosV2(new Ciudad('Villa ortuzar', 'Argentina'),4 , new Date(2023, 10, 6), new Date(2023, 11, 20), 100, 300, [Caracteristica.ESTACIONAMIENTO, Caracteristica.PISCINA]);
 
-console.log(alojamientosFiltrados);
+//console.log(alojamientosFiltrados);
+
+var aloj = sistema.buscarAlojamientos({cantHuespedes:2, fechaInicio:new Date(2023, 10, 6), precioMin:100});
+console.log(aloj);
+
 /* console.log(reserva1);
 // console.log(reserva2);
 

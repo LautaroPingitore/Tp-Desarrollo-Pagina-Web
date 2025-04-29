@@ -14,12 +14,8 @@ export class Reserva {
     this.cambiosEstado = [];
   }
 
-  actualizarEstado(nuevoEstado) {
-    this.estado = nuevoEstado;
-    this.huespedReservador.recibirNotificacion(FactoryNotificacion.crearConfirmacion(this));
-  }
-
-  actualizarEstado(nuevoEstado, motivo) {
+  // Verificar bien esto
+  actualizarEstado({nuevoEstado, motivo}) {
     this.estado = nuevoEstado;
     const cambio = new CambioEstadoReserva(new Date(), nuevoEstado, this, motivo, this.huespedReservador);
     
