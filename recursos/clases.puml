@@ -17,7 +17,7 @@ class Alojamiento {
   + estasDisponibleEn(rangoDeFechas): boolean
   + tuPrecioEstaEntre(valorMinimo, valorMaximo): boolean
   + tenesCaracteristica(caracteristica): boolean
-  + puedenAlojarse(cantHuespedes): boolean
+  + puedenAlojarse(cantHuespedes): 
   + reservar(Huesped, Number, RangoFechas): Reserva
 }
 
@@ -71,6 +71,7 @@ class Reserva {
   - estado: EstadoReserva
   - precioPorNoche: Double
 
+  + reservar(Alojamiento, Huesped, Number, RangoFecha)
   + actualizarEstado(EstadoReserva): void
 }
 

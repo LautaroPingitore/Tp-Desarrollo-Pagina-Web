@@ -15,6 +15,9 @@ export class FactoryNotificacion {
   }
 
   static crearCancelacion(reserva, motivo) {
+    if(motivo == null) {
+      motivo = "Sin Especificar";
+    }
     const mensaje = `El huésped ${reserva.huespedReservador.nombre} canceló su reserva en ${reserva.alojamiento.nombre}. Motivo: ${motivo}`;
     return new Notificacion(mensaje, reserva.alojamiento.anfitrion);
   }

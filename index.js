@@ -2,15 +2,16 @@ import { RangoFechas } from './modelos/RangoFechas.js'
 import { Alojamiento } from './modelos/Alojamiento.js'
 import { Caracteristica } from './enums/Caracteristica.js'
 import { Foto } from  './modelos/Foto.js'
-import { TipoUsuario } from './enums/TipoUsuario.js'
 import { Usuario } from './modelos/Usuario.js'
+import { Huesped } from './modelos/Huesped.js'
+import { Anfitrion } from './modelos/Anfitrion.js'
 import { Direccion } from './modelos/Direccion.js'
 import { Ciudad } from './modelos/Ciudad.js'
 import { SistemaBirbnb } from './modelos/SistemaBirbnb.js'
 import { Reserva } from './modelos/Reserva.js'
 
-const huesped1 = new Usuario ( 'Martin', 'martin33@gmail.com', TipoUsuario.HUESPED, []); 
-const anfitrion1 = new Usuario ('Gaston', 'gaston445@gmail.com', TipoUsuario.ANFITRION, []);
+const huesped1 = new Huesped ( 'Martin', 'martin33@gmail.com'); 
+const anfitrion1 = new Anfitrion ('Gaston', 'gaston445@gmail.com');
 
 const fechaReserva = new RangoFechas(new Date(2023, 10, 3), new Date(2023, 10, 6)); 
 const fechaReserva2 = new RangoFechas(new Date(2023, 10, 7), new Date(2023, 10, 9));
@@ -26,18 +27,24 @@ const sistema = new SistemaBirbnb();
 sistema.agregarAlojamiento(alojamiento);
 sistema.agregarAlojamiento(alojamiento2);
 sistema.agregarAlojamiento(alojamiento3);
-  const reserva1 = alojamiento.reservar(huesped1, 3, fechaReserva);
- //const reserva2 = alojamiento.reservar(huesped1, 3, fechaReserva2); 
- //anfitrion1.aceptarReserva(reserva1);
+const reserva1 = Reserva.reservar(alojamiento, huesped1, 1, fechaReserva);
+const reserva2 = Reserva.reservar(alojamiento, huesped1, 1, fechaReserva2); 
 
+anfitrion1.aceptarReserva(reserva1);
+huesped1.cancelarReserva(reserva1, "XD");
 
+anfitrion1.aceptarReserva(reserva2);
+huesped1.cancelarReserva(reserva2);
+
+console.log(anfitrion1.notificaciones);
+console.log(huesped1.notificaciones);
 
 var alojamientosFiltrados = sistema.buscarAlojamientosV2(new Ciudad('Villa ortuzar', 'Argentina'),4 , new Date(2023, 10, 6), new Date(2023, 11, 20), 100, 300, [Caracteristica.ESTACIONAMIENTO, Caracteristica.PISCINA]);
 
 //console.log(alojamientosFiltrados);
 
 var aloj = sistema.buscarAlojamientos({cantHuespedes:2, fechaInicio:new Date(2023, 10, 6), precioMin:100});
-console.log(aloj);
+//console.log(aloj);
 
 /* console.log(reserva1);
 // console.log(reserva2);

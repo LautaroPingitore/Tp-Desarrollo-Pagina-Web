@@ -61,7 +61,6 @@ export class SistemaBirbnb {
 
 
   //////// VERSION 2 //////////
-
   buscarAlojamientosV2(ciudad, cantHuespedes, fechaInicio, fechaFin, precioMin, precioMax, caracteristicas) {
     let alojamientosFiltrados = this.alojamientos;
 

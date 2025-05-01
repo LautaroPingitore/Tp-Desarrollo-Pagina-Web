@@ -1,25 +1,33 @@
 import { EstadoReserva } from '../enums/EstadoReserva.js';
-import { CambioEstadoReserva } from './CambioEstadoReserva.js';
 import { FactoryNotificacion } from './FactoryNotificacion.js';
 
 export class Reserva {
   constructor(fechaAlta, huespedReservador, cantHuespedes, alojamiento, rangoFechas, precioPorNoche) {
-    this.fechaAlta = fechaAlta;
-    this.huespedReservador = huespedReservador;
-    this.cantHuespedes = cantHuespedes;
-    this.alojamiento = alojamiento;
-    this.rangoFechas = rangoFechas;
-    this.estado = EstadoReserva.PENDIENTE;
-    this.precioPorNoche = precioPorNoche;
-    this.cambiosEstado = [];
+   this.fechaAlta = fechaAlta;
+   this.huespedReservador = huespedReservador;
+   this.cantHuespedes = cantHuespedes;
+   this.alojamiento = alojamiento;
+   this.rangoFechas = rangoFechas;
+   this.estado = EstadoReserva.PENDIENTE;
+   this.precioPorNoche = precioPorNoche;
   }
 
-  // Verificar bien esto
-  actualizarEstado({nuevoEstado, motivo}) {
+  static reservar(alojamiento, huesped, cantHuespedes, rangoFechas) {
+    if (!alojamiento.puedenAlojarse(cantHuespedes)) throw new Error("Cantidad de huéspedes supera la capacidad");
+    if (!alojamiento.estasDisponibleEn(rangoFechas)) throw new Error("El alojamiento no está disponible en las fechas indicadas");
+    const reserva = new Reserva(new Date(), huesped, cantHuespedes, alojamiento, rangoFechas, alojamiento.precioPorNoche);
+    alojamiento.reservas.push(reserva);
+    const notificacion = FactoryNotificacion.crearSegunReserva(reserva);
+    alojamiento.anfitrion.recibirNotificacion(notificacion);
+    return reserva;
+  }
+
+  actualizarEstado(nuevoEstado, motivo=null) {
     this.estado = nuevoEstado;
-    const cambio = new CambioEstadoReserva(new Date(), nuevoEstado, this, motivo, this.huespedReservador);
-    
-    this.cambiosEstado.push(cambio);
-    this.alojamiento.anfitrion.recibirNotificacion(FactoryNotificacion.crearCancelacion(this, motivo));    
+    if(nuevoEstado == EstadoReserva.CANCELADA) {
+      this.alojamiento.anfitrion.recibirNotificacion(FactoryNotificacion.crearCancelacion(this, motivo));    
+    } else if(nuevoEstado == EstadoReserva.CONFIRMADA) {
+      this.huespedReservador.recibirNotificacion(FactoryNotificacion.crearConfirmacion(this));
+    }
   }
 }
