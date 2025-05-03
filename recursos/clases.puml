@@ -1,6 +1,7 @@
 @startuml Birbnb
 
 class Alojamiento {
+  - id: Number
   - anfitrion: Anfitrion
   - nombre: String
   - descripcion: String

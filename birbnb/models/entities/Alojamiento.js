@@ -1,9 +1,10 @@
 import { EstadoReserva } from '../enums/EstadoReserva.js';
 import { Reserva } from './Reserva.js';
-
-import { FactoryNotificacion } from './FactoryNotificacion.js';
+import { FactoryNotificacion } from './FactorYNotificacion.js';
 
 export class Alojamiento {
+  #id
+
   constructor(anfitrion, nombre, descripcion, precioPorNoche, moneda, horarioCheckIn, horarioCheckOut, direccion, cantHuespedesMax, caracteristicas, fotos) {
     this.anfitrion = anfitrion;
     this.nombre = nombre;
@@ -17,6 +18,14 @@ export class Alojamiento {
     this.caracteristicas = caracteristicas;
     this.reservas = [];
     this.fotos = fotos;
+  }
+
+  set id(id) {
+    this.#id = id;
+  }
+
+  get id() {
+    return this.#id;
   }
 
   estasDisponibleEn(rangoFecha) {

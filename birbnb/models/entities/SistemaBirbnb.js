@@ -47,6 +47,7 @@ export class SistemaBirbnb {
     return caracteristicas.every(c => alojamiento.tenesCaracteristica(c));
   }
 
+  // No tendria que estar aca
   buscarAlojamientos({ ciudad, cantHuespedes, fechaInicio, fechaFin, precioMin, precioMax, caracteristicas = [] }) {
     return this.alojamientos.filter(a => {
       return (

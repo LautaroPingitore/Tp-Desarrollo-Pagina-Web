@@ -1,5 +1,5 @@
-import { EstadoReserva } from '../enums/EstadoReserva.js';
-import { TipoUsuario } from '../enums/TipoUsuario.js';
+import { EstadoReserva } from './enums/EstadoReserva.js';
+import { TipoUsuario } from './enums/TipoUsuario.js';
 
 export class Usuario {
   constructor(nombre, email) {

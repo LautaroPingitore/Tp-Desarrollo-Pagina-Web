@@ -1,5 +1,5 @@
 import { EstadoReserva } from '../enums/EstadoReserva.js';
-import { FactoryNotificacion } from './FactoryNotificacion.js';
+import { FactoryNotificacion } from './FactorYNotificacion.js';
 
 export class Reserva {
   constructor(fechaAlta, huespedReservador, cantHuespedes, alojamiento, rangoFechas, precioPorNoche) {
@@ -12,6 +12,7 @@ export class Reserva {
    this.precioPorNoche = precioPorNoche;
   }
 
+  // No tendria que estar aca
   static reservar(alojamiento, huesped, cantHuespedes, rangoFechas) {
     if (!alojamiento.puedenAlojarse(cantHuespedes)) throw new Error("Cantidad de huéspedes supera la capacidad");
     if (!alojamiento.estasDisponibleEn(rangoFechas)) throw new Error("El alojamiento no está disponible en las fechas indicadas");

@@ -1,6 +1,6 @@
 import { Usuario } from "./Usuario.js";
-import { EstadoReserva } from "../enums/EstadoReserva.js";
-import { FactoryNotificacion } from "./FactoryNotificacion.js";
+import { EstadoReserva } from "./enums/EstadoReserva.js";
+import { FactoryNotificacion } from "./FactorYNotificacion.js";
 
 export class Anfitrion extends Usuario {
     aceptarReserva(reserva, motivo = null) {
