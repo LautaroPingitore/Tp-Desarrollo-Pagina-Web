@@ -10,7 +10,7 @@ import { AlojamientoController } from "./birbnb/controllers/alojamientoControlle
 
 const app = express();
 const port = process.env.PORT || 3000;
-const server = new Server(app, 3000);
+const server = new Server(app, port);
 
 // Configuración de dependencias
 const alojamientoRepo = new AlojamientoRepository();

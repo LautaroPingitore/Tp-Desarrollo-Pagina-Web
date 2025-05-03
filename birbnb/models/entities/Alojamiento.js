@@ -1,4 +1,4 @@
-import { EstadoReserva } from '../enums/EstadoReserva.js';
+import { EstadoReserva } from './enums/EstadoReserva.js';
 import { Reserva } from './Reserva.js';
 import { FactoryNotificacion } from './FactorYNotificacion.js';
 
@@ -33,8 +33,8 @@ export class Alojamiento {
   } 
 
   tuPrecioEstaDentroDe(valorMinimo, valorMaximo) {
-    if(valorMaximo == null) {
-      return this.precioPorNoche >= valorMinimo;
+    if(valorMinimo == null) {
+      return this.precioPorNoche <= valorMaximo;
     } else {
       return this.precioPorNoche >= valorMinimo && this.precioPorNoche <= valorMaximo;
     }

@@ -1,4 +1,4 @@
-import { Alojamiento } from "../models/entities/Alojamiento";
+import { Alojamiento } from "../models/entities/Alojamiento.js";
 
 export class AlojamientoService {
     constructor(alojamientoService) {

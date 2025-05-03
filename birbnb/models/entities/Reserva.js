@@ -1,4 +1,4 @@
-import { EstadoReserva } from '../enums/EstadoReserva.js';
+import { EstadoReserva } from './enums/EstadoReserva.js';
 import { FactoryNotificacion } from './FactorYNotificacion.js';
 
 export class Reserva {

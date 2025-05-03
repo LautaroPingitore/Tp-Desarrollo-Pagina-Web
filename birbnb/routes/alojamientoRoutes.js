@@ -1,4 +1,4 @@
-import { AlojamientoController } from "../controllers/alojamientoController";
+import { AlojamientoController } from "../controllers/alojamientoController.js";
 
 export function registerAlojamientoRoutes(app, getController) {
     app.get("/alojamientos", (req, res) =>
