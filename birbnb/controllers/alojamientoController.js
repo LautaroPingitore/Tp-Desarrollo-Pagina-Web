@@ -18,7 +18,12 @@ export class AlojamientoController {
     };
 
     findByFilter = (req, res) => {
-        // TODO
+        const filtro = req.query;
+        const alojamientos = this.alojamientoService.findByFilters(filtro);
+        if(!alojamientos) {
+            return res.status(404).json({ error: "No se encontraron alojamientos"});
+        }
+        res.json(alojamientos);
     }
 
     create = (req, res) => {
@@ -26,6 +31,9 @@ export class AlojamientoController {
         const { anfitrion, nombre, descripcion, precioPorNoche, moneda, horarioCheckIn, horarioCheckOut, direccion, cantHuespedesMax, caracteristicas, reservas, fotos} = alojamiento;
 
         // Verificar datos
+        if(!anfitrion || !nombre || !descripcion || !precioPorNoche || !moneda || !horarioCheckIn || !horarioCheckOut || !direccion || !cantHuespedesMax || !caracteristicas || !reservas || !fotos) {
+            return res.status(400).json({ error: "Faltan datos obligatorios"});
+        }
 
         const nuevo = this.alojamientoService.create(alojamiento);
         if(!nuevo) {
