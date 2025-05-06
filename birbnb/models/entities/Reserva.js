@@ -12,6 +12,16 @@ export class Reserva {
    this.precioPorNoche = precioPorNoche;
   }
 
+  #id 
+
+  get id(){
+    return this.#id
+  }
+
+  set id(id){
+    this.#id = id
+  }
+  
   // No tendria que estar aca
   static reservar(alojamiento, huesped, cantHuespedes, rangoFechas) {
     if (!alojamiento.puedenAlojarse(cantHuespedes)) throw new Error("Cantidad de huéspedes supera la capacidad");
@@ -25,10 +35,11 @@ export class Reserva {
 
   actualizarEstado(nuevoEstado, motivo=null) {
     this.estado = nuevoEstado;
+
     if(nuevoEstado == EstadoReserva.CANCELADA) {
-      this.alojamiento.anfitrion.recibirNotificacion(FactoryNotificacion.crearCancelacion(this, motivo));    
+      return FactoryNotificacion.crearCancelacion(this, motivo)
     } else if(nuevoEstado == EstadoReserva.CONFIRMADA) {
-      this.huespedReservador.recibirNotificacion(FactoryNotificacion.crearConfirmacion(this));
+      return FactoryNotificacion.crearConfirmacion(this)
     }
   }
 }

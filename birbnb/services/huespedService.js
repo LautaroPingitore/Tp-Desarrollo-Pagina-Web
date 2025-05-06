@@ -46,8 +46,19 @@ export class HuespedService {
         return this.toDTO(actualizado)
     }
 
+    updateNotificacion(id, notificacion) {
+        const huesped = this.huespedRepository.findById(id)
+        if(!huesped) return { error: "not-found" }
+
+        huesped.recibirNotificacion(notificacion)
+
+        const actualizado = this.huespedRepository.update(huesped)
+        return this.toDTO(actualizado)
+    }
+
     toDTO(huesped) {
         return {
+            id: huesped.id,
             nombre: huesped.nombre,
             email: huesped.email,
             notificaciones: huesped.notificaciones            

@@ -46,8 +46,19 @@ export class AnfitrionService {
         return this.toDTO(actualizado)
     }
 
+    updateNotificacion(id, notificacion) {
+        const anfitrion = this.anfitrionRepository.findById(id)
+        if(!anfitrion) return { error: "not-found" }
+
+        anfitrion.recibirNotificacion(notificacion)
+
+        const actualizado = this.anfitrionRepository.update(anfitrion)
+        return this.toDTO(actualizado)
+    }
+
     toDTO(anfitrion) {
         return {
+            id: anfitrion.id,
             nombre: anfitrion.nombre,
             email: anfitrion.email,
             notificaciones: anfitrion.notificaciones            

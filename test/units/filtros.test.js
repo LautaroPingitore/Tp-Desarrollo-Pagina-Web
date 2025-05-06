@@ -5,7 +5,7 @@ import { Caracteristica } from "../../birbnb/models/entities/enums/Caracteristic
 import { Filtro } from "../../birbnb/models/entities/Filtro";
 
 describe("Tests de Filtros", () => {
-    const aloj = new Alojamiento(null, null, null, 1000, null, null, null, new Direccion(null, null, new Ciudad("CABA", null), null, null), 5, [Caracteristica.WIFI, Caracteristica.PISCINA], null)
+    const aloj = new Alojamiento(null, null, null, 1000, null, null, null, new Direccion(null, null, new Ciudad("CABA", null)), 5, [Caracteristica.WIFI, Caracteristica.PISCINA], null)
 
     test("Filtro por Ciudad", () => {
         const filtroCiudad = new Filtro({ciudad: new Ciudad("CABA", null)})
