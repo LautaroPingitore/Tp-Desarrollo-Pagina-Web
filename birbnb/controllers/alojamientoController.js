@@ -3,8 +3,10 @@ export class AlojamientoController {
         this.alojamientoService = alojamientoService;
     }
 
+    // Endpoint alojamientos disponibles
     findAll = (req, res) => {
-        const alojamientos = this.alojamientoService.findAll();
+        const { page = 1, limit = 10} = req.query;
+        const alojamientos = this.alojamientoService.findAll({page, limit});
         res.json(alojamientos);
     };
 
@@ -17,20 +19,22 @@ export class AlojamientoController {
         res.json(alojamiento);
     };
 
+    // Endpoint para buscar alojamientos por filtros
     findByFilter = (req, res) => {
+        const { page = 1, limit = 10} = req.query;
         const filtro = req.query;
-        const alojamientos = this.alojamientoService.findByFilters(filtro);
+        const alojamientos = this.alojamientoService.findByFilters(filtro, {page, limit});
         if(!alojamientos) {
             return res.status(404).json({ error: "No se encontraron alojamientos"});
         }
         res.json(alojamientos);
     }
 
+    // Endpoint para crear un nuevo alojamiento
     create = (req, res) => {
         const alojamiento = req.body;
         const { anfitrion, nombre, descripcion, precioPorNoche, moneda, horarioCheckIn, horarioCheckOut, direccion, cantHuespedesMax, caracteristicas, reservas, fotos} = alojamiento;
 
-        // Verificar datos
         if(!anfitrion || !nombre || !descripcion || !precioPorNoche || !moneda || !horarioCheckIn || !horarioCheckOut || !direccion || !cantHuespedesMax || !caracteristicas || !reservas || !fotos) {
             return res.status(400).json({ error: "Faltan datos obligatorios"});
         }
@@ -43,6 +47,7 @@ export class AlojamientoController {
         res.status(201).json(nuevo);
     }
 
+    // Endpoint para eliminar un alojamiento
     delete = (req, res) => {
         const id = Number(req.params.id);
         const eliminado = this.alojamientoService.delete(id);

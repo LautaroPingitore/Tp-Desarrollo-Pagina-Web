@@ -4,6 +4,11 @@ export class AlojamientoRepository {
         this.nextId = 0;
     }
 
+    countAll() {
+        const alojamientos = this.findAll();
+        return alojamientos.length;
+    }
+
     save(alojamiento) {
         alojamiento.id = this.nextId++;
         this.alojamientos.push(alojamiento);
@@ -17,6 +22,12 @@ export class AlojamientoRepository {
         return true;
     }
 
+    findByPage(pageNum, limitNum) {
+        const alojamientos = this.findAll();
+        const offset = (pageNum - 1) * limitNum;
+        return productos.splice(offset, offset + limitNum);
+    }
+
     findAll() {
         return this.alojamientos;
     }
@@ -25,8 +36,10 @@ export class AlojamientoRepository {
         return this.alojamientos.find(p => p.id === id);
     }
 
-    findByFilters(filtro) {
-        return filtro.cumplenCon(this.alojamientos);
+    findByFilters(filtro, {pageNum, limitNum}) {
+        let filtrados = filtro.cumplenCon(this.alojamientos);
+        const offset = (pageNum - 1) * limitNum;
+        return filtrados.slice(offset, offset + limitNum);
     }
 
     findByName(nombre) {
