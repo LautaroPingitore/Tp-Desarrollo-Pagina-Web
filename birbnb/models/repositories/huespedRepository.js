@@ -18,15 +18,19 @@ export class HuespedRepository {
     }
 
     findById(id) {
-        return this.alojamientos.find(p => p.id === id)
+        return this.alojamientos.find(h => h.id === id)
     }
 
     findByName(nombre){
-        return this.huespedes.find(p => p.nombre === nombre)
+        return this.huespedes.find(h => h.nombre === nombre)
     }
+
+    findByEmail(email) {
+        return this.huespedes.find(h => h.email === email)
+    } 
     
     update(huesped) {
-        const index = this.huespedes.findIndex((p) => p.id === huesped.id)
+        const index = this.huespedes.findIndex((h) => h.id === huesped.id)
         if (index === -1) return null
         this.huespedes[index] = huesped
         return huesped
