@@ -35,7 +35,7 @@ export class AlojamientoController {
         const alojamiento = req.body;
         const { idAnfitrion, nombre, descripcion, precioPorNoche, moneda, horarioCheckIn, horarioCheckOut, calle, altura, ciudad, pais, cantHuespedesMax, caracteristicas, fotos } = alojamiento;
 
-        if(!idAnfitrion || !nombre || !descripcion || !precioPorNoche || !moneda || !horarioCheckIn || !horarioCheckOut || !calle || !altura || !idCiudad || !idPais || !cantHuespedesMax || !caracteristicas || !fotos) {
+        if(!idAnfitrion || !nombre || !descripcion || !precioPorNoche || !moneda || !horarioCheckIn || !horarioCheckOut || !calle || !altura || !ciudad || !pais || !cantHuespedesMax || !caracteristicas || !fotos) {
             return res.status(400).json({ error: "Faltan datos obligatorios"});
         }
 

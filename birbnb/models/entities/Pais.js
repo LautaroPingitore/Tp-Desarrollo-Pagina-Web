@@ -1,5 +1,5 @@
 export class Pais {
-    constructor(nombre) {
-      this.nombre = nombre;
-    }
+  constructor(nombre) {
+    this.nombre = nombre;
   }
+}

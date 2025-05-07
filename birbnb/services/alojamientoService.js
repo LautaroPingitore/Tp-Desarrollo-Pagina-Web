@@ -1,9 +1,13 @@
 import { Alojamiento } from "../models/entities/Alojamiento.js";
+import { Pais } from "../models/entities/Pais.js";
+import { Ciudad } from "../models/entities/Ciudad.js";
 
 export class AlojamientoService {
-    constructor(alojamientoRepository, anfitrionRepository) {
+    constructor(alojamientoRepository, anfitrionRepository, ciudadRepository, paisRepository) {
         this.alojamientoRepository = alojamientoRepository
         this.anfitrionRepository = anfitrionRepository
+        this.ciudadRepository = ciudadRepository
+        this.paisRepository = paisRepository
     }
 
     findAll({page = 1, limit = 10}) {
@@ -50,20 +54,29 @@ export class AlojamientoService {
     }
 
     create(alojamiento) {
-        // anfitrion es en realidad el id, lo mismo con la direccion
         const { idAnfitrion, nombre, descripcion, precioPorNoche, moneda, horarioCheckIn, horarioCheckOut, calle, altura, ciudad, pais, cantHuespedesMax, caracteristicas, fotos} = alojamiento;
         
         const existente = this.alojamientoRepository.findByName(nombre);
         if(existente) return null;
         
-        const anfitrion = this.anfitrionRepository.findById(idAnfitrion)
+        const anfitrionExistente = this.anfitrionRepository.findById(idAnfitrion)
+        if(!anfitrionExistente) return null
 
-        // const ciudad = this.ciudadRepository.findByName(ciudad)
-        // const pais = this.paisRepository.findByName(pais)
+        let paisExistente = this.paisRepository.findByName(pais)
+        if(!paisExistente) {
+            paisExistente = new Pais(pais)
+            this.paisRepository.save(paisExistente)
+        }
 
-        const direccion = new Direccion(calle, altura, ciudad)
+        let ciudadExistente = this.ciudadRepository.findByName(ciudad)
+        if(!ciudadExistente) {
+            ciudadExistente = new Ciudad(ciudad, paisExistente)
+            this.ciudadRepository.save(ciudadExistente)
+        }
 
-        const nuevo = new Alojamiento(anfitrion, nombre, descripcion, precioPorNoche, moneda, horarioCheckIn, horarioCheckOut, direccion, cantHuespedesMax, caracteristicas, fotos);
+        const direccion = new Direccion(calle, altura, ciudadExistente)
+
+        const nuevo = new Alojamiento(anfitrionExistente, nombre, descripcion, precioPorNoche, moneda, horarioCheckIn, horarioCheckOut, direccion, cantHuespedesMax, caracteristicas, fotos);
 
         this.alojamientoRepository.save(nuevo);
         return this.toDTO(nuevo);

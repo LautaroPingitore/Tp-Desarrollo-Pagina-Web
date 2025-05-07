@@ -27,9 +27,10 @@ const port = process.env.PORT || 3000;
 const server = new Server(app, port);
 
 // Configuración de dependencias
-const alojamientoRepo = new AlojamientoRepository();
-const alojamientoService = new AlojamientoService(alojamientoRepo);
-const alojamientoController = new AlojamientoController(alojamientoService);
+const paisRepo = new PaisRepository();
+const ciudadRepo = new CiudadRepository();
+const ciudadService = new CiudadService(ciudadRepo, paisRepo);
+const ciudadController = new CiudadController(ciudadService);
 
 const anfitrionRepo = new AnfitrionRepository();
 const anfitrionService = new AnfitrionService(anfitrionRepo);
@@ -38,6 +39,10 @@ const anfitrionController = new AnfitrionController(anfitrionService);
 const huespedRepo = new HuespedRepository();
 const huespedService = new HuespedService(huespedRepo);
 const huespedController = new HuespedController(huespedService);
+
+const alojamientoRepo = new AlojamientoRepository();
+const alojamientoService = new AlojamientoService(alojamientoRepo, anfitrionRepo, ciudadRepo, paisRepo);
+const alojamientoController = new AlojamientoController(alojamientoService);
 
 const reservaRepo = new ReservaRepository();
 const reservaService = new ReservaService(reservaRepo);
@@ -48,6 +53,7 @@ server.setController(AlojamientoController, alojamientoController);
 server.setController(AnfitrionController, anfitrionController);
 server.setController(HuespedController, huespedController);
 server.setController(ReservaController, reservaController);
+server.setController(CiudadController, ciudadController);
 
 // Configuración de rutas y lanzamiento
 routes.forEach(r => {
