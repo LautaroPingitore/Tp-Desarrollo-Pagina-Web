@@ -87,7 +87,7 @@ export class AlojamientoService {
     }
 
     toDTO(alojamiento) {
-        const direccion = alojamiento.direccion.ciudad.pais + ", " +
+        const direccion = alojamiento.direccion.ciudad.pais.nombre + ", " +
                           alojamiento.direccion.ciudad.nombre + ", " +
                           alojamiento.direccion.calle + " " +
                           alojamiento.direccion.altura
