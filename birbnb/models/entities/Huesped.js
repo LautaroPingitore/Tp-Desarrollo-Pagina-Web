@@ -1,5 +1,5 @@
+import { EstadoReserva } from "./enums/EstadoReserva.js"
 import { Usuario } from "./Usuario.js"
-import { EstadoReserva } from "../enums/EstadoReserva.js";
 
 export class Huesped extends Usuario {
     cancelarReserva(reserva, motivo) {

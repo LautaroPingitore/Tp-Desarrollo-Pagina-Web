@@ -5,6 +5,25 @@ export class HuespedService {
         this.huespedRepository = huespedRepository
     }
 
+    findAll({page = 1, limit = 10}) {
+        const pageNum = Math.max(Number(page), 1)
+        const limitNum = Math.min(Math.max(Number(limit), 1), 100)
+
+        let huesped = this.huespedRepository.findByPage(pageNum, limit)
+
+        const total = this.huespedRepository.countAll()
+        const totla_pages = Math.ceil(total / limitNum)
+        const data = huesped.map(a => this.toDTO(a))
+
+        return {
+            page: pageNum,
+            per_page: limitNum,
+            total: total,
+            totla_pages: totla_pages,
+            data: data
+        };
+    }
+
     create(huesped) {
         const { nombre, email } = huesped
 
@@ -14,11 +33,11 @@ export class HuespedService {
         if(nombreExistente || mailExistente) return null
 
 
-        const huesped = new Huesped(nombre, email)
+        const nuevoHuesped = new Huesped(nombre, email)
 
-        this.huespedRepository.save(huesped)
+        this.huespedRepository.save(nuevoHuesped)
 
-        return this.toDto(huesped)
+        return this.toDTO(nuevoHuesped)
     }
 
     delete(id) {
@@ -31,13 +50,13 @@ export class HuespedService {
 
         if(datos.nombre) {
             const otroMismoNombre = this.huespedRepository.findByName(datos.nombre)
-            if(otroMismoNombre && otroMismoNombre.id !== datos.id) return { error : "name-duplicated" }
+            if(otroMismoNombre && otroMismoNombre.id !== id) return { error : "name-duplicated" }
 
             huesped.nombre = datos.nombre
         }
         if(datos.email) {
             const otroMismoEmail = this.huespedRepository.findByEmail(datos.email)
-            if(otroMismoEmail && otroMismoEmail.id !== datos.id) return { error : "mail-duplicated" }
+            if(otroMismoEmail && otroMismoEmail.id !== id) return { error : "mail-duplicated" }
 
             huesped.email = datos.email
         }

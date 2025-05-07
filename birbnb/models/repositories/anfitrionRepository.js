@@ -11,14 +11,14 @@ export class AnfitrionRepository {
     }
 
     deleteById(id) {
-        const index = this.anfitriones.findIndex(a => a.id == id)
-        if(id == -1) return false
+        const index = this.anfitriones.findIndex(a => a.id === id)
+        if(index == -1) return false
         this.anfitriones.splice(index, 1)
         return true
     }
 
     findById(id) {
-        return this.anfitrion.find(a => a.id === id)
+        return this.anfitriones.find(a => a.id === id)
     }
 
     findByName(nombre){
@@ -28,6 +28,15 @@ export class AnfitrionRepository {
     findByEmail(email) {
         return this.anfitriones.find(a => a.email === email)
     } 
+
+    findByPage(pageNum, limitNum) {
+        const offset = (pageNum - 1) * limitNum
+        return this.anfitriones.slice(offset, offset + limitNum)
+    }
+
+    countAll() {
+        return this.anfitriones.length
+    }
     
     update(anfitrion) {
         const index = this.anfitriones.findIndex(a => a.id === anfitrion.id)

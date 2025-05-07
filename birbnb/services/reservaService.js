@@ -1,4 +1,4 @@
-
+import { Reserva } from "../models/entities/Reserva.js";
 
 export class ReservaService {
     constructor(reservaRepository, huespedRepository) {
@@ -39,10 +39,10 @@ export class ReservaService {
         const fechas = new RangoFechas(fechaInicio, fechaFin)
         const fechaActual = new Date()
 
-        const reserva = new Reserva(fechaActual, huesped, cantHuespedes, alojamiento, fechas, precioPorNoche)
+        const nuevaReserva = new Reserva(fechaActual, huesped, cantHuespedes, alojamiento, fechas, precioPorNoche)
 
-        this.reservaRepository.save(reserva)
-        return this.toDTO(reserva)
+        this.reservaRepository.save(nuevaReserva)
+        return this.toDTO(nuevaReserva)
     }
 
     // Actualizar Estado

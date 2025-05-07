@@ -11,26 +11,35 @@ export class HuespedRepository {
     }
 
     deleteById(id) {
-        const index = this.huespedes.findIndex(h => h.id == id)
-        if(id == -1) return false
+        const index = this.huespedes.findIndex(a => a.id === id)
+        if(index == -1) return false
         this.huespedes.splice(index, 1)
         return true
     }
 
     findById(id) {
-        return this.alojamientos.find(h => h.id === id)
+        return this.huespedes.find(a => a.id === id)
     }
 
     findByName(nombre){
-        return this.huespedes.find(h => h.nombre === nombre)
+        return this.huespedes.find(a => a.nombre === nombre)
     }
 
     findByEmail(email) {
-        return this.huespedes.find(h => h.email === email)
+        return this.huespedes.find(a => a.email === email)
     } 
+
+    findByPage(pageNum, limitNum) {
+        const offset = (pageNum - 1) * limitNum
+        return this.huespedes.slice(offset, offset + limitNum)
+    }
+
+    countAll() {
+        return this.huespedes.length
+    }
     
     update(huesped) {
-        const index = this.huespedes.findIndex((h) => h.id === huesped.id)
+        const index = this.huespedes.findIndex(a => a.id === huesped.id)
         if (index === -1) return null
         this.huespedes[index] = huesped
         return huesped

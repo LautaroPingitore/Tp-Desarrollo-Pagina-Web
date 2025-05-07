@@ -3,6 +3,12 @@ export class HuespedController {
         this.huespedService = huespedService
     }
 
+    findAll = (req, res) => {
+        const { page, limit } = req.query
+        const huesped = this.huespedService.findAll({ page, limit })
+        res.json(huesped)
+    }
+
     create = (req, res) => {
         const huesped = req.body
         const { nombre, email } = huesped
@@ -32,10 +38,10 @@ export class HuespedController {
         const id = Number(req.params.id)
         const { nombre, email } = req.body
     
-        const actualizado = this.productService.update(id, {nombre,email})
+        const actualizado = this.huespedService.update(id, {nombre, email})
     
         if (actualizado.error === "not-found") {
-          return res.status(404).json({ error: "Producto no encontrado" })
+          return res.status(404).json({ error: "Huesped no encontrado" })
         }
     
         if (actualizado.error === "name-duplicated") {

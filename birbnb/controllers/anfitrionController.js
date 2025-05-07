@@ -3,6 +3,12 @@ export class AnfitrionController {
         this.anfitrionService = anfitrionService
     }
 
+    findAll = (req, res) => {
+        const { page, limit } = req.query
+        const anfitrion = this.anfitrionService.findAll({ page, limit })
+        res.json(anfitrion)
+    }
+
     create = (req, res) => {
         const anfitrion = req.body
         const { nombre, email } = anfitrion
@@ -22,7 +28,7 @@ export class AnfitrionController {
 
     delete = (req, res) => {
         const id = Number(req.params.id)
-        const eliminado =this.anfitrionService.delete(id)
+        const eliminado = this.anfitrionService.delete(id)
 
         if(!eliminado) return res.status(404).json({ error: "Anfitrion no encontrado"})
         return res.status(204).send()
@@ -32,10 +38,10 @@ export class AnfitrionController {
         const id = Number(req.params.id)
         const { nombre, email } = req.body
     
-        const actualizado = this.productService.update(id, {nombre,email})
+        const actualizado = this.anfitrionService.update(id, {nombre, email})
     
         if (actualizado.error === "not-found") {
-          return res.status(404).json({ error: "Producto no encontrado" })
+          return res.status(404).json({ error: "Anfitrion no encontrado" })
         }
     
         if (actualizado.error === "name-duplicated") {

@@ -1,8 +1,8 @@
 import express from 'express';
-import { registerAlojamientoRoutes } from './birbnb/routes/alojamientoRoutes';
 
 export class Server {
   #controllers = {};
+  #routes = [];
   #app;
 
   constructor(app, port = 3000) {
@@ -28,13 +28,19 @@ export class Server {
   }
 
   configureRoutes() {
-    registerAlojamientoRoutes(this.app, this.getController.bind(this));
+    this.#routes.forEach(r => {
+      this.app.use(r(this.getController.bind(this)));
+    })
   }
 
   launch() {
     this.app.listen(this.port, () => {
       console.log("Server running on port " + this.port);
     });
+  }
+
+  addRoute(route) {
+    this.#routes.push(route)
   }
 
 }

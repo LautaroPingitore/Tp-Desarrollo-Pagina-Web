@@ -3,12 +3,15 @@
   "scripts": {
     "start": "node index.js",
     "dev": "node --watch index.js",
-    "unit-test": "node --experimental-vm-modules node_modules/jest/bin/jest.js ./test/unit"
+    "unit-test": "node --experimental-vm-modules node_modules/jest/bin/jest.js ./test/unit",
+    "integration-test": "node --experimental-vm-modules node_modules/jest/bin/jest.js ./test/integration"
   },
   "dependencies": {
+    "dotenv": "^16.5.0",
     "express": "^5.1.0"
   },
   "devDependencies": {
-    "jest": "^29.7.0"
+    "jest": "^29.7.0",
+    "supertest": "^7.1.0"
   }
 }
