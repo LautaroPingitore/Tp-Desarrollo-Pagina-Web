@@ -25,7 +25,7 @@ export class AlojamientoRepository {
     findByPage(pageNum, limitNum) {
         const alojamientos = this.findAll();
         const offset = (pageNum - 1) * limitNum;
-        return productos.splice(offset, offset + limitNum);
+        return alojamientos.splice(offset, offset + limitNum);
     }
 
     findAll() {
@@ -43,6 +43,6 @@ export class AlojamientoRepository {
     }
 
     findByName(nombre) {
-        return this.productos.find(p => p.nombre === nombre);
+        return this.alojamientos.find(p => p.nombre === nombre);
     }
 }

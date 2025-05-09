@@ -6,6 +6,12 @@ import { Server } from "./server.js";
 
 import routes from "./birbnb/routes/routes.js";
 
+import { CiudadRepository } from "./birbnb/models/repositories/ciudadRepository.js";
+import { PaisRepository } from "./birbnb/models/repositories/paisRepository.js";
+import { CiudadService } from "./birbnb/services/ciudadService.js";
+import { CiudadController } from "./birbnb/controllers/ciudadController.js";
+
+
 import { AlojamientoRepository } from "./birbnb/models/repositories/alojamientoRepository.js";
 import { AnfitrionRepository } from "./birbnb/models/repositories/anfitrionRepository.js";
 import { HuespedRepository } from "./birbnb/models/repositories/huespedRepository.js";

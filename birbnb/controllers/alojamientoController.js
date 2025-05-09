@@ -33,9 +33,9 @@ export class AlojamientoController {
     // Endpoint para crear un nuevo alojamiento
     create = (req, res) => {
         const alojamiento = req.body;
-        const { idAnfitrion, nombre, descripcion, precioPorNoche, moneda, horarioCheckIn, horarioCheckOut, calle, altura, ciudad, pais, cantHuespedesMax, caracteristicas, fotos } = alojamiento;
+        const { anfitrion, nombre, descripcion, precioPorNoche, moneda, horarioCheckIn, horarioCheckOut, direccion, cantHuespedesMax, caracteristicas, fotos } = alojamiento;
 
-        if(!idAnfitrion || !nombre || !descripcion || !precioPorNoche || !moneda || !horarioCheckIn || !horarioCheckOut || !calle || !altura || !ciudad || !pais || !cantHuespedesMax || !caracteristicas || !fotos) {
+        if(!anfitrion || !nombre || !descripcion || !precioPorNoche || !moneda || !horarioCheckIn || !horarioCheckOut || !direccion || !cantHuespedesMax || !caracteristicas || !fotos) {
             return res.status(400).json({ error: "Faltan datos obligatorios"});
         }
 

@@ -5,9 +5,9 @@ export class ReservaController {
 
     create(req, res){
         const reserva = req.body
-        const { idHuespedReservador, cantHuespedes, idAlojamiento, fehcaInicio, fechaFin, precioPorNoche } = reserva
+        const { reservador, cantHuespedes, alojamiento, fechas} = reserva
 
-        if(!idHuespedReservador || !cantHuespedes || !idAlojamiento || !fechaInicio || !fechaFin || !precioPorNoche) {
+        if(!reservador || !cantHuespedes || !alojamiento || !fechas) {
             return res.status(400).json({ error: "Faltan datos obligatorios"})
         }
 

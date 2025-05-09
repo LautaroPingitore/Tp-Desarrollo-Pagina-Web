@@ -1,4 +1,5 @@
 import { Alojamiento } from "../models/entities/Alojamiento.js";
+import { Direccion } from "../models/entities/Direccion.js";
 import { Pais } from "../models/entities/Pais.js";
 import { Ciudad } from "../models/entities/Ciudad.js";
 
@@ -16,7 +17,7 @@ export class AlojamientoService {
 
         let alojamientos = this.alojamientoRepository.findByPage(pageNum, limit)
 
-        const total = this.alojamientoRepository.coutAll()
+        const total = this.alojamientoRepository.countAll()
         const totla_pages = Math.ceil(total / limitNum)
         const data = alojamientos.map(a => this.toDTO(a))
 
@@ -40,7 +41,7 @@ export class AlojamientoService {
 
         let alojamientos = this.alojamientoRepository.findByFilters(filtro, {pageNum, limitNum});
 
-        const total = this.alojamientoRepository.coutAll();
+        const total = this.alojamientoRepository.countAll();
         const totla_pages = Math.ceil(total / limitNum);
         const data = alojamientos.map(a => this.toDTO(a));
 
@@ -54,29 +55,29 @@ export class AlojamientoService {
     }
 
     create(alojamiento) {
-        const { idAnfitrion, nombre, descripcion, precioPorNoche, moneda, horarioCheckIn, horarioCheckOut, calle, altura, ciudad, pais, cantHuespedesMax, caracteristicas, fotos} = alojamiento;
+        const { anfitrion, nombre, descripcion, precioPorNoche, moneda, horarioCheckIn, horarioCheckOut, direccion, cantHuespedesMax, caracteristicas, fotos} = alojamiento;
         
         const existente = this.alojamientoRepository.findByName(nombre);
-        if(existente) return null;
+        if(existente) return { error: "Alojamiento ya existente" };
         
-        const anfitrionExistente = this.anfitrionRepository.findById(idAnfitrion)
-        if(!anfitrionExistente) return null
+        const anfitrionExistente = this.anfitrionRepository.findByName(anfitrion);
+        if(!anfitrionExistente) return { error: "Anfitrion inexistente" };
 
-        let paisExistente = this.paisRepository.findByName(pais)
+        let paisExistente = this.paisRepository.findByName(direccion.ciudad.pais.nombre)
         if(!paisExistente) {
-            paisExistente = new Pais(pais)
+            paisExistente = new Pais(direccion.ciudad.pais.nombre)
             this.paisRepository.save(paisExistente)
         }
 
-        let ciudadExistente = this.ciudadRepository.findByName(ciudad)
+        let ciudadExistente = this.ciudadRepository.findByName(direccion.ciudad.nombre)
         if(!ciudadExistente) {
-            ciudadExistente = new Ciudad(ciudad, paisExistente)
+            ciudadExistente = new Ciudad(direccion.ciudad.nombre, paisExistente)
             this.ciudadRepository.save(ciudadExistente)
         }
 
-        const direccion = new Direccion(calle, altura, ciudadExistente)
+        const objectDireccion = new Direccion(direccion.calle, direccion.altura, ciudadExistente)
 
-        const nuevo = new Alojamiento(anfitrionExistente, nombre, descripcion, precioPorNoche, moneda, horarioCheckIn, horarioCheckOut, direccion, cantHuespedesMax, caracteristicas, fotos);
+        const nuevo = new Alojamiento(anfitrionExistente, nombre, descripcion, precioPorNoche, moneda, horarioCheckIn, horarioCheckOut, objectDireccion, cantHuespedesMax, caracteristicas, fotos);
 
         this.alojamientoRepository.save(nuevo);
         return this.toDTO(nuevo);
@@ -87,20 +88,26 @@ export class AlojamientoService {
     }
 
     toDTO(alojamiento) {
-        const direccion = alojamiento.direccion.ciudad.pais.nombre + ", " +
-                          alojamiento.direccion.ciudad.nombre + ", " +
-                          alojamiento.direccion.calle + " " +
-                          alojamiento.direccion.altura
         return {
             id: alojamiento.id,
-            anfitrion: alojamiento.anfitrion.id,
+            anfitrion: {
+                nombre: alojamiento.anfitrion.nombre,
+                email: alojamiento.anfitrion.email,
+            },
             nombre: alojamiento.nombre,
             descripcion: alojamiento.descripcion,
             precioPorNoche: alojamiento.precioPorNoche,
             moneda: alojamiento.moneda,
             horarioCheckIn: alojamiento.horarioCheckIn,
             horarioCheckOut: alojamiento.horarioCheckOut,
-            direccion: direccion,
+            direccion: {
+                calle: alojamiento.direccion.calle,
+                altura: alojamiento.direccion.altura,
+                ciudad: {
+                    nombre: alojamiento.direccion.ciudad.nombre,
+                    pais: alojamiento.direccion.ciudad.pais.nombre
+                }
+            },
             cantHuespedesMax: alojamiento.cantHuespedesMax,
             caracteristicas: alojamiento.caracteristicas,
             fotos: alojamiento.fotos

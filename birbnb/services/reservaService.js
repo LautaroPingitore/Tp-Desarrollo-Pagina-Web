@@ -12,7 +12,7 @@ export class ReservaService {
 
         let reservas = this.reservaRepository.findByPage(pageNum, limit);
 
-        const total = this.reservaRepository.coutAll();
+        const total = this.reservaRepository.countAll();
         const totla_pages = Math.ceil(total / limitNum);
         const data = reservas.map(r => this.toDTO(r));
 
@@ -31,15 +31,18 @@ export class ReservaService {
     }
 
     create(reserva) {
-        const {idHuespedReservador, cantHuespedes, alojamiento, fechaInicio, fechaFin, estado, precioPorNoche} = reserva
+        const {reservador, cantHuespedes, alojamiento, fechas} = reserva
 
-        const huesped = this.huespedRepository.findById(idHuespedReservador)
+        const huesped = this.huespedRepository.findByName(reservador)
         if(!huesped) return { error: "Huesped-inexistente"}
 
-        const fechas = new RangoFechas(fechaInicio, fechaFin)
+        const alojamientoObject = this.alojamientoRepository.findByName(alojamiento)
+        if(!alojamientoObject) return { error: "Alojamiento-inexistente"}
+
+        const objectFechas = new RangoFechas(fechas.fechaInicio, fechas.fechaFin)
         const fechaActual = new Date()
 
-        const nuevaReserva = new Reserva(fechaActual, huesped, cantHuespedes, alojamiento, fechas, precioPorNoche)
+        const nuevaReserva = new Reserva(fechaActual, huesped, cantHuespedes, alojamientoObject, objectFechas)
 
         this.reservaRepository.save(nuevaReserva)
         return this.toDTO(nuevaReserva)
@@ -52,16 +55,20 @@ export class ReservaService {
     }
 
     toDTO(reserva) {
-        const rangoFechas = reserva.rangoFecha.fechaInicio + " - " + reserva.rangoFecha.fechaFin
         return {
             id: reserva.id,
             fechaAlta: reserva.fechaAlta,
-            huespedReservador: reserva.huespedReservador.id,
+            huespedReservador: {
+                nombre: reserva.huespedReservador.nombre,
+                email: reserva.huespedReservador.email
+            },
             cantHuespedes: reserva.cantHuespedes,
-            alojamiento: reserva.alojamiento.id,
-            fechas: rangoFechas,
-            estado: reserva.EstadoReserva,
-            precioPorNoche: reserva.precioPorNoche
+            alojamiento: reserva.alojamiento.nombre,
+            fechas: {
+                fechaInicio: reserva.rangoFecha.fechaInicio,
+                fechaFin: reserva.rangoFecha.fechaFin
+            },
+            estado: reserva.EstadoReserva
         }
     }
 }
