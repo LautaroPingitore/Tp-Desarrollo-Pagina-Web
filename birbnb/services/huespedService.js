@@ -1,17 +1,18 @@
 import { Huesped } from "../models/entities/Huesped.js"
+import { ConflictError, NotFoundError } from "../errors/AppError.js"
 
 export class HuespedService {
     constructor(huespedRepository) {
         this.huespedRepository = huespedRepository
     }
 
-    findAll({page = 1, limit = 10}) {
+    async findAll({page = 1, limit = 10}) {
         const pageNum = Math.max(Number(page), 1)
         const limitNum = Math.min(Math.max(Number(limit), 1), 100)
 
-        let huesped = this.huespedRepository.findByPage(pageNum, limit)
+        let huesped = await this.huespedRepository.findByPage(pageNum, limit)
 
-        const total = this.huespedRepository.countAll()
+        const total = await this.huespedRepository.countAll()
         const totla_pages = Math.ceil(total / limitNum)
         const data = huesped.map(a => this.toDTO(a))
 
@@ -24,54 +25,76 @@ export class HuespedService {
         };
     }
 
-    create(huesped) {
+    async create(huesped) {
         const { nombre, email } = huesped
 
-        const nombreExistente = this.huespedRepository.findByName(nombre) 
-        const mailExistente = this.huespedRepository.findByEmail(email)
+        if(!nombre || !email) {
+            throw new ValidationError("Faltan datos obligatorios")
+        }
 
-        if(nombreExistente || mailExistente) return null
+        const nombreExistente = await this.huespedRepository.findByName(nombre) 
+        const mailExistente = await this.huespedRepository.findByEmail(email)
+
+        if(nombreExistente) {
+            throw new ConflictError(`Huesped con nombre ${nombre} ya existe`)
+        }
+        if(mailExistente) {
+            throw new ConflictError(`Huesped con email ${email} ya existe`)
+        }
 
 
-        const nuevoHuesped = new Huesped(nombre, email)
+        const nuevohuesped = new Huesped(nombre, email)
 
-        this.huespedRepository.save(nuevoHuesped)
+        await this.huespedRepository.save(nuevohuesped)
 
-        return this.toDTO(nuevoHuesped)
+        return this.toDTO(nuevohuesped)
     }
 
-    delete(id) {
-        return this.huespedRepository.deleteById(id)
+    async delete(id) {
+        const borrado = await this.huespedRepository.deleteById(id)
+        if(!borrado){
+            throw new notFoundError(`Huesped con id ${id} no encontrado`);
+        }
+        return borrado;
     }
 
-    update(id, datos) {
-        const huesped = this.huespedRepository.findById(id)
-        if(!huesped) return { error: "not-found" }
+    async update(id, datos) {
+        const huesped = await this.huespedRepository.findById(id)
+        if(!huesped) {
+            throw new NotFoundError(`Huesped con id ${id} no encontrado`)
+        }
 
         if(datos.nombre) {
-            const otroMismoNombre = this.huespedRepository.findByName(datos.nombre)
-            if(otroMismoNombre && otroMismoNombre.id !== id) return { error : "name-duplicated" }
+            const otroMismoNombre = await this.huespedRepository.findByName(datos.nombre)
+            if(otroMismoNombre && otroMismoNombre.id !== id) {
+                throw new ConflictError(`Huesped con nombre ${datos.nombre} ya existe`)
+            }
 
             huesped.nombre = datos.nombre
         }
+
         if(datos.email) {
-            const otroMismoEmail = this.huespedRepository.findByEmail(datos.email)
-            if(otroMismoEmail && otroMismoEmail.id !== id) return { error : "mail-duplicated" }
+            const otroMismoEmail = await this.huespedRepository.findByEmail(datos.email)
+            if(otroMismoEmail && otroMismoEmail.id !== id) {
+                throw new ConflictError(`Huesped con email ${datos.email} ya existe`)
+            }
 
             huesped.email = datos.email
         }
 
-        const actualizado = this.huespedRepository.update(huesped)
+        const actualizado = await this.huespedRepository.save(huesped)
         return this.toDTO(actualizado)
     }
 
-    updateNotificacion(id, notificacion) {
-        const huesped = this.huespedRepository.findById(id)
-        if(!huesped) return { error: "not-found" }
+    async updateNotificacion(id, notificacion) {
+        const huesped = await this.huespedRepository.findById(id)
+        if(!huesped) {
+            throw new NotFoundError(`Huesped con id ${id} no encontrado`)
+        }
 
         huesped.recibirNotificacion(notificacion)
 
-        const actualizado = this.huespedRepository.update(huesped)
+        const actualizado = await this.huespedRepository.save(huesped)
         return this.toDTO(actualizado)
     }
 
@@ -84,3 +107,4 @@ export class HuespedService {
         }
     }
 }
+

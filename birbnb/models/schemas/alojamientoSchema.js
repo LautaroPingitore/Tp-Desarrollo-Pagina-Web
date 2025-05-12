@@ -1,7 +1,6 @@
 import mongoose from "mongoose"
 import { Alojamiento } from "../entities/Alojamiento.js";
 
-
 const alojamientoSchema = new mongoose.Schema({
     anfitrion: {
         type: mongoose.Schema.Types.ObjectId,
@@ -91,7 +90,7 @@ const alojamientoSchema = new mongoose.Schema({
     caracteristicas: [{
         type: String,
         required: true,
-        enum: ["pileta", "wifi", "parrilla", "cocina", "aire acondicionado"]
+        enum: ["PILETA", "WIFI", "MASCOTAS_PERMITIDAS", "ESTACIONAMIENTO"]
     }],
 
     fotos: [{

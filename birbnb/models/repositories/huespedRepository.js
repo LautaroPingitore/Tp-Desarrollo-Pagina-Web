@@ -1,47 +1,52 @@
+import { HuespedSchema } from "../schemas/huespedSchema.js"
+
 export class HuespedRepository {
     constructor() {
-        this.huespedes = []
-        this.nextId = 0
+        this.model = HuespedSchema
     }
 
-    save(huesped) {
-        huesped.id = this.nextId++
-        this.huespedes.push(huesped)
-        return huesped
+    async save(huesped) {
+        if(huesped.id) {
+            const huespedExistente = await this.model.findByIdAndUpdate(
+                huesped.id,
+                huesped,
+                { new: true, runValidators: true }
+            )
+            return huespedExistente
+        } else {
+            const newhuesped = new this.model(huesped)
+            const huespedGuardado = await newhuesped.save()
+            return huespedGuardado
+        }
     }
 
-    deleteById(id) {
-        const index = this.huespedes.findIndex(a => a.id === id)
-        if(index == -1) return false
-        this.huespedes.splice(index, 1)
-        return true
+    async deleteById(id) {
+        const resultado = await this.huespedes.findByIdAndDelete(id)
+        return resultado !== null
     }
 
-    findById(id) {
-        return this.huespedes.find(a => a.id === id)
+    async findById(id) {
+        return await this.model.findById(id)
     }
 
-    findByName(nombre){
-        return this.huespedes.find(a => a.nombre === nombre)
+    async findByName(nombre){
+        return await this.model.findOne({nombre})
     }
 
-    findByEmail(email) {
-        return this.huespedes.find(a => a.email === email)
+    async findByEmail(email) {
+        return await this.model.findOne({ email })
     } 
 
-    findByPage(pageNum, limitNum) {
-        const offset = (pageNum - 1) * limitNum
-        return this.huespedes.slice(offset, offset + limitNum)
+    async findByPage(pageNum, limitNum) {
+        const skip = (pageNum - 1) * limitNum
+        const huespedes = await this.model.find()
+            .skip(skip)
+            .limit(limitNum)
+            .exec()
+        return huespedes
     }
 
-    countAll() {
-        return this.huespedes.length
-    }
-    
-    update(huesped) {
-        const index = this.huespedes.findIndex(a => a.id === huesped.id)
-        if (index === -1) return null
-        this.huespedes[index] = huesped
-        return huesped
+    async countAll() {
+        return await this.model.countDocuments()
     }
 }

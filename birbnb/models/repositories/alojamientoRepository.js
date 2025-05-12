@@ -32,12 +32,12 @@ export class AlojamientoRepository {
 
 
     async findByPage(pageNum,limitNum){
-        const alojamientos = await this.model.findByPage(pageNum, limitNum)
+        const alojamientos = await this.model.findByPage(pageNum, limitNum).populate('anfitrion').populate('direccion.ciudad').populate('direccion.ciudad.pais')
         return alojamientos;
     }
 
     async findById(id) {
-        return await this.model.findById(id);
+        return await this.model.findById(id).populate('anfitrion').populate('direccion.ciudad').populate('direccion.ciudad.pais');
     }
 
    async findByFilters(filtro) {
@@ -69,11 +69,11 @@ export class AlojamientoRepository {
             query.filtro.caracteristicas = { $in: filtro.caracteristicas };
         }        
 
-        return await this.model.find(query);
+        return await this.model.find(query).populate('anfitrion').populate('direccion.ciudad').populate('direccion.ciudad.pais');
 
     }
 
     async findByName(nombre) {
-        return await this.model.findByName(nombre)
+        return await this.model.findOne({nombre}).populate('anfitrion').populate('direccion.ciudad').populate('direccion.ciudad.pais')
     }
 }

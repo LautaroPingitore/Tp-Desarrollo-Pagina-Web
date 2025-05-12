@@ -1,17 +1,18 @@
 import { Anfitrion } from "../models/entities/Anfitrion.js"
+import { ConflictError, NotFoundError } from "../errors/AppError.js"
 
 export class AnfitrionService {
     constructor(anfitrionRepository) {
         this.anfitrionRepository = anfitrionRepository
     }
 
-    findAll({page = 1, limit = 10}) {
+    async findAll({page = 1, limit = 10}) {
         const pageNum = Math.max(Number(page), 1)
         const limitNum = Math.min(Math.max(Number(limit), 1), 100)
 
-        let anfitrion = this.anfitrionRepository.findByPage(pageNum, limit)
+        let anfitrion = await this.anfitrionRepository.findByPage(pageNum, limit)
 
-        const total = this.anfitrionRepository.countAll()
+        const total = await this.anfitrionRepository.countAll()
         const totla_pages = Math.ceil(total / limitNum)
         const data = anfitrion.map(a => this.toDTO(a))
 
@@ -24,54 +25,76 @@ export class AnfitrionService {
         };
     }
 
-    create(anfitrion) {
+    async create(anfitrion) {
         const { nombre, email } = anfitrion
 
-        const nombreExistente = this.anfitrionRepository.findByName(nombre) 
-        const mailExistente = this.anfitrionRepository.findByEmail(email)
+        if(!nombre || !email) {
+            throw new ValidationError("Faltan datos obligatorios")
+        }
 
-        if(nombreExistente || mailExistente) return null
+        const nombreExistente = await this.anfitrionRepository.findByName(nombre) 
+        const mailExistente = await this.anfitrionRepository.findByEmail(email)
+
+        if(nombreExistente) {
+            throw new ConflictError(`Anfitrion con nombre ${nombre} ya existe`)
+        }
+        if(mailExistente) {
+            throw new ConflictError(`Anfitrion con email ${email} ya existe`)
+        }
 
 
         const nuevoAnfitrion = new Anfitrion(nombre, email)
 
-        this.anfitrionRepository.save(nuevoAnfitrion)
+        await this.anfitrionRepository.save(nuevoAnfitrion)
 
         return this.toDTO(nuevoAnfitrion)
     }
 
-    delete(id) {
-        return this.anfitrionRepository.deleteById(id)
+    async delete(id) {
+        const borrado = await this.anfitrionRepository.deleteById(id)
+        if(!borrado){
+            throw new notFoundError(`Anfitrion con id ${id} no encontrado`);
+        }
+        return borrado;
     }
 
-    update(id, datos) {
-        const anfitrion = this.anfitrionRepository.findById(id)
-        if(!anfitrion) return { error: "not-found" }
+    async update(id, datos) {
+        const anfitrion = await this.anfitrionRepository.findById(id)
+        if(!anfitrion) {
+            throw new NotFoundError(`Anfitrion con id ${id} no encontrado`)
+        }
 
         if(datos.nombre) {
-            const otroMismoNombre = this.anfitrionRepository.findByName(datos.nombre)
-            if(otroMismoNombre && otroMismoNombre.id !== id) return { error : "name-duplicated" }
+            const otroMismoNombre = await this.anfitrionRepository.findByName(datos.nombre)
+            if(otroMismoNombre && otroMismoNombre.id !== id) {
+                throw new ConflictError(`Anfitrion con nombre ${datos.nombre} ya existe`)
+            }
 
             anfitrion.nombre = datos.nombre
         }
+
         if(datos.email) {
-            const otroMismoEmail = this.anfitrionRepository.findByEmail(datos.email)
-            if(otroMismoEmail && otroMismoEmail.id !== id) return { error : "mail-duplicated" }
+            const otroMismoEmail = await this.anfitrionRepository.findByEmail(datos.email)
+            if(otroMismoEmail && otroMismoEmail.id !== id) {
+                throw new ConflictError(`Anfitrion con email ${datos.email} ya existe`)
+            }
 
             anfitrion.email = datos.email
         }
 
-        const actualizado = this.anfitrionRepository.update(anfitrion)
+        const actualizado = await this.anfitrionRepository.save(anfitrion)
         return this.toDTO(actualizado)
     }
 
-    updateNotificacion(id, notificacion) {
-        const anfitrion = this.anfitrionRepository.findById(id)
-        if(!anfitrion) return { error: "not-found" }
+    async updateNotificacion(id, notificacion) {
+        const anfitrion = await this.anfitrionRepository.findById(id)
+        if(!anfitrion) {
+            throw new NotFoundError(`Anfitrion con id ${id} no encontrado`)
+        }
 
         anfitrion.recibirNotificacion(notificacion)
 
-        const actualizado = this.anfitrionRepository.update(anfitrion)
+        const actualizado = await this.anfitrionRepository.save(anfitrion)
         return this.toDTO(actualizado)
     }
 
@@ -84,3 +107,4 @@ export class AnfitrionService {
         }
     }
 }
+

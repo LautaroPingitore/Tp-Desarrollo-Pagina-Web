@@ -2,7 +2,7 @@ import { Alojamiento } from "../models/entities/Alojamiento.js";
 import { Direccion } from "../models/entities/Direccion.js";
 import { Pais } from "../models/entities/Pais.js";
 import { Ciudad } from "../models/entities/Ciudad.js";
-import { ConflictError, NotFoundError } from "../errors/AppError.js";
+import { ConflictError, NotFoundError, ValidationError } from "../errors/AppError.js";
 
 export class AlojamientoService {
     constructor(alojamientoRepository, anfitrionRepository, ciudadRepository, paisRepository) {
@@ -16,9 +16,9 @@ export class AlojamientoService {
         const pageNum = Math.max(Number(page), 1)
         const limitNum = Math.min(Math.max(Number(limit), 1), 100)
 
-        let alojamientos = this.alojamientoRepository.findByPage(pageNum, limit)
+        let alojamientos = await this.alojamientoRepository.findByPage(pageNum, limit)
 
-        const total = this.alojamientoRepository.countAll()
+        const total = await this.alojamientoRepository.countAll()
         const totla_pages = Math.ceil(total / limitNum)
         const data = alojamientos.map(a => this.toDTO(a))
 
@@ -32,7 +32,7 @@ export class AlojamientoService {
     }
 
     async findById(id) {
-        let alojamiento = this.alojamientoRepository.findById(id)
+        let alojamiento = await this.alojamientoRepository.findById(id)
         if(!alojamiento) {
             throw new NotFoundError(`Alojamiento con id ${id} no encontrado`)
         }
@@ -43,7 +43,7 @@ export class AlojamientoService {
         const pageNum = Math.max(Number(page), 1)
         const limitNum = Math.min(Math.max(Number(limit), 1), 100)
 
-        let alojamientos = this.alojamientoRepository.findByFilters(filtro);
+        let alojamientos = await this.alojamientoRepository.findByFilters(filtro);
 
         const total = alojamientos.length;
         const startIndex = (pageNum - 1) * limitNum;
@@ -65,41 +65,41 @@ export class AlojamientoService {
         const { anfitrion, nombre, descripcion, precioPorNoche, moneda, horarioCheckIn, horarioCheckOut, direccion, cantHuespedesMax, caracteristicas, fotos} = alojamiento;
         
         if(!anfitrion || !nombre || !descripcion || !precioPorNoche || !moneda || !horarioCheckIn || !horarioCheckOut || !direccion || !cantHuespedesMax || !caracteristicas || !fotos) {
-                throw new ValidationError("Faltan datos obligatorios");
+            throw new ValidationError("Faltan datos obligatorios");
         }
         
-        const existente = this.alojamientoRepository.findByName(nombre);
+        const existente = await this.alojamientoRepository.findByName(nombre);
         if(existente) {
             throw new ConflictError(`Alojamiento con nombre ${nombre} ya existe`)
         };
         
-        const anfitrionExistente = this.anfitrionRepository.findByName(anfitrion);
+        const anfitrionExistente = await this.anfitrionRepository.findByName(anfitrion);
         if(!anfitrionExistente) {
             throw new NotFoundError(`Anfitrion con nombre ${anfitrion} no encontrado`)
         };
 
-        let paisExistente = this.paisRepository.findByName(direccion.ciudad.pais.nombre)
+        let paisExistente = await this.paisRepository.findByName(direccion.ciudad.pais.nombre)
         if(!paisExistente) {
             paisExistente = new Pais(direccion.ciudad.pais.nombre)
-            this.paisRepository.save(paisExistente)
+            await this.paisRepository.save(paisExistente)
         }
 
-        let ciudadExistente = this.ciudadRepository.findByName(direccion.ciudad.nombre)
+        let ciudadExistente = await this.ciudadRepository.findByName(direccion.ciudad.nombre)
         if(!ciudadExistente) {
             ciudadExistente = new Ciudad(direccion.ciudad.nombre, paisExistente)
-            this.ciudadRepository.save(ciudadExistente)
+            await this.ciudadRepository.save(ciudadExistente)
         }
 
         const objectDireccion = new Direccion(direccion.calle, direccion.altura, ciudadExistente)
 
         const nuevo = new Alojamiento(anfitrionExistente, nombre, descripcion, precioPorNoche, moneda, horarioCheckIn, horarioCheckOut, objectDireccion, cantHuespedesMax, caracteristicas, fotos);
 
-        this.alojamientoRepository.save(nuevo);
+        await this.alojamientoRepository.save(nuevo);
         return this.toDTO(nuevo);
     }
 
     async delete(id) {
-        const borrado = this.alojamientoRepository.deleteById(id);
+        const borrado = await this.alojamientoRepository.deleteById(id);
         if(!borrado){
             throw new notFoundError(`Alojamiento con id ${id} no encontrado`);
         }

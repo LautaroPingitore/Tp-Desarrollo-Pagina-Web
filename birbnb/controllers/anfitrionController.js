@@ -1,57 +1,51 @@
 export class AnfitrionController {
-    constructor(anfitrionService) {
-        this.anfitrionService = anfitrionService
+  constructor(anfitrionService) {
+    this.anfitrionService = anfitrionService;
+  }
+
+  async findAll(req, res, next) {
+    try {
+      const { page, limit } = req.query;
+      const anfitrion = await this.anfitrionService.findAll({ page, limit });
+
+      res.json(anfitrion);
+    } catch (error) {
+      next(error);
     }
+  }
 
-    findAll = (req, res) => {
-        const { page, limit } = req.query
-        const anfitrion = this.anfitrionService.findAll({ page, limit })
-        res.json(anfitrion)
+  async create(req, res, next) {
+    try {
+      const anfitrion = req.body;
+      const nuevo = this.anfitrionService.create(anfitrion);
+
+      res.status(201).json(nuevo);
+    } catch (error) {
+      next(error);
     }
+  }
 
-    create = (req, res) => {
-        const anfitrion = req.body
-        const { nombre, email } = anfitrion
+  async delete(req, res, next) {
+    try {
+      const id = Number(req.params.id);
+      this.anfitrionService.delete(id);
 
-        if(!nombre || !email) {
-            return res.status(400).json({ error: "Faltan datos obligatorios"})
-        }
-
-        const nuevo = this.anfitrionService.create(anfitrion)
-
-        if(!nuevo) {
-            return res.status(409).json({ error: "anfitrion ya existente"})
-        }
-
-        res.status(201).json(nuevo);
-    } 
-
-    delete = (req, res) => {
-        const id = Number(req.params.id)
-        const eliminado = this.anfitrionService.delete(id)
-
-        if(!eliminado) return res.status(404).json({ error: "Anfitrion no encontrado"})
-        return res.status(204).send()
+      return res.status(204).send();
+    } catch (error) {
+      next(error);
     }
+  }
 
-    update = (req, res) => {
-        const id = Number(req.params.id)
-        const { nombre, email } = req.body
-    
-        const actualizado = this.anfitrionService.update(id, {nombre, email})
-    
-        if (actualizado.error === "not-found") {
-          return res.status(404).json({ error: "Anfitrion no encontrado" })
-        }
-    
-        if (actualizado.error === "name-duplicated") {
-          return res.status(409).json({ error: "Nombre en uso por otro anfitrion" })
-        }
+  async update(req, res, next) {
+    try {
+      const id = Number(req.params.id);
+      const { nombre, email } = req.body;
 
-        if (actualizado.error === "email-duplicated") {
-            return res.status(409).json({ error: "Email en uso por otro anfitrion" })
-        }
-    
-        res.json(actualizado)
+      const actualizado = this.anfitrionService.update(id, { nombre, email });
+
+      res.json(actualizado);
+    } catch (error) {
+      next(error);
     }
+  }
 }

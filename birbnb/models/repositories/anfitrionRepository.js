@@ -1,47 +1,52 @@
+import { AnfitrionModel } from "../schemas/anfitrionSchema"
+
 export class AnfitrionRepository {
     constructor() {
-        this.anfitriones = []
-        this.nextId = 0
+        this.model = AnfitrionModel
     }
 
-    save(anfitrion) {
-        anfitrion.id = this.nextId++
-        this.anfitriones.push(anfitrion)
-        return anfitrion
+    async save(anfitrion) {
+        if(anfitrion.id) {
+            const anfitrionExistente = await this.model.findByIdAndUpdate(
+                anfitrion.id,
+                anfitrion,
+                { new: true, runValidators: true }
+            )
+            return anfitrionExistente
+        } else {
+            const newAnfitrion = new this.model(anfitrion)
+            const anfitrionGuardado = await newAnfitrion.save()
+            return anfitrionGuardado
+        }
     }
 
-    deleteById(id) {
-        const index = this.anfitriones.findIndex(a => a.id === id)
-        if(index == -1) return false
-        this.anfitriones.splice(index, 1)
-        return true
+    async deleteById(id) {
+        const resultado = await this.anfitriones.findByIdAndDelete(id)
+        return resultado !== null
     }
 
-    findById(id) {
-        return this.anfitriones.find(a => a.id === id)
+    async findById(id) {
+        return await this.model.findById(id)
     }
 
-    findByName(nombre){
-        return this.anfitriones.find(a => a.nombre === nombre)
+    async findByName(nombre){
+        return await this.model.findOne({nombre})
     }
 
-    findByEmail(email) {
-        return this.anfitriones.find(a => a.email === email)
+    async findByEmail(email) {
+        return await this.model.findOne({ email })
     } 
 
-    findByPage(pageNum, limitNum) {
-        const offset = (pageNum - 1) * limitNum
-        return this.anfitriones.slice(offset, offset + limitNum)
+    async findByPage(pageNum, limitNum) {
+        const skip = (pageNum - 1) * limitNum
+        const anfitriones = await this.model.find()
+            .skip(skip)
+            .limit(limitNum)
+            .exec()
+        return anfitriones
     }
 
-    countAll() {
-        return this.anfitriones.length
-    }
-    
-    update(anfitrion) {
-        const index = this.anfitriones.findIndex(a => a.id === anfitrion.id)
-        if (index === -1) return null
-        this.anfitriones[index] = anfitrion
-        return anfitrion
+    async countAll() {
+        return await this.model.countDocuments()
     }
 }

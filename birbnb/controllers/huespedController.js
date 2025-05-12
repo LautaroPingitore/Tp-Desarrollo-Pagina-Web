@@ -1,57 +1,51 @@
 export class HuespedController {
-    constructor(huespedService) {
-        this.huespedService = huespedService
+  constructor(huespedService) {
+    this.huespedService = huespedService;
+  }
+
+  async findAll(req, res, next) {
+    try {
+      const { page, limit } = req.query;
+      const huesped = await this.huespedService.findAll({ page, limit });
+
+      res.json(huesped);
+    } catch (error) {
+      next(error);
     }
+  }
 
-    findAll = (req, res) => {
-        const { page, limit } = req.query
-        const huesped = this.huespedService.findAll({ page, limit })
-        res.json(huesped)
+  async create(req, res, next) {
+    try {
+      const huesped = req.body;
+      const nuevo = this.huespedService.create(huesped);
+
+      res.status(201).json(nuevo);
+    } catch (error) {
+      next(error);
     }
+  }
 
-    create = (req, res) => {
-        const huesped = req.body
-        const { nombre, email } = huesped
+  async delete(req, res, next) {
+    try {
+      const id = Number(req.params.id);
+      this.huespedService.delete(id);
 
-        if(!nombre || !email) {
-            return res.status(400).json({ error: "Faltan datos obligatorios"})
-        }
-
-        const nuevo = this.huespedService.create(huesped)
-
-        if(!nuevo) {
-            return res.status(409).json({ error: "Huesped ya existente"})
-        }
-
-        res.status(201).json(nuevo);
-    } 
-
-    delete = (req, res) => {
-        const id = Number(req.params.id)
-        const eliminado =this.huespedService.delete(id)
-
-        if(!eliminado) return res.status(404).json({ error: "Huesped no encontrado"})
-        return res.status(204).send()
+      return res.status(204).send();
+    } catch (error) {
+      next(error);
     }
+  }
 
-    update = (req, res) => {
-        const id = Number(req.params.id)
-        const { nombre, email } = req.body
-    
-        const actualizado = this.huespedService.update(id, {nombre, email})
-    
-        if (actualizado.error === "not-found") {
-          return res.status(404).json({ error: "Huesped no encontrado" })
-        }
-    
-        if (actualizado.error === "name-duplicated") {
-          return res.status(409).json({ error: "Nombre en uso por otro huesped" })
-        }
+  async update(req, res, next) {
+    try {
+      const id = Number(req.params.id);
+      const { nombre, email } = req.body;
 
-        if (actualizado.error === "email-duplicated") {
-            return res.status(409).json({ error: "Email en uso por otro huesped" })
-        }
-    
-        res.json(actualizado)
+      const actualizado = this.huespedService.update(id, { nombre, email });
+
+      res.json(actualizado);
+    } catch (error) {
+      next(error);
     }
+  }
 }
