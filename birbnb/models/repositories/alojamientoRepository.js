@@ -1,48 +1,79 @@
+import { AlojamientoModel } from '../schemas/alojamientoSchema.js';
+
 export class AlojamientoRepository {
     constructor() {
-        this.alojamientos = [];
-        this.nextId = 0;
+        this.model = AlojamientoModel
     }
 
-    countAll() {
-        const alojamientos = this.findAll();
-        return alojamientos.length;
+    async countAll() {
+        return await this.model.countDocuments()
     }
 
-    save(alojamiento) {
-        alojamiento.id = this.nextId++;
-        this.alojamientos.push(alojamiento);
-        return alojamiento;
+    async save(alojamiento) {
+        if(alojamiento.id) {
+            const alojamientoExistente = await this.model.findByIdAndUpdate(
+                alojamiento.id,
+                alojamiento,
+                { new: true , runValidators: true }
+            )
+            return alojamientoExistente
+        } else {
+            const nuevoAlojamiento = new this.model(alojamiento)
+            const alojamientoGuardado = await nuevoAlojamiento.save()
+            return alojamientoGuardado
+        }
+
     }
 
-    deleteById(id) {
-        const index = this.alojamientos.findIndex(p => p.id == id);
-        if(id == -1) return false;
-        this.alojamientos.splice(index, 1);
-        return true;
+    async deleteById(id) {
+        const resultado = await this.model.findByIdAndDelete(id)
+        return resultado !== null
     }
 
-    findByPage(pageNum, limitNum) {
-        const alojamientos = this.findAll();
-        const offset = (pageNum - 1) * limitNum;
-        return alojamientos.splice(offset, offset + limitNum);
+
+    async findByPage(pageNum,limitNum){
+        const alojamientos = await this.model.findByPage(pageNum, limitNum)
+        return alojamientos;
     }
 
-    findAll() {
-        return this.alojamientos;
+    async findById(id) {
+        return await this.model.findById(id);
     }
 
-    findById(id) {
-        return this.alojamientos.find(p => p.id === id);
+   async findByFilters(filtro) {
+        
+        const query = {};
+
+        if (filtro.ciudad) {
+            query.filtro.ciudad = { $regex: filtro.ciudad, $options: 'i' };
+        }
+        if (filtro.pais) {
+            query.filtro.pais = { $regex: filtro.pais, $options: 'i' };
+        }
+        if (filtro.cantHuespedes) {
+            query.filtro.cantHuespedes = { $gte: filtro.cantHuespedes };
+        }
+        if (filtro.fechaInicio) {
+            query.filtro.fechaInicio = { $gte: new Date(filtro.fechaInicio) };
+        }
+        if (filtro.fechaFin) {
+            query.filtro.fechaFin = { $lte: new Date(filtro.fechaFin) };
+        }
+        if (filtro.precioMin) {
+            query.filtro.precioMin = { $gte: filtro.precioMin };
+        }
+        if (filtro.precioMax) {
+            query.filtro.precioMax = { $lte: filtro.precioMax };
+        }
+        if (filtro.caracteristicas && filtro.caracteristicas.length > 0) {
+            query.filtro.caracteristicas = { $in: filtro.caracteristicas };
+        }        
+
+        return await this.model.find(query);
+
     }
 
-    findByFilters(filtro, {pageNum, limitNum}) {
-        let filtrados = filtro.cumplenCon(this.alojamientos);
-        const offset = (pageNum - 1) * limitNum;
-        return filtrados.slice(offset, offset + limitNum);
-    }
-
-    findByName(nombre) {
-        return this.alojamientos.find(p => p.nombre === nombre);
+    async findByName(nombre) {
+        return await this.model.findByName(nombre)
     }
 }

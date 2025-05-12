@@ -16,7 +16,6 @@ export class Alojamiento {
     this.direccion = direccion;
     this.cantHuespedesMax = cantHuespedesMax;
     this.caracteristicas = caracteristicas;
-    this.reservas = [];
     this.fotos = fotos;
   }
 

@@ -2,6 +2,7 @@ import { Alojamiento } from "../models/entities/Alojamiento.js";
 import { Direccion } from "../models/entities/Direccion.js";
 import { Pais } from "../models/entities/Pais.js";
 import { Ciudad } from "../models/entities/Ciudad.js";
+import { ConflictError, NotFoundError } from "../errors/AppError.js";
 
 export class AlojamientoService {
     constructor(alojamientoRepository, anfitrionRepository, ciudadRepository, paisRepository) {
@@ -11,7 +12,7 @@ export class AlojamientoService {
         this.paisRepository = paisRepository
     }
 
-    findAll({page = 1, limit = 10}) {
+    async findAll({page = 1, limit = 10}) {
         const pageNum = Math.max(Number(page), 1)
         const limitNum = Math.min(Math.max(Number(limit), 1), 100)
 
@@ -30,38 +31,52 @@ export class AlojamientoService {
         };
     }
 
-    findById(id) {
+    async findById(id) {
         let alojamiento = this.alojamientoRepository.findById(id)
-        return alojamiento ? this.toDTO(alojamiento) : null
+        if(!alojamiento) {
+            throw new NotFoundError(`Alojamiento con id ${id} no encontrado`)
+        }
+        return this.toDTO(alojamiento)
     }
 
-    findByFilters(filtro,{page=1,limit=10}) {
+    async findByFilters(filtro,{page=1,limit=10}) {
         const pageNum = Math.max(Number(page), 1)
         const limitNum = Math.min(Math.max(Number(limit), 1), 100)
 
-        let alojamientos = this.alojamientoRepository.findByFilters(filtro, {pageNum, limitNum});
+        let alojamientos = this.alojamientoRepository.findByFilters(filtro);
 
-        const total = this.alojamientoRepository.countAll();
-        const totla_pages = Math.ceil(total / limitNum);
-        const data = alojamientos.map(a => this.toDTO(a));
+        const total = alojamientos.length;
+        const startIndex = (pageNum - 1) * limitNum;
+        const endIndex = startIndex + limitNum;
+        const total_pages = Math.ceil(total / limitNum);
+
+        const data = alojamientos.slice(startIndex, endIndex).map(a => this.toDTO(a));
 
         return {
             page: pageNum,
             per_page: limitNum,
             total: total,
-            totla_pages: totla_pages,
+            totla_pages: total_pages,
             data: data
         };
     }
 
-    create(alojamiento) {
+    async create(alojamiento) {
         const { anfitrion, nombre, descripcion, precioPorNoche, moneda, horarioCheckIn, horarioCheckOut, direccion, cantHuespedesMax, caracteristicas, fotos} = alojamiento;
         
+        if(!anfitrion || !nombre || !descripcion || !precioPorNoche || !moneda || !horarioCheckIn || !horarioCheckOut || !direccion || !cantHuespedesMax || !caracteristicas || !fotos) {
+                throw new ValidationError("Faltan datos obligatorios");
+        }
+        
         const existente = this.alojamientoRepository.findByName(nombre);
-        if(existente) return { error: "Alojamiento ya existente" };
+        if(existente) {
+            throw new ConflictError(`Alojamiento con nombre ${nombre} ya existe`)
+        };
         
         const anfitrionExistente = this.anfitrionRepository.findByName(anfitrion);
-        if(!anfitrionExistente) return { error: "Anfitrion inexistente" };
+        if(!anfitrionExistente) {
+            throw new NotFoundError(`Anfitrion con nombre ${anfitrion} no encontrado`)
+        };
 
         let paisExistente = this.paisRepository.findByName(direccion.ciudad.pais.nombre)
         if(!paisExistente) {
@@ -83,8 +98,12 @@ export class AlojamientoService {
         return this.toDTO(nuevo);
     }
 
-    delete(id) {
-        return this.alojamientoRepository.deleteById(id);
+    async delete(id) {
+        const borrado = this.alojamientoRepository.deleteById(id);
+        if(!borrado){
+            throw new notFoundError(`Alojamiento con id ${id} no encontrado`);
+        }
+        return borrado;
     }
 
     toDTO(alojamiento) {

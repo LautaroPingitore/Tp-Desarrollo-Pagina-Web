@@ -27,10 +27,7 @@ import { AlojamientoController } from "./birbnb/controllers/alojamientoControlle
 import { AnfitrionController } from "./birbnb/controllers/anfitrionController.js";
 import { HuespedController } from "./birbnb/controllers/huespedController.js";
 import { ReservaController } from "./birbnb/controllers/reservaController.js";
-
-const app = express();
-const port = process.env.PORT || 3000;
-const server = new Server(app, port);
+import { MongoDBClient } from "./birbnb/config/database.js";
 
 // Configuración de dependencias
 const paisRepo = new PaisRepository();
@@ -53,6 +50,12 @@ const alojamientoController = new AlojamientoController(alojamientoService);
 const reservaRepo = new ReservaRepository();
 const reservaService = new ReservaService(reservaRepo);
 const reservaController = new ReservaController(reservaService);
+
+const app = express();
+const port = process.env.PORT || 3000;
+const server = new Server(app, port);
+
+MongoDBClient.connect();
 
 // Registro del controlador en el servidor
 server.setController(AlojamientoController, alojamientoController);
