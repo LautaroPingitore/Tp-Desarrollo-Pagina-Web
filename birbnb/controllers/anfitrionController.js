@@ -17,7 +17,7 @@ export class AnfitrionController {
   async create(req, res, next) {
     try {
       const anfitrion = req.body;
-      const nuevo = this.anfitrionService.create(anfitrion);
+      const nuevo = await this.anfitrionService.create(anfitrion);
 
       res.status(201).json(nuevo);
     } catch (error) {
@@ -27,8 +27,7 @@ export class AnfitrionController {
 
   async delete(req, res, next) {
     try {
-      const id = Number(req.params.id);
-      this.anfitrionService.delete(id);
+      await this.anfitrionService.delete(req.params.id);
 
       return res.status(204).send();
     } catch (error) {
@@ -41,7 +40,7 @@ export class AnfitrionController {
       const id = Number(req.params.id);
       const { nombre, email } = req.body;
 
-      const actualizado = this.anfitrionService.update(id, { nombre, email });
+      const actualizado = await this.anfitrionService.update(id, { nombre, email });
 
       res.json(actualizado);
     } catch (error) {

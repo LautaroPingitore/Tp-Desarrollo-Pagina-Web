@@ -25,4 +25,4 @@ export class ConflictError extends AppError {
   constructor(message = 'Conflicto con el recurso existente') {
     super(message, 409);
   }
-} 
+}

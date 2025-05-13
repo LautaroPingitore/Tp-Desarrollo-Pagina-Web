@@ -2,7 +2,7 @@ import { EstadoReserva } from './enums/EstadoReserva.js';
 import { FactoryNotificacion } from './FactorYNotificacion.js';
 
 export class Reserva {
-  #id 
+   
 
   constructor(fechaAlta, huespedReservador, cantHuespedes, alojamiento, rangoFechas) {
    this.fechaAlta = fechaAlta;
@@ -11,14 +11,6 @@ export class Reserva {
    this.alojamiento = alojamiento;
    this.rangoFechas = rangoFechas;
    this.estado = EstadoReserva.PENDIENTE;
-  }
-
-  get id(){
-    return this.#id
-  }
-
-  set id(id){
-    this.#id = id
   }
   
   // No tendria que estar aca

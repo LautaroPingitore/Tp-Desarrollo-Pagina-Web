@@ -3,7 +3,7 @@ import { Reserva } from './Reserva.js';
 import { FactoryNotificacion } from './FactorYNotificacion.js';
 
 export class Alojamiento {
-  #id
+  
 
   constructor(anfitrion, nombre, descripcion, precioPorNoche, moneda, horarioCheckIn, horarioCheckOut, direccion, cantHuespedesMax, caracteristicas, fotos) {
     this.anfitrion = anfitrion;
@@ -19,13 +19,9 @@ export class Alojamiento {
     this.fotos = fotos;
   }
 
-  set id(id) {
-    this.#id = id;
-  }
+  
 
-  get id() {
-    return this.#id;
-  }
+  
 
   estasDisponibleEn(rangoFecha) {
     return this.reservas.every(res => res.estado !== EstadoReserva.CONFIRMADA && !res.rangoFechas.seSuperponeCon(rangoFecha));

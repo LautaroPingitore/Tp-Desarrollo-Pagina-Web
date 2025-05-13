@@ -17,7 +17,7 @@ export class HuespedController {
   async create(req, res, next) {
     try {
       const huesped = req.body;
-      const nuevo = this.huespedService.create(huesped);
+      const nuevo = await this.huespedService.create(huesped);
 
       res.status(201).json(nuevo);
     } catch (error) {
@@ -28,7 +28,7 @@ export class HuespedController {
   async delete(req, res, next) {
     try {
       const id = Number(req.params.id);
-      this.huespedService.delete(id);
+      await this.huespedService.delete(id);
 
       return res.status(204).send();
     } catch (error) {
@@ -41,7 +41,7 @@ export class HuespedController {
       const id = Number(req.params.id);
       const { nombre, email } = req.body;
 
-      const actualizado = this.huespedService.update(id, { nombre, email });
+      const actualizado = await this.huespedService.update(id, { nombre, email });
 
       res.json(actualizado);
     } catch (error) {

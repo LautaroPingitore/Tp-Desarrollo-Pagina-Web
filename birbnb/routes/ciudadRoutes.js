@@ -4,8 +4,8 @@ import { CiudadController } from "../controllers/ciudadController.js"
 export default function ciudadRoutes(getController) {
     const router = express.Router()
 
-    router.get("/ciudades", (req, res) => {
-        getController(CiudadController).findAll(req, res)
+    router.get("/ciudades", (req, res, next) => {
+        getController(CiudadController).findAll(req, res, next)
     })
 
     return router

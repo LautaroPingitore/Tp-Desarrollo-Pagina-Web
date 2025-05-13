@@ -4,20 +4,20 @@ import { HuespedController } from "../controllers/huespedController.js"
 export default function huespedRoutes(getController) {
     const router = express.Router()
 
-    router.get("/huespedes", (req, res) => {
-        getController(HuespedController).findAll(req, res)
+    router.get("/huespedes", (req, res, next) => {
+        getController(HuespedController).findAll(req, res, next)
     })
 
-    router.post("/login/huesped", (req, res) =>
-        getController(HuespedController).create(req, res)
+    router.post("/login/huesped", (req, res, next) =>
+        getController(HuespedController).create(req, res, next)
     )
 
-    router.delete("/huesped/:id", (req, res)=>
-        getController(HuespedController).delete(req, res)
+    router.delete("/huesped/:id", (req, res, next)=>
+        getController(HuespedController).delete(req, res, next)
     )
     
-    router.put("/huesped/:id", (req, res) =>
-        getController(HuespedController).update(req, res)
+    router.put("/huesped/:id", (req, res, next) =>
+        getController(HuespedController).update(req, res, next)
     )
 
     return router

@@ -4,24 +4,24 @@ import { AnfitrionController } from "../controllers/anfitrionController.js"
 export default function anfitrionRoutes(getController) {
     const router = express.Router()
 
-    router.get("/health", (req, res) => {
+    router.get("/health", (req, res, next) => {
         res.status(200).send("OK")
     })
 
-    router.get("/anfitriones", (req, res) => {
-        getController(AnfitrionController).findAll(req, res)
+    router.get("/anfitriones", (req, res, next) => {
+        getController(AnfitrionController).findAll(req, res, next)
     })
 
-    router.post("/login/anfitrion", (req, res) =>
-        getController(AnfitrionController).create(req, res)
+    router.post("/login/anfitrion", (req, res, next) =>
+        getController(AnfitrionController).create(req, res, next)
     )
 
-    router.delete("/anfitrion/:id", (req, res)=>
-        getController(AnfitrionController).delete(req, res)
+    router.delete("/anfitrion/:id", (req, res, next)=>
+        getController(AnfitrionController).delete(req, res, next)
     )
     
-    router.put("/anfitrion/:id", (req, res) =>
-        getController(AnfitrionController).update(req, res)
+    router.put("/anfitrion/:id", (req, res, next) =>
+        getController(AnfitrionController).update(req, res, next)
     )
 
     return router

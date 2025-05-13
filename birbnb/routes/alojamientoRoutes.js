@@ -4,22 +4,22 @@ import { AlojamientoController } from "../controllers/alojamientoController.js";
 export default function alojamientoRoutes(getController) {
   const router = express.Router()
 
-  router.get("/alojamientos", (req, res) => {
-      getController(AlojamientoController).findAll(req, res)
+  router.get("/alojamientos", (req, res, next) => {
+      getController(AlojamientoController).findAll(req, res, next)
   })
   
-  router.get("/alojamientos/:id", (req, res) => {
-    getController(AlojamientoController).findById(req, res)
+  router.get("/alojamientos/:id", (req, res, next) => {
+    getController(AlojamientoController).findById(req, res, next)
   })
 
     // TODO: finByFilters
   
-  router.post("/alojamientos", (req, res) => {
-    getController(AlojamientoController).create(req, res)
+  router.post("/alojamientos", (req, res, next) => {
+    getController(AlojamientoController).create(req, res, next)
   })
   
-  router.delete("/alojamientos/:id", (req, res) => {
-    getController(AlojamientoController).delete(req, res)
+  router.delete("/alojamientos/:id", (req, res, next) => {
+    getController(AlojamientoController).delete(req, res, next)
   })
 
   return router;

@@ -1,4 +1,4 @@
-import { AnfitrionModel } from "../schemas/anfitrionSchema"
+import { AnfitrionModel } from "../schemas/anfitrionSchema.js"
 
 export class AnfitrionRepository {
     constructor() {
@@ -7,9 +7,9 @@ export class AnfitrionRepository {
 
     async save(anfitrion) {
         if(anfitrion.id) {
-            const { id, ...datosActualizados } = anfitrionExistente
+            const { id, ...datosActualizados } = anfitrion
             const anfitrionExistente = await this.model.findByIdAndUpdate(
-                anfitrion.id,
+                id,
                 datosActualizados,
                 { new: true, runValidators: true }
             )
@@ -22,7 +22,7 @@ export class AnfitrionRepository {
     }
 
     async deleteById(id) {
-        const resultado = await this.anfitriones.findByIdAndDelete(id)
+        const resultado = await this.model.findByIdAndDelete(id)
         return resultado !== null
     }
 

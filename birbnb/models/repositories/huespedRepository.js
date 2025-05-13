@@ -1,8 +1,8 @@
-import { HuespedSchema } from "../schemas/huespedSchema.js"
+import { HuespedModel } from "../schemas/huespedSchema.js"
 
 export class HuespedRepository {
     constructor() {
-        this.model = HuespedSchema
+        this.model = HuespedModel
     }
 
     async save(huesped) {

@@ -1,5 +1,5 @@
 import { Anfitrion } from "../models/entities/Anfitrion.js"
-import { ConflictError, NotFoundError } from "../errors/AppError.js"
+import { ValidationError, ConflictError, NotFoundError } from "../errors/AppError.js"
 
 export class AnfitrionService {
     constructor(anfitrionRepository) {
@@ -42,12 +42,9 @@ export class AnfitrionService {
             throw new ConflictError(`Anfitrion con email ${email} ya existe`)
         }
 
-
         const nuevoAnfitrion = new Anfitrion(nombre, email)
-
-        await this.anfitrionRepository.save(nuevoAnfitrion)
-
-        return this.toDTO(nuevoAnfitrion)
+        const anfitrionDB = await this.anfitrionRepository.save(nuevoAnfitrion)
+        return this.toDTO(anfitrionDB)
     }
 
     async delete(id) {
@@ -100,10 +97,10 @@ export class AnfitrionService {
 
     toDTO(anfitrion) {
         return {
-            id: anfitrion.id,
+            id: anfitrion.id.toString(),
             nombre: anfitrion.nombre,
             email: anfitrion.email,
-            notificaciones: anfitrion.notificaciones            
+            notificaciones: anfitrion.notificaciones ?? []           
         }
     }
 }
