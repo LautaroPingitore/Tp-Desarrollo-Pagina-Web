@@ -1,3 +1,4 @@
+import { ConflictError } from "../errors/AppError.js"
 import { Ciudad } from "../models/entities/Ciudad.js"
 import { Pais } from "../models/entities/Pais.js"
 
@@ -7,15 +8,15 @@ export class CiudadService {
         this.paisRepository = paisRepository
     }
 
-    findAll({page = 1, limit = 10}) {
+    async findAll({page = 1, limit = 10}) {
         const pageNum = Math.max(Number(page), 1)
         const limitNum = Math.min(Math.max(Number(limit), 1), 100)
 
-        let ciudades = this.ciudadRepository.findByPage(pageNum, limit)
+        let ciudades = await this.ciudadRepository.findByPage(pageNum, limit)
 
-        const total = this.ciudadRepository.countAll()
+        const total = await this.ciudadRepository.countAll()
         const totla_pages = Math.ceil(total / limitNum)
-        const data = anfitrion.map(a => this.toDTO(a))
+        const data = ciudades.map(a => this.toDTO(a))
 
         return {
             page: pageNum,
@@ -26,20 +27,22 @@ export class CiudadService {
         };
     }
 
-    create(ciudad) {
+    async create(ciudad) {
         const { nombre, pais } = ciudad
 
-        const ciudadExistente = this.ciudadRepository.findByName(nombre)
-        if(ciudadExistente) return null
+        const ciudadExistente = await this.ciudadRepository.findByName(nombre)
+        if(ciudadExistente) {
+            throw new ConflictError(`Ciudad con nombre ${nombre} ya existente`)
+        }
 
-        let paisExistente = this.paisRepository.findByName(pais)
+        let paisExistente = await this.paisRepository.findByName(pais)
         if(!paisExistente) {
             paisExistente = new Pais(pais)
-            this.paisRepository.save(paisExistente)
+            await this.paisRepository.save(paisExistente)
         }
         
         const nuevaCiudad = new Ciudad(nombre, paisExistente)
-        this.ciudadRepository.save(nuevaCiudad)
+        await this.ciudadRepository.save(nuevaCiudad)
 
         return this.toDTO(nuevaCiudad)
         

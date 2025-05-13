@@ -11,16 +11,17 @@ export class AlojamientoRepository {
 
     async save(alojamiento) {
         if(alojamiento.id) {
+            const { id, ...datosActualizados } = alojamiento
             const alojamientoExistente = await this.model.findByIdAndUpdate(
                 alojamiento.id,
-                alojamiento,
+                datosActualizados,
                 { new: true , runValidators: true }
             )
-            return alojamientoExistente
+            return alojamientoExistente.populate('anfitrion').populate('direccion.ciudad').populate('direccion.ciudad.pais')
         } else {
             const nuevoAlojamiento = new this.model(alojamiento)
             const alojamientoGuardado = await nuevoAlojamiento.save()
-            return alojamientoGuardado
+            return alojamientoGuardado.populate('anfitrion').populate('direccion.ciudad').populate('direccion.ciudad.pais')
         }
 
     }

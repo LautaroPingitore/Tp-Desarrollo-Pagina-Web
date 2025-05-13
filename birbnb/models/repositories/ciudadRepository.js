@@ -1,33 +1,43 @@
+import { CiudadModel } from "../schemas/ciudadSchema.js"
+
 export class CiudadRepository {
     constructor() {
-        this.ciudades = []
-        this.nextId = 0
+        this.model = CiudadModel
     }
 
-    save(ciudad) {
-        ciudad.id = this.nextId++
-        this.ciudades.push(ciudad)
-        return ciudad
+    async save(ciudad) {
+        if(ciudad.id) {
+            const { id, ...datosActualizados } = ciudad
+            const ciudadExistente = await this.model.findByIdAndUpdate(
+                ciudad.id,
+                datosActualizados,
+                { new: true , runValidators: true}
+            )
+            return ciudadExistente.populate('Pais')
+        } else {
+            const nuevaCiudad = new this.model(ciudad)
+            const ciudadGuardada = await nuevaCiudad.save()
+            return ciudadGuardada.populate('Pais')
+        }
     }
 
-    findById(id) {
-        return this.ciudades.find(c => c.id === id)
+    async findById(id) {
+        return await this.model.findById(id).populate('Pais')
     }
     
-    findByName(nombre) {
-        return this.ciudades.find(c => c.nombre === nombre)
+    async findByName(nombre) {
+        return await this.model.findOne({nombre}).populate('Pais')
     }
 
-    findByPais(pais) {
-        return this.ciudades.filter(c => c.pais === pais)
+    async findByPais(idPais) {
+        return await this.model.find({pais : idPais}).populate('Pais')
     }
 
-    findByPage(pageNum, limitNum) {
-        const offset = (pageNum - 1) * limitNum
-        return this.ciudades.slice(offset, offset + limitNum)
+    async findByPage(pageNum, limitNum) {
+        return await this.model.findByPage(pageNum, limitNum).populate('Pais')
     }
 
-    countAll() {
-        return this.ciudades.length
+    async countAll() {
+        return await this.model.countDocuments()
     }
 }

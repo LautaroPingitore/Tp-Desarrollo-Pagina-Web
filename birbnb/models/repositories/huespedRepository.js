@@ -7,9 +7,10 @@ export class HuespedRepository {
 
     async save(huesped) {
         if(huesped.id) {
+            const { id, ...datosActualizados } = huesped
             const huespedExistente = await this.model.findByIdAndUpdate(
                 huesped.id,
-                huesped,
+                datosActualizados,
                 { new: true, runValidators: true }
             )
             return huespedExistente

@@ -1,24 +1,34 @@
+import { PaisModel } from "../schemas/paisShema.js"
+
 export class PaisRepository {
     constructor() {
-        this.paises = []
+        this.model = PaisModel
     }
 
-    save(pais) {
-        this.paises.push(pais)
-        return pais
+    async save(pais) {
+        if(pais.id) {
+            const paisExistente = await this.model.findByIdAndUpdate(
+                pais.id,
+                pais.nombre,
+                { new: true, runValidators: true}
+            )
+            return paisExistente
+        } else {
+            const nuevoPais = new this.model(pais)
+            const paisGuardadao = await nuevoPais.save()
+            return paisGuardadao
+        }
     }
 
-    findByName(nombre) {
-        return this.paises.find(p => p.nombre === nombre)
+    async findByName(nombre) {
+        return await this.model.findOne({nombre})
     }
 
-    // Se puede sacar si no queres ver todos los paises
-    findByPage(pageNum, limitNum) {
-        const offset = (pageNum - 1) * limitNum
-        return this.paises.slice(offset, offset + limitNum)
+    async findByPage(pageNum, limitNum) {
+        return await this.model.findByPage(pageNum, limitNum)
     }
 
-    countAll() {
-        return this.paises.length
+    async countAll() {
+        return await this.model.countDocuments()
     }
 }

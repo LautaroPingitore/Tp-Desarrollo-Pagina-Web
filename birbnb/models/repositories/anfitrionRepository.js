@@ -7,9 +7,10 @@ export class AnfitrionRepository {
 
     async save(anfitrion) {
         if(anfitrion.id) {
+            const { id, ...datosActualizados } = anfitrionExistente
             const anfitrionExistente = await this.model.findByIdAndUpdate(
                 anfitrion.id,
-                anfitrion,
+                datosActualizados,
                 { new: true, runValidators: true }
             )
             return anfitrionExistente
