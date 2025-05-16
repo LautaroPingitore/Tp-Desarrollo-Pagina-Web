@@ -19,14 +19,14 @@ export class AlojamientoService {
         let alojamientos = await this.alojamientoRepository.findByPage(pageNum, limit)
 
         const total = await this.alojamientoRepository.countAll()
-        const totla_pages = Math.ceil(total / limitNum)
+        const total_pages = Math.ceil(total / limitNum)
         const data = alojamientos.map(a => this.toDTO(a))
 
         return {
             page: pageNum,
             per_page: limitNum,
             total: total,
-            totla_pages: totla_pages,
+            total_pages: total_pages,
             data: data
         };
     }
@@ -56,7 +56,7 @@ export class AlojamientoService {
             page: pageNum,
             per_page: limitNum,
             total: total,
-            totla_pages: total_pages,
+            total_pages: total_pages,
             data: data
         };
     }

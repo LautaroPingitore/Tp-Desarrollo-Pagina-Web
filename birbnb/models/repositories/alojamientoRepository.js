@@ -17,11 +17,21 @@ export class AlojamientoRepository {
                 datosActualizados,
                 { new: true , runValidators: true }
             )
-            return alojamientoExistente.populate('anfitrion').populate('direccion.ciudad').populate('direccion.ciudad.pais')
+            return await alojamientoExistente
+                .populate('anfitrion')
+                .populate({
+                    path: 'direccion.ciudad',
+                    populate: {path: 'pais'}
+                })
         } else {
             const nuevoAlojamiento = new this.model(alojamiento)
             const alojamientoGuardado = await nuevoAlojamiento.save()
-            return alojamientoGuardado.populate('anfitrion').populate('direccion.ciudad').populate('direccion.ciudad.pais')
+            return await alojamientoGuardado
+                .populate('anfitrion')
+                .populate({
+                    path: 'direccion.ciudad',
+                    populate: {path: 'pais'}
+                })
         }
 
     }
@@ -32,13 +42,26 @@ export class AlojamientoRepository {
     }
 
 
-    async findByPage(pageNum,limitNum){
-        const alojamientos = await this.model.findByPage(pageNum, limitNum).populate('anfitrion').populate('direccion.ciudad').populate('direccion.ciudad.pais')
+    async findByPage(pageNum, limitNum){
+        const skip = (pageNum - 1) * limitNum
+        const alojamientos = await this.model.find()
+            .skip(skip)
+            .limit(limitNum)
+            .populate('anfitrion')
+            .populate({
+                path: 'direccion.ciudad',
+                populate: {path: 'pais'}
+            })
         return alojamientos;
     }
 
     async findById(id) {
-        return await this.model.findById(id).populate('anfitrion').populate('direccion.ciudad').populate('direccion.ciudad.pais');
+        return await this.model.findById(id)
+            .populate('anfitrion')
+            .populate({
+                path: 'direccion.ciudad',
+                populate: {path: 'pais'}
+            })
     }
 
    async findByFilters(filtro) {
@@ -70,11 +93,21 @@ export class AlojamientoRepository {
             query.filtro.caracteristicas = { $in: filtro.caracteristicas };
         }        
 
-        return await this.model.find(query).populate('anfitrion').populate('direccion.ciudad').populate('direccion.ciudad.pais');
+        return await this.model.find(query)
+            .populate('anfitrion')
+            .populate({
+                path: 'direccion.ciudad',
+                populate: {path: 'pais'}
+            })
 
     }
 
     async findByName(nombre) {
-        return await this.model.findOne({nombre}).populate('anfitrion').populate('direccion.ciudad').populate('direccion.ciudad.pais')
+        return await this.model.findOne({nombre})
+            .populate('anfitrion')
+            .populate({
+                path: 'direccion.ciudad',
+                populate: {path: 'pais'}
+            })
     }
 }

@@ -50,7 +50,7 @@ export class AnfitrionService {
     async delete(id) {
         const borrado = await this.anfitrionRepository.deleteById(id)
         if(!borrado){
-            throw new notFoundError(`Anfitrion con id ${id} no encontrado`);
+            throw new NotFoundError(`Anfitrion con id ${id} no encontrado`);
         }
         return borrado;
     }
