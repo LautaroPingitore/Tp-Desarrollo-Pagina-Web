@@ -13,7 +13,7 @@ export class AlojamientoRepository {
         if(alojamiento.id) {
             const { id, ...datosActualizados } = alojamiento
             const alojamientoExistente = await this.model.findByIdAndUpdate(
-                alojamiento.id,
+                id,
                 datosActualizados,
                 { new: true , runValidators: true }
             )
@@ -52,7 +52,7 @@ export class AlojamientoRepository {
                 path: 'direccion.ciudad',
                 populate: {path: 'pais'}
             })
-        return alojamientos;
+        return alojamientos
     }
 
     async findById(id) {

@@ -1,3 +1,4 @@
+import { NotFoundError, ValidationError } from "../errors/AppError.js";
 import { Reserva } from "../models/entities/Reserva.js";
 
 export class ReservaService {
@@ -6,7 +7,7 @@ export class ReservaService {
         this.huespedRepository = huespedRepository
     }
 
-    findAll({page = 1, limit = 10}) {
+    async findAll({page = 1, limit = 10}) {
         const pageNum = Math.max(Number(page), 1)
         const limitNum = Math.min(Math.max(Number(limit), 1), 100)
 
@@ -25,19 +26,26 @@ export class ReservaService {
         };
     }
 
-    findById(id) {
+    async findById(id) {
         let reserva = this.reservaRepository.findById(id);
         return reserva ? this.toDTO(reserva) : null;
     }
 
-    create(reserva) {
+    async create(reserva) {
         const {reservador, cantHuespedes, alojamiento, fechas} = reserva
+        if(!reservador || !cantHuespedes || !alojamiento || !fechas) {
+            throw new ValidationError("Faltan datos obligatorios")
+        }
 
         const huesped = this.huespedRepository.findByName(reservador)
-        if(!huesped) return { error: "Huesped-inexistente"}
+        if(!huesped) {
+            throw new NotFoundError("Huesped no existente")
+        }
 
         const alojamientoObject = this.alojamientoRepository.findByName(alojamiento)
-        if(!alojamientoObject) return { error: "Alojamiento-inexistente"}
+        if(!alojamientoObject) {
+            throw new NotFoundError("Alojamiento no existente")
+        }
 
         const objectFechas = new RangoFechas(fechas.fechaInicio, fechas.fechaFin)
         const fechaActual = new Date()
@@ -48,10 +56,16 @@ export class ReservaService {
         return this.toDTO(nuevaReserva)
     }
 
-    // Actualizar Estado
+    async update(reserva) {
+        // TODO
+    }
 
-    delete(id) {
-        return this.reservaRepository.deleteById(id)
+    async delete(id) {
+        const borrado = await this.reservaRepository.deleteById(id);
+        if(!borrado){
+            throw new NotFoundError(`Reserva con id ${id} no encontrado`);
+        }
+        return borrado;
     }
 
     toDTO(reserva) {

@@ -33,6 +33,7 @@ const alojamientoSchema = new mongoose.Schema({
     moneda: {
         type: String,
         required: true,
+        trim: true,
         enum: ["DOLAR_USA", "PESO_ARG", "REALES"]
     },
        
@@ -41,9 +42,9 @@ const alojamientoSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true,
+        length: 5,
         validate: {
             validator: function(v) {
-                v.length == 5 &&
                 v.split(":").length == 2
             }
         } 
@@ -53,9 +54,9 @@ const alojamientoSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true,
+        length: 5,
         validate: {
             validator: function(v) {
-                v.length == 5 &&
                 v.split(":").length == 2
             }
         } 

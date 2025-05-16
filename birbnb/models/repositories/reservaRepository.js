@@ -1,45 +1,104 @@
+import { populate } from "dotenv"
+import { ReservaModel } from "../schemas/reservaSchema.js"
+
 export class ReservaRepository {
     constructor() {
-        this.reservas = []
-        this.nextId = 0
+        this.model = ReservaModel
     }
 
-    countAll() {
-        return this.reservas.length
+    async countAll() {
+        return await this.model.countDocuments()
     }
 
-    save(reserva) {
-        reserva.id = this.nextId++
-        this.reservas.push(reserva)
-        return reserva
+    async save(reserva) {
+        if(reserva.id) {
+            const { id, ...datosActualizados } = reserva
+            const reservaExistente = await this.model.findByIdAndUpdate(
+                id,
+                datosActualizados,
+                { new: true , runValidators: true }
+            )
+            return await reservaExistente
+                .populate('huesped')
+                .populate({
+                    path: 'alojamiento',
+                    populate: [
+                        {path: 'anfitrion'},
+                        {
+                            path: 'direccion.ciudad',
+                            populate: {path: 'pais'}
+                        }
+                    ]
+                })
+        } else {
+            const nuevaReserva = new this.model(reserva)
+            const reservaGuardada = await nuevaReserva.save()
+            return await reservaGuardada
+                .populate('huesped')
+                .populate({
+                    path: 'alojamiento',
+                    populate: [
+                        {path: 'anfitrion'},
+                        {
+                            path: 'direccion.ciudad',
+                            populate: {path: 'pais'}
+                        }
+                    ]
+                })
+        }
     }
 
-    deleteById(id) {
-        const index = this.reservas.findIndex(r => r.id == id);
-        if(id == -1) return false;
-        this.reservas.splice(index, 1);
-        return true;
+    async deleteById(id) {
+        const resultado = await this.model.findByIdAndDelete(id)
+        return resultado !== null
     }
 
-    findByPage(pageNum, limitNum) {
-        const reservas = this.findAll();
-        const offset = (pageNum - 1) * limitNum;
-        return reservas.splice(offset, offset + limitNum);
+    async findByPage(pageNum, limitNum) {
+        const skip = (pageNum - 1) * limitNum
+        const reservas = await this.model.find()
+            .skip(skip)
+            .limit(limitNum)
+            .populate('huesped')
+            .populate({
+                path: 'alojamiento',
+                populate: [
+                    {path: 'anfitrion'},
+                    {
+                        path: 'direccion.ciudad',
+                        populate: {path: 'pais'}
+                    }
+                ]
+            })
+        return reservas
     }
 
-    findAll() {
-        return this.reservas;
+    async findAll() {
+        return await this.model.find()
+            .populate('huesped')
+            .populate({
+                path: 'alojamiento',
+                populate: [
+                    {path: 'anfitrion'},
+                    {
+                        path: 'direccion.ciudad',
+                        populate: {path: 'pais'}
+                    }
+                ]
+            })
     }
 
-    findById(id) {
-        return this.reservas.find(r => r.id === id);
+    async findById(id) {
+        return await this.model.findById(id)
+            .populate('huesped')
+            .populate({
+                path: 'alojamiento',
+                populate: [
+                    {path: 'anfitrion'},
+                    {
+                        path: 'direccion.ciudad',
+                        populate: {path: 'pais'}
+                    }
+                ]
+            })
     }
-
-    update(reserva) {
-        const index = this.reservas.findIndex(r => r.id === reserva.id)
-        if (index === -1) return null
-        this.reservas[index] = reserva
-        return reserva
-    }
-
 }

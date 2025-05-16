@@ -3,27 +3,33 @@ export class ReservaController {
         this.reservaService = ReservaService
     }
 
-    create(req, res){
-        const reserva = req.body
-        const { reservador, cantHuespedes, alojamiento, fechas} = reserva
-
-        if(!reservador || !cantHuespedes || !alojamiento || !fechas) {
-            return res.status(400).json({ error: "Faltan datos obligatorios"})
+    async create(req, res, next){
+        try {
+            const reserva = req.body    
+            const nuevo = this.reservaService.create(reserva)
+    
+            res.status(201).json(nuevo)
+        } catch(error) {
+            next(error)
         }
-
-        const nuevo = this.reservaService.create(reserva)
-
-        if(!nuevo) {
-            return res.status(409).json({ error: "Reserva ya existente"})
-        }
-
-        res.status(201).json(nuevo)
     }
     
-    findAll(req, res) {
-        const { page, limit } = req.query
-        const reservas = this.reservaService.findAll({ page, limit })
-        res.json(reservas)
+    async findAll(req, res, next) {
+        try {
+            const { page, limit } = req.query
+            const reservas = this.reservaService.findAll({ page, limit })
+            res.json(reservas)
+        } catch(error) {
+            next(error)
+        }
+    }
+
+    async update(req, res, next) {
+        try {
+
+        } catch(error) {
+            next(error)
+        }
     }
     
 }

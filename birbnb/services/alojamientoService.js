@@ -101,7 +101,7 @@ export class AlojamientoService {
     async delete(id) {
         const borrado = await this.alojamientoRepository.deleteById(id);
         if(!borrado){
-            throw new notFoundError(`Alojamiento con id ${id} no encontrado`);
+            throw new NotFoundError(`Alojamiento con id ${id} no encontrado`);
         }
         return borrado;
     }

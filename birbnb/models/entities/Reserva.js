@@ -2,17 +2,15 @@ import { EstadoReserva } from './enums/EstadoReserva.js';
 import { FactoryNotificacion } from './FactorYNotificacion.js';
 
 export class Reserva {
-   
-
   constructor(fechaAlta, huespedReservador, cantHuespedes, alojamiento, rangoFechas) {
-   this.fechaAlta = fechaAlta;
-   this.huespedReservador = huespedReservador;
-   this.cantHuespedes = cantHuespedes;
-   this.alojamiento = alojamiento;
-   this.rangoFechas = rangoFechas;
-   this.estado = EstadoReserva.PENDIENTE;
+    this.fechaAlta = fechaAlta;
+    this.huespedReservador = huespedReservador;
+    this.cantHuespedes = cantHuespedes;
+    this.alojamiento = alojamiento;
+    this.rangoFechas = rangoFechas;
+    this.estado = EstadoReserva.PENDIENTE;
   }
-  
+
   // No tendria que estar aca
   static reservar(alojamiento, huesped, cantHuespedes, rangoFechas) {
     if (!alojamiento.puedenAlojarse(cantHuespedes)) throw new Error("Cantidad de huéspedes supera la capacidad");
