@@ -13,14 +13,14 @@ export class HuespedService {
         let huesped = await this.huespedRepository.findByPage(pageNum, limit)
 
         const total = await this.huespedRepository.countAll()
-        const totla_pages = Math.ceil(total / limitNum)
+        const total_pages = Math.ceil(total / limitNum)
         const data = huesped.map(a => this.toDTO(a))
 
         return {
             page: pageNum,
             per_page: limitNum,
             total: total,
-            totla_pages: totla_pages,
+            total_pages: total_pages,
             data: data
         };
     }

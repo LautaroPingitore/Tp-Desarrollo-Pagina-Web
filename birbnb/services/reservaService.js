@@ -14,14 +14,14 @@ export class ReservaService {
         let reservas = this.reservaRepository.findByPage(pageNum, limit);
 
         const total = this.reservaRepository.countAll();
-        const totla_pages = Math.ceil(total / limitNum);
+        const total_pages = Math.ceil(total / limitNum);
         const data = reservas.map(r => this.toDTO(r));
 
         return {
             page: pageNum,
             per_page: limitNum,
             total: total,
-            totla_pages: totla_pages,
+            total_pages: total_pages,
             data: data
         };
     }

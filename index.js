@@ -28,6 +28,7 @@ import { AnfitrionController } from "./birbnb/controllers/anfitrionController.js
 import { HuespedController } from "./birbnb/controllers/huespedController.js";
 import { ReservaController } from "./birbnb/controllers/reservaController.js";
 import { MongoDBClient } from "./birbnb/config/database.js";
+import { errorHandler } from "./birbnb/middlewares/errorHandler.js";
 
 // Configuración de dependencias
 const paisRepo = new PaisRepository();
@@ -69,4 +70,7 @@ routes.forEach(r => {
     server.addRoute(r);
 })
 server.configureRoutes();
+
+app.use(errorHandler)
+
 server.launch();
