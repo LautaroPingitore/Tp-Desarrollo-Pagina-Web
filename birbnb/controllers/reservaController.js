@@ -1,6 +1,6 @@
 export class ReservaController {
-    contructor(ReservaService) {
-        this.reservaService = ReservaService
+    constructor(reservaService) {
+        this.reservaService = reservaService
     }
 
     async create(req, res, next){

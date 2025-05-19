@@ -22,7 +22,7 @@ export class HuespedRepository {
     }
 
     async deleteById(id) {
-        const resultado = await this.huespedes.findByIdAndDelete(id)
+        const resultado = await this.model.findByIdAndDelete(id)
         return resultado !== null
     }
 

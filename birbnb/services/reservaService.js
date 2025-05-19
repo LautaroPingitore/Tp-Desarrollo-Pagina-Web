@@ -1,10 +1,11 @@
 import { NotFoundError, ValidationError } from "../errors/AppError.js";
-import { FactoryNotificacion } from "../models/entities/FactorYNotificacion.js";
+import { RangoFechas } from "../models/entities/RangoFechas.js"
 import { Reserva } from "../models/entities/Reserva.js";
 
 export class ReservaService {
-    constructor(reservaRepository, huespedRepository, anfitrionRepository) {
+    constructor(reservaRepository, alojamientoRepository, huespedRepository, anfitrionRepository) {
         this.reservaRepository = reservaRepository
+        this.alojamientoRepository = alojamientoRepository
         this.huespedRepository = huespedRepository
         this.anfitrionRepository = anfitrionRepository
     }
@@ -34,7 +35,7 @@ export class ReservaService {
     }
 
     async create(reserva) {
-        const {reservador, cantHuespedes, alojamiento, fechas} = reserva
+        const { reservador, cantHuespedes, alojamiento, fechas } = reserva
         if(!reservador || !cantHuespedes || !alojamiento || !fechas) {
             throw new ValidationError("Faltan datos obligatorios")
         }
@@ -52,14 +53,16 @@ export class ReservaService {
         const objectFechas = new RangoFechas(fechas.fechaInicio, fechas.fechaFin)
         const fechaActual = new Date()
 
-        if (!alojamiento.puedenAlojarse(cantHuespedes)) {
+        if (!alojamientoObject.puedenAlojarse(cantHuespedes)) {
             throw new ValidationError("Cantidad de huéspedes supera la capacidad")
         }
 
-        if (!alojamiento.estasDisponibleEn(rangoFechas)) {
+        // TODO: Buscar las reservas de ese alojamiento y comprobar si se superpones o que el alojamiento conosca sus reservas
+        // const idAlojamiento = this.alojamientoRepository.findId(alojamientoObject.nombre)
+        // const reservasDeAlojamiento = this.reservaRepository.findByAlojamiento(idAlojamiento)
+        if (!alojamientoObject.estasDisponibleEn(objectFechas)) {
             throw new ValidationError("El alojamiento no está disponible en las fechas indicadas")
         }
-        
         
         const nuevaReserva = new Reserva(fechaActual, huesped, cantHuespedes, alojamientoObject, objectFechas)
         

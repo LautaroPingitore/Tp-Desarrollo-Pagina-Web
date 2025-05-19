@@ -28,8 +28,7 @@ export class HuespedController {
 
   async delete(req, res, next) {
     try {
-      const id = Number(req.params.id);
-      await this.huespedService.delete(id);
+      await this.huespedService.delete(req.params.id);
 
       return res.status(204).send();
     } catch (error) {

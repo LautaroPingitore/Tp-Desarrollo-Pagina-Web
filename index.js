@@ -27,6 +27,7 @@ import { AlojamientoController } from "./birbnb/controllers/alojamientoControlle
 import { AnfitrionController } from "./birbnb/controllers/anfitrionController.js";
 import { HuespedController } from "./birbnb/controllers/huespedController.js";
 import { ReservaController } from "./birbnb/controllers/reservaController.js";
+
 import { MongoDBClient } from "./birbnb/config/database.js";
 import { errorHandler } from "./birbnb/middlewares/errorHandler.js";
 
@@ -36,21 +37,20 @@ const ciudadRepo = new CiudadRepository();
 const ciudadService = new CiudadService(ciudadRepo, paisRepo);
 const ciudadController = new CiudadController(ciudadService);
 
-const anfitrionRepo = new AnfitrionRepository();
-const anfitrionService = new AnfitrionService(anfitrionRepo);
-const anfitrionController = new AnfitrionController(anfitrionService);
-
-const huespedRepo = new HuespedRepository();
-const huespedService = new HuespedService(huespedRepo);
-const huespedController = new HuespedController(huespedService);
-
-const alojamientoRepo = new AlojamientoRepository();
-const alojamientoService = new AlojamientoService(alojamientoRepo, anfitrionRepo, ciudadRepo, paisRepo);
-const alojamientoController = new AlojamientoController(alojamientoService);
-
 const reservaRepo = new ReservaRepository();
-const reservaService = new ReservaService(reservaRepo);
+const anfitrionRepo = new AnfitrionRepository();
+const huespedRepo = new HuespedRepository();
+const alojamientoRepo = new AlojamientoRepository();
+
+const reservaService = new ReservaService(reservaRepo, alojamientoRepo, huespedRepo, anfitrionRepo);
+const anfitrionService = new AnfitrionService(anfitrionRepo);
+const huespedService = new HuespedService(huespedRepo);
+const alojamientoService = new AlojamientoService(alojamientoRepo, anfitrionRepo, ciudadRepo, paisRepo);
+
 const reservaController = new ReservaController(reservaService);
+const anfitrionController = new AnfitrionController(anfitrionService, reservaService);
+const huespedController = new HuespedController(huespedService, reservaService);
+const alojamientoController = new AlojamientoController(alojamientoService);
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -59,11 +59,11 @@ const server = new Server(app, port);
 MongoDBClient.connect();
 
 // Registro del controlador en el servidor
-server.setController(AlojamientoController, alojamientoController);
+server.setController(CiudadController, ciudadController);
+server.setController(ReservaController, reservaController);
 server.setController(AnfitrionController, anfitrionController);
 server.setController(HuespedController, huespedController);
-server.setController(ReservaController, reservaController);
-server.setController(CiudadController, ciudadController);
+server.setController(AlojamientoController, alojamientoController);
 
 // Configuración de rutas y lanzamiento
 routes.forEach(r => {

@@ -18,9 +18,9 @@ export class ReservaRepository {
                 datosActualizados,
                 { new: true , runValidators: true }
             )
-            return await reservaExistente
-                .populate('huesped')
-                .populate({
+            return await this.model.populate(reservaExistente, [
+                { path: 'huesped'},
+                {
                     path: 'alojamiento',
                     populate: [
                         {path: 'anfitrion'},
@@ -29,13 +29,14 @@ export class ReservaRepository {
                             populate: {path: 'pais'}
                         }
                     ]
-                })
+                }
+            ])
         } else {
             const nuevaReserva = new this.model(reserva)
             const reservaGuardada = await nuevaReserva.save()
-            return await reservaGuardada
-                .populate('huesped')
-                .populate({
+            return await this.model.populate(reservaGuardada, [
+                { path: 'huesped'},
+                {
                     path: 'alojamiento',
                     populate: [
                         {path: 'anfitrion'},
@@ -44,7 +45,8 @@ export class ReservaRepository {
                             populate: {path: 'pais'}
                         }
                     ]
-                })
+                }
+            ])
         }
     }
 

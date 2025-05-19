@@ -17,21 +17,23 @@ export class AlojamientoRepository {
                 datosActualizados,
                 { new: true , runValidators: true }
             )
-            return await alojamientoExistente
-                .populate('anfitrion')
-                .populate({
+            return await this.model.populate(alojamientoExistente, [
+                { path: 'anfitrion'},
+                { 
                     path: 'direccion.ciudad',
-                    populate: {path: 'pais'}
-                })
+                    populate: { path: 'pais' }
+                }
+            ])
         } else {
             const nuevoAlojamiento = new this.model(alojamiento)
             const alojamientoGuardado = await nuevoAlojamiento.save()
-            return await alojamientoGuardado
-                .populate('anfitrion')
-                .populate({
+            return await this.model.populate(alojamientoGuardado, [
+                { path: 'anfitrion'},
+                { 
                     path: 'direccion.ciudad',
-                    populate: {path: 'pais'}
-                })
+                    populate: { path: 'pais' }
+                }
+            ])
         }
 
     }

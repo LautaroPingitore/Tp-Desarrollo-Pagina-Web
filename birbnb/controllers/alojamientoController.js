@@ -52,14 +52,13 @@ export class AlojamientoController {
     }
 
     // Endpoint para eliminar un alojamiento
-    async delete(req, res) {
-        try {
-            const id = Number(req.params.id);
-            await this.alojamientoService.delete(id);
+    async delete(req, res, next) {
+    try {
+      await this.alojamientoService.delete(req.params.id);
 
-            res.status(204).send();
-        } catch (error){
-            next(error)
-        }
-    };
+      return res.status(204).send();
+    } catch (error) {
+      next(error);
+    }
+  }
 }

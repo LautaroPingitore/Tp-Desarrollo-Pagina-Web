@@ -54,7 +54,7 @@ export class HuespedService {
     async delete(id) {
         const borrado = await this.huespedRepository.deleteById(id)
         if(!borrado){
-            throw new notFoundError(`Huesped con id ${id} no encontrado`);
+            throw new NotFoundError(`Huesped con id ${id} no encontrado`);
         }
         return borrado;
     }
