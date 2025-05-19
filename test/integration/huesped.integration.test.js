@@ -93,9 +93,9 @@ describe("POST /huespedes", () => {
             notificaciones:[]
         })
     })
-})
 
-test("Debe retornar un estado 400 si el huesped no tiene nombre", async () => {
+
+    test("Debe retornar un estado 400 si el huesped no tiene nombre", async () => {
     const huesped = {
         email: "santino@example.com"
     }
@@ -106,5 +106,6 @@ test("Debe retornar un estado 400 si el huesped no tiene nombre", async () => {
     expect(response.body).toEqual({
         status: "fail",
         message: "Faltan datos obligatorios"
+    })
     })
 })
