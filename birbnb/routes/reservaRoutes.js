@@ -4,12 +4,12 @@ import { ReservaController } from "../controllers/reservaController.js";
 export default function reservaRoutes(getController) {
   const router = express.Router()
 
-  router.post("/:id/reservar", (req, res, next) =>
+  router.post("/reservar", (req, res, next) =>
     getController(ReservaController).create(req, res, next)
   );
 
-  router.put("/:id/reserva/", (req, res, next) =>
-    getController(ReservaController).delete(req, res, next)
+  router.put("/reserva/update", (req, res, next) =>
+    getController(ReservaController).update(req, res, next)
   );
 
   return router

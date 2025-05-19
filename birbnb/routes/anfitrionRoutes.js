@@ -24,5 +24,9 @@ export default function anfitrionRoutes(getController) {
         getController(AnfitrionController).update(req, res, next)
     )
 
+    router.put("/:id/confirmar/:idReserva", (req, res, next) =>
+        getController(AnfitrionController).confirmarReserva(req, res, next)
+    )
+
     return router
 }

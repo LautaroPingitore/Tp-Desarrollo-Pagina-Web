@@ -1,6 +1,7 @@
 export class AnfitrionController {
-  constructor(anfitrionService) {
+  constructor(anfitrionService, reservaService) {
     this.anfitrionService = anfitrionService;
+    this.reservaService = reservaService
   }
 
   async findAll(req, res, next) {
@@ -45,6 +46,19 @@ export class AnfitrionController {
       res.json(actualizado);
     } catch (error) {
       next(error);
+    }
+  }
+
+  async confirmarReserva(req, res, next) {
+    try {
+      const id = req.query.id
+      const idReserva = req.query.idReserva
+  
+      await this.reservaService.updateEstado(id, idReserva, "CONFIRMADA")
+
+      res.status(200)
+    } catch(error) {
+      next(error)
     }
   }
 }

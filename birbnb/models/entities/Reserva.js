@@ -11,22 +11,39 @@ export class Reserva {
     this.estado = EstadoReserva.PENDIENTE;
   }
 
-  notificar(alojamiento) {
-    const notificacion = FactoryNotificacion.crearSegunReserva(reserva);
-    alojamiento.anfitrion.recibirNotificacion(notificacion);
-    return alojamiento.anfitrion;
+  notificar() {
+    const notificacion = FactoryNotificacion.crearSegunReserva(this);
+    notificacion.nro = this.alojamiento.anfitrion.notificaciones.length + 1
+    this.alojamiento.anfitrion.recibirNotificacion(notificacion);
+    return this.alojamiento.anfitrion;
   }
 
-  notificarActualizacion(alojamiento) {
+  notificarActualizacion() {
+    const notificacion = FactoryNotificacion.crearActualizacion(this);
+    this.alojamiento.anfitrion.recibirNotificacion(notificacion);
+    return this.alojamiento.anfitrion;
   }
 
-  actualizarEstado(nuevoEstado, motivo=null) {
-    this.estado = nuevoEstado;
+  notificarCambioEstado(nuevoEstado, motivo=null) {
+    this.estado = nuevoEstado
 
-    if(nuevoEstado == EstadoReserva.CANCELADA) {
-      return FactoryNotificacion.crearCancelacion(this, motivo)
-    } else if(nuevoEstado == EstadoReserva.CONFIRMADA) {
-      return FactoryNotificacion.crearConfirmacion(this)
+    const notificacion = null
+    if(nuevoEstado === EstadoReserva.CANCELADA) {
+
+      notificacion = FactoryNotificacion.crearCancelacion(this, motivo)
+      this.alojamiento.anfitrion.recibirNotificacion(notificacion)
+      return this.alojamiento.anfitrion
+
+    } else if(nuevoEstado === EstadoReserva.CONFIRMADA) {
+
+      notificacion =  FactoryNotificacion.crearConfirmacion(this)
+      this.huespedReservador.recibirNotificacion(notificacion)
+      return this.huespedReservador
+
+    } else {
+      return null
     }
+    
+    
   }
 }

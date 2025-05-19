@@ -1,6 +1,7 @@
 export class HuespedController {
-  constructor(huespedService) {
-    this.huespedService = huespedService;
+  constructor(huespedService, reservaService) {
+    this.huespedService = huespedService
+    this.reservaService = reservaService
   }
 
   async findAll(req, res, next) {
@@ -46,6 +47,32 @@ export class HuespedController {
       res.json(actualizado);
     } catch (error) {
       next(error);
+    }
+  }
+
+  async updateReserva(req, res, next) {
+    try {
+      const id = req.query
+      const reservaModif = req.body
+
+      const nuevaReserva = await this.reservaService.update(reservaModif, id)
+
+      res.json(nuevaReserva)
+    } catch(error) {
+      next(error)
+    }
+  }
+
+  async cancelReserva(req, res, next) {
+    try {
+      const id = req.query.id
+      const idReserva = req.query.idReserva
+  
+      await this.reservaService.updateEstado(id, idReserva, "CANCELADA")
+
+      res.status(200)
+    } catch(error) {
+      next(error)
     }
   }
 }

@@ -20,5 +20,13 @@ export default function huespedRoutes(getController) {
         getController(HuespedController).update(req, res, next)
     )
 
+    router.put("/:id/reserva", (req, res, next) =>
+        getController(HuespedController).updateReserva(req, res, next)
+    )
+
+    router.put("/:id/cancelar/:idReserva", (req, res, next) =>
+        getController(HuespedController).cancelReserva(req, res, next)
+    )
+
     return router
 }

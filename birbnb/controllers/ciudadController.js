@@ -6,7 +6,7 @@ export class CiudadController {
     async findAll(req, res, next) {
         try {
             const { page, limit } = req.query 
-            const ciudades = this.ciudadService.findAll({ page, limit })
+            const ciudades = await this.ciudadService.findAll({ page, limit })
             res.json(ciudades)
 
         } catch(error) {
@@ -17,7 +17,7 @@ export class CiudadController {
     async create(req, res, next) {
         try {
             const ciudad = req.body
-            const nuevo = this.ciudadService.create(ciudad)
+            const nuevo = await this.ciudadService.create(ciudad)
             
             res.status(201).json(nuevo);
         } catch(error) {
