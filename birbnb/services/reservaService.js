@@ -1,10 +1,12 @@
 import { NotFoundError, ValidationError } from "../errors/AppError.js";
+import { FactoryNotificacion } from "../models/entities/FactorYNotificacion.js";
 import { Reserva } from "../models/entities/Reserva.js";
 
 export class ReservaService {
-    constructor(reservaRepository, huespedRepository) {
+    constructor(reservaRepository, huespedRepository, anfitrionRepository) {
         this.reservaRepository = reservaRepository
         this.huespedRepository = huespedRepository
+        this.anfitrionRepository = anfitrionRepository
     }
 
     async findAll({page = 1, limit = 10}) {
@@ -50,14 +52,56 @@ export class ReservaService {
         const objectFechas = new RangoFechas(fechas.fechaInicio, fechas.fechaFin)
         const fechaActual = new Date()
 
-        const nuevaReserva = new Reserva(fechaActual, huesped, cantHuespedes, alojamientoObject, objectFechas)
+        if (!alojamiento.puedenAlojarse(cantHuespedes)) {
+            throw new ValidationError("Cantidad de huéspedes supera la capacidad")
+        }
 
+        if (!alojamiento.estasDisponibleEn(rangoFechas)) {
+            throw new ValidationError("El alojamiento no está disponible en las fechas indicadas")
+        }
+        
+        
+        const nuevaReserva = new Reserva(fechaActual, huesped, cantHuespedes, alojamientoObject, objectFechas)
+        
+        const anfitrionActualizado = nuevaReserva.notificar(alojamiento)
+
+        this.anfitrionRepository.save(anfitrionActualizado)
         this.reservaRepository.save(nuevaReserva)
         return this.toDTO(nuevaReserva)
     }
 
     async update(reserva) {
-        // TODO
+        const {idReserva, cantHuespedes, fechas} = reserva
+        if(!idReserva || !cantHuespedes || !fechas) {
+            throw new ValidationError("Faltan datos obligatorios")
+        }
+
+        const reservaExistente = this.reservaRepository.findById(idReserva)
+        if(!reservaExistente) {
+            throw new NotFoundError("Reserva no existente")
+        }
+
+        const alojamiento = reserva.alojamiento
+
+        const objectFechas = new RangoFechas(fechas.fechaInicio, fechas.fechaFin)
+        const fechaActual = new Date()
+        
+        if (!alojamiento.puedenAlojarse(cantHuespedes)) {
+            throw new ValidationError("Cantidad de huéspedes supera la capacidad")
+        }
+        
+        if (!alojamiento.estasDisponibleEn(objectFechas)) {
+            throw new ValidationError("El alojamiento no está disponible en las fechas indicadas")
+        }
+        
+        const anfitrionActualizado = reservaExistente.notificar(alojamiento)
+        this.anfitrionRepository.save(anfitrionActualizado)
+        reservaExistente.fechaAlta = fechaActual
+        reservaExistente.cantHuespedes = cantHuespedes
+        reservaExistente.rangoFecha = objectFechas
+
+        this.reservaRepository.save(reservaExistente)
+        return this.toDTO(reservaExistente)
     }
 
     async delete(id) {

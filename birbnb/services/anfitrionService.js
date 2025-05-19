@@ -100,7 +100,12 @@ export class AnfitrionService {
             id: anfitrion.id.toString(),
             nombre: anfitrion.nombre,
             email: anfitrion.email,
-            notificaciones: anfitrion.notificaciones ?? []           
+            notificaciones: anfitrion.notificaciones.map(notificacion => ({
+                mensaje: notificacion.mensaje,
+                fechaDeAlta: notificacion.fechaDeAlta, 
+                leida: notificacion.leida,
+                fechaLeida: notificacion.fechaLeida
+            }))
         }
     }
 }

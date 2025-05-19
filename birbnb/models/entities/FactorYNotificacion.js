@@ -20,4 +20,9 @@ export class FactoryNotificacion {
     const mensaje = `El huésped ${reserva.huespedReservador.nombre} canceló su reserva en ${reserva.alojamiento.nombre}. Motivo: ${motivo}`;
     return new Notificacion(mensaje);
   }
+
+  static crearActualizacion(reserva) {
+    const mensaje = `Tu reserva en ${reserva.alojamiento.nombre} a sido modificada`
+    return new Notificacion(mensaje)
+  }
 }

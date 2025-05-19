@@ -11,15 +11,13 @@ export class Reserva {
     this.estado = EstadoReserva.PENDIENTE;
   }
 
-  // No tendria que estar aca
-  static reservar(alojamiento, huesped, cantHuespedes, rangoFechas) {
-    if (!alojamiento.puedenAlojarse(cantHuespedes)) throw new Error("Cantidad de huéspedes supera la capacidad");
-    if (!alojamiento.estasDisponibleEn(rangoFechas)) throw new Error("El alojamiento no está disponible en las fechas indicadas");
-    const reserva = new Reserva(new Date(), huesped, cantHuespedes, alojamiento, rangoFechas);
-    alojamiento.reservas.push(reserva);
+  notificar(alojamiento) {
     const notificacion = FactoryNotificacion.crearSegunReserva(reserva);
     alojamiento.anfitrion.recibirNotificacion(notificacion);
-    return reserva;
+    return alojamiento.anfitrion;
+  }
+
+  notificarActualizacion(alojamiento) {
   }
 
   actualizarEstado(nuevoEstado, motivo=null) {
