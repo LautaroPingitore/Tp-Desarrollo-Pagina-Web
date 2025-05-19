@@ -1,5 +1,6 @@
 import { Huesped } from "../models/entities/Huesped.js"
-import { ConflictError, NotFoundError } from "../errors/AppError.js"
+import { ValidationError, ConflictError, NotFoundError } from "../errors/AppError.js"
+
 
 export class HuespedService {
     constructor(huespedRepository) {
