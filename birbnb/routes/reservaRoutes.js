@@ -4,7 +4,7 @@ import { ReservaController } from "../controllers/reservaController.js";
 export default function reservaRoutes(getController) {
   const router = express.Router()
 
-  router.post("/reservas", (req, res, next) => {
+  router.post("/reservar", (req, res, next) => {
     getController(ReservaController).create(req, res, next)
   })
 

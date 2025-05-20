@@ -1,7 +1,7 @@
 import { Notificacion } from './Notificacion.js';
 
 export class FactoryNotificacion {
-  static crearSegunReserva(reserva, motivo = null) {
+  static crearSegunReserva(reserva) {
     const alojamiento = reserva.alojamiento;
     const huesped = reserva.huespedReservador;
     const mensaje = `Reserva realizada por ${huesped.nombre} del ${reserva.rangoFechas.fechaInicio.toDateString()} al ${reserva.rangoFechas.fechaFin.toDateString()} en ${alojamiento.nombre}`;

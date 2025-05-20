@@ -25,22 +25,22 @@ const reservaRepository ={
         [
             {
                 id: 0,
-                reservador: {nombre: "Pepita", email: "pepita@example.com"},
+                reservador: "Pepita",
                 cantHuespedes: 2,
                 alojamiento: {nombre : "Casa de playa"},
                 rangoFechas: {
-                    fechaInicio: new Date("2023-10-01"),
-                    fechaFin: new Date("2023-10-05")
+                    fechaInicio: new Date("2023/10/01"),
+                    fechaFin: new Date("2023/10/05")
                 }
             },
             {
                 id: 1,
-                reservador: {nombre: "Juanito", email: "juanito@example.com"},
+                reservador: "Juanito",
                 cantHuespedes: 4,
-                alojamiento: {nombre: "Cabaña en la montaña"},
+                alojamiento: "Cabaña en la montaña",
                 rangoFechas: {
-                    fechaInicio: new Date("2023-11-01"),
-                    fechaFin: new Date("2023-11-05")
+                    fechaInicio: new Date("2023/11/01"),
+                    fechaFin: new Date("2023/11/05")
                 }
             }
         ]
@@ -70,12 +70,12 @@ describe("GET /reservas", () => {
         reservaRepository.findByPage = jest.fn().mockResolvedValue([
             {
                 id: 0,
-                reservador: {nombre: "Pepita", email: "pepita@example.com"},
+                reservador: "Pepita",
                 cantHuespedes: 2,
-                alojamiento: {nombre: "Casa de playa"},
+                alojamiento: "Casa de playa",
                 rangoFechas: {
-                    fechaInicio: new Date("2023-10-01"),
-                    fechaFin: new Date("2023-10-05")
+                    fechaInicio: new Date("2023/10/01"),
+                    fechaFin: new Date("2023/10/05")
                 }
             }
         ])
@@ -94,12 +94,12 @@ describe("POST /reservas", () => {
     test("Debe retornar un estado 201 y la reserva creada", async () => {
 
         const nuevaReserva = {
-            reservador: {nombre: "Pepita", email: "pepita@example.com"},
+            reservador: "Pepita",
             cantHuespedes: 2,
-            alojamiento: {nombre: "Casa de playa"},
+            alojamiento: "Casa de playa",
             rangoFechas: {
-                fechaInicio: new Date("2023-10-01"),
-                fechaFin: new Date("2023-10-05")
+                fechaInicio: new Date("2023/10/01"),
+                fechaFin: new Date("2023/10/05")
             }
         }
 

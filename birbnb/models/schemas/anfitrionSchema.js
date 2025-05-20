@@ -32,19 +32,9 @@ const anfitrionSchema = new mongoose.Schema({
             maxlength: 100
         },
 
-        fecha: {
-            type: String,
-            required: true,
-            // DD/MM/YYYY
-            length: 10,
-            validate: {
-                validator: function(v) {
-                    v.split("/").length == 3 &&
-                    v[3].length == 4
-                },
-                message: "Las fechas deben tener formato DD/MM/YYYY"
-            },
-            trim: true
+        fechaAlta: {
+            type: Date,
+            required: true
         },
 
         leida: {
@@ -53,18 +43,7 @@ const anfitrionSchema = new mongoose.Schema({
         },
 
         fechaLeida: {
-            type: String,
-            required: true,
-            // DD/MM/YYYY
-            length: 10,
-            validate: {
-                validator: function(v) {
-                    v.split("/").length == 3 &&
-                    v[3].length == 4
-                },
-                message: "Las fechas deben tener formato DD/MM/YYYY"
-            },
-            trim: true
+            type: Date
         }
     }]
 })

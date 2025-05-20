@@ -2,6 +2,9 @@ import { NotFoundError, ValidationError } from "../errors/AppError.js";
 import { RangoFechas } from "../models/entities/RangoFechas.js"
 import { Reserva } from "../models/entities/Reserva.js";
 import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat.js";
+
+dayjs.extend(customParseFormat)
 
 export class ReservaService {
     constructor(reservaRepository, alojamientoRepository, huespedRepository, anfitrionRepository) {
@@ -42,7 +45,7 @@ export class ReservaService {
             throw new ValidationError("Faltan datos obligatorios")
         }
 
-        const huesped = await this.huespedRepository.findByName(reservador.nombre)
+        const huesped = await this.huespedRepository.findByName(reservador)
         if(!huesped) {
             throw new NotFoundError("Huesped no existente")
         }
@@ -52,9 +55,17 @@ export class ReservaService {
             throw new NotFoundError("Alojamiento no existente")
         }
 
+        const parsearFecha = (fechaStr, formato) => {
+            const fecha = dayjs(fechaStr, formato, true); // true = modo estricto
+            if (!fecha.isValid()) {
+                throw new ValidationError(`Fecha inválida: ${fechaStr}. Formato requerido: ${formato}`);
+            }
+            return fecha.toDate();
+        };
+
         const objectFechas = new RangoFechas(
-            dayjs(rangoFechas.fechaInicio, 'DD/MM/YYYY').toDate(),
-            dayjs(rangoFechas.fechaFin, 'DD/MM/YYYY').toDate()
+            parsearFecha(rangoFechas.fechaInicio, "DD/MM/YYYY"),
+            parsearFecha(rangoFechas.fechaFin, "DD/MM/YYYY")
         )
 
         const fechaActual = new Date()
@@ -138,8 +149,8 @@ export class ReservaService {
         const alojamiento = reserva.alojamiento
 
         const objectFechas = new RangoFechas(
-            dayjs(rangoFechas.fechaInicio, "DD-MM-YYYY"),
-            dayjs(rangoFechas.fechaFin, "DD-MM-YYYY")
+            dayjs(rangoFechas.fechaInicio, "DD/MM/YYYY"),
+            dayjs(rangoFechas.fechaFin, "DD/MM/YYYY")
         )
         
         if (!alojamiento.puedenAlojarse(cantHuespedes)) {
@@ -169,16 +180,15 @@ export class ReservaService {
     }
 
     toDTO(reserva) {
-        console.log(reserva);
-        const fechaInicio = dayjs(reserva.rangoFechas.fechaInicio).format("DD-MM-YYYY");
-        const fechaFin = dayjs(reserva.rangoFechas.fechaFin).format("DD-MM-YYYY");
+        const fechaInicio = dayjs(reserva.rangoFechas.fechaInicio).format("DD/MM/YYYY");
+        const fechaFin = dayjs(reserva.rangoFechas.fechaFin).format("DD/MM/YYYY");
 
         return {
             id: reserva.id,
             fechaAlta: reserva.fechaAlta,
             huespedReservador: {
-                nombre: reserva.reservador.nombre,
-                email: reserva.reservador.email
+                nombre: reserva.huespedReservador.nombre,
+                email: reserva.huespedReservador.email
             },
             cantHuespedes: reserva.cantHuespedes,
             alojamiento: reserva.alojamiento.nombre,

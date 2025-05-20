@@ -13,9 +13,10 @@ export class Reserva {
 
   notificar() {
     const notificacion = FactoryNotificacion.crearSegunReserva(this);
-    notificacion.nro = this.alojamiento.anfitrion.notificaciones.length + 1
-    this.alojamiento.anfitrion.recibirNotificacion(notificacion);
-    return this.alojamiento.anfitrion;
+    const anfitrion = this.alojamiento.anfitrion
+    notificacion.nro = anfitrion.notificaciones.length + 1
+    anfitrion.recibirNotificacion(notificacion);
+    return anfitrion;
   }
 
   notificarActualizacion() {
