@@ -36,12 +36,13 @@ export class ReservaService {
     }
 
     async create(reserva) {
-        const { reservador, cantHuespedes, alojamiento, fechas } = reserva
-        if(!reservador || !cantHuespedes || !alojamiento || !fechas) {
+        const { reservador, cantHuespedes, alojamiento, rangoFechas } = reserva
+
+        if(!reservador || !cantHuespedes || !alojamiento || !rangoFechas) {
             throw new ValidationError("Faltan datos obligatorios")
         }
 
-        const huesped = await this.huespedRepository.findByName(reservador)
+        const huesped = await this.huespedRepository.findByName(reservador.nombre)
         if(!huesped) {
             throw new NotFoundError("Huesped no existente")
         }
@@ -52,8 +53,8 @@ export class ReservaService {
         }
 
         const objectFechas = new RangoFechas(
-            dayjs(fechas.fechaInicio, 'DD/MM/YYYY').toDate(),
-            dayjs(fechas.fechaFin, 'DD/MM/YYYY').toDate()
+            dayjs(rangoFechas.fechaInicio, 'DD/MM/YYYY').toDate(),
+            dayjs(rangoFechas.fechaFin, 'DD/MM/YYYY').toDate()
         )
 
         const fechaActual = new Date()
@@ -116,8 +117,8 @@ export class ReservaService {
     }
 
     async update(reserva, idHuesped) {
-        const {idReserva, cantHuespedes, fechas} = reserva
-        if(!idReserva || !cantHuespedes || !fechas) {
+        const {idReserva, cantHuespedes, rangoFechas} = reserva
+        if(!idReserva || !cantHuespedes || !rangoFechas) {
             throw new ValidationError("Faltan datos obligatorios")
         }
 
@@ -137,8 +138,8 @@ export class ReservaService {
         const alojamiento = reserva.alojamiento
 
         const objectFechas = new RangoFechas(
-            dayjs(fechas.fechaInicio, 'DD/MM/YYYY'),
-            dayjs(fechas.fechaFin, 'DD/MM/YYYY')
+            dayjs(rangoFechas.fechaInicio, "DD-MM-YYYY"),
+            dayjs(rangoFechas.fechaFin, "DD-MM-YYYY")
         )
         
         if (!alojamiento.puedenAlojarse(cantHuespedes)) {
@@ -153,7 +154,7 @@ export class ReservaService {
         await this.anfitrionRepository.save(anfitrionActualizado)
 
         reservaExistente.cantHuespedes = cantHuespedes
-        reservaExistente.rangoFecha = objectFechas
+        reservaExistente.rangoFechas = objectFechas
 
         await this.reservaRepository.save(reservaExistente)
         return this.toDTO(reservaExistente)
@@ -168,20 +169,24 @@ export class ReservaService {
     }
 
     toDTO(reserva) {
+        console.log(reserva);
+        const fechaInicio = dayjs(reserva.rangoFechas.fechaInicio).format("DD-MM-YYYY");
+        const fechaFin = dayjs(reserva.rangoFechas.fechaFin).format("DD-MM-YYYY");
+
         return {
             id: reserva.id,
             fechaAlta: reserva.fechaAlta,
             huespedReservador: {
-                nombre: reserva.huespedReservador.nombre,
-                email: reserva.huespedReservador.email
+                nombre: reserva.reservador.nombre,
+                email: reserva.reservador.email
             },
             cantHuespedes: reserva.cantHuespedes,
             alojamiento: reserva.alojamiento.nombre,
-            fechas: {
-                fechaInicio: reserva.rangoFecha.fechaInicio,
-                fechaFin: reserva.rangoFecha.fechaFin
+            rangoFechas: {
+                fechaInicio: fechaInicio,
+                fechaFin: fechaFin
             },
-            estado: reserva.EstadoReserva
+            estado: reserva.estado
         }
     }
 }

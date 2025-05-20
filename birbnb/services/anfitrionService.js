@@ -95,17 +95,17 @@ export class AnfitrionService {
         return this.toDTO(actualizado)
     }
 
-    toDTO(anfitrion) {
-        return {
+        toDTO(anfitrion) {
+    return {
             id: anfitrion.id.toString(),
             nombre: anfitrion.nombre,
             email: anfitrion.email,
-            notificaciones: anfitrion.notificaciones.map(notificacion => ({
-                mensaje: notificacion.mensaje,
-                fechaDeAlta: notificacion.fechaDeAlta, 
-                leida: notificacion.leida,
-                fechaLeida: notificacion.fechaLeida
-            }))
+            notificaciones: (anfitrion.notificaciones || []).map(notificacion => ({
+            mensaje: notificacion.mensaje,
+            fechaDeAlta: notificacion.fechaDeAlta, 
+            leida: notificacion.leida,
+            fechaLeida: notificacion.fechaLeida
+         }))
         }
     }
 }

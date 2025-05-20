@@ -1,41 +1,46 @@
-import {reservaController as ReservaControllerClass} from '../../src/controllers/reserva.controller.js';
-import { Reserva } from '../../src/models/reserva.js';
-import reservaRoute from '../../src/routes/reserva.route.js';
+import { ReservaController } from "../../birbnb/controllers/reservaController.js";
+import { ReservaService } from "../../birbnb/services/reservaService.js";
+import reservaRoutes from "../../birbnb/routes/reservaRoutes.js";
 import { buildTestServer } from "./utils/server.js";
 import { describe, expect, jest, test } from "@jest/globals";
-import request from 'supertest';
-import express from 'express';
-import { errorHandler } from '../../birbnb/middlewares/errorHandler.js';
+import request from "supertest";
+import express from "express";
+import { Reserva } from "../../birbnb/models/entities/Reserva.js";
+import { errorHandler } from "../../birbnb/middlewares/errorHandler.js";
+import { RangoFechas } from "../../birbnb/models/entities/RangoFechas.js";
+import { Alojamiento } from "../../birbnb/models/entities/Alojamiento.js";
 
 const app = express()
 const server = buildTestServer(app)
 
-server.addRoute(reservaRoute)
+server.addRoute(reservaRoutes)
 server.configureRoutes()
 
 app.use(errorHandler)
 
 const reservaRepository ={
+    countAll: jest.fn().mockResolvedValue(2),
+    findByName: jest.fn().mockResolvedValue(null), 
     findByPage: jest.fn().mockResolvedValue(
         [
             {
                 id: 0,
-                reservador: "Pepita",
+                reservador: {nombre: "Pepita", email: "pepita@example.com"},
                 cantHuespedes: 2,
-                alojamiento: "Casa de playa",
-                fechas: {
-                    fechaInicio: "2023-10-01",
-                    fechaFin: "2023-10-05"
+                alojamiento: {nombre : "Casa de playa"},
+                rangoFechas: {
+                    fechaInicio: new Date("2023-10-01"),
+                    fechaFin: new Date("2023-10-05")
                 }
             },
             {
                 id: 1,
-                reservador: "Juanito",
+                reservador: {nombre: "Juanito", email: "juanito@example.com"},
                 cantHuespedes: 4,
-                alojamiento: "Cabaña en la montaña",
-                fechas: {
-                    fechaInicio: "2023-11-01",
-                    fechaFin: "2023-11-05"
+                alojamiento: {nombre: "Cabaña en la montaña"},
+                rangoFechas: {
+                    fechaInicio: new Date("2023-11-01"),
+                    fechaFin: new Date("2023-11-05")
                 }
             }
         ]
@@ -43,10 +48,10 @@ const reservaRepository ={
     countAll: jest.fn().mockResolvedValue(2)
 }
 
-const reservaService = new Reserva(reservaRepository)
-const reservaController = new reservaController(reservaService)
+const reservaService = new ReservaService(reservaRepository)
+const reservaController = new ReservaController(reservaService)
 
-server.setController(reservaController, reservaController)
+server.setController(ReservaController, reservaController)
 
 describe("GET /reservas", () => {
     test("Debe retornar un estado 200 y 2 reservas", async () => {
@@ -61,15 +66,16 @@ describe("GET /reservas", () => {
     })
 
     test("Debe retornar un estado 200 y una reserva por pagina", async () => {
+        reservaRepository.countAll = jest.fn().mockResolvedValue(1);
         reservaRepository.findByPage = jest.fn().mockResolvedValue([
             {
                 id: 0,
-                reservador: "Pepita",
+                reservador: {nombre: "Pepita", email: "pepita@example.com"},
                 cantHuespedes: 2,
-                alojamiento: "Casa de playa",
-                fechas: {
-                    fechaInicio: "2023-10-01",
-                    fechaFin: "2023-10-05"
+                alojamiento: {nombre: "Casa de playa"},
+                rangoFechas: {
+                    fechaInicio: new Date("2023-10-01"),
+                    fechaFin: new Date("2023-10-05")
                 }
             }
         ])
@@ -86,13 +92,14 @@ describe("GET /reservas", () => {
 
 describe("POST /reservas", () => {
     test("Debe retornar un estado 201 y la reserva creada", async () => {
+
         const nuevaReserva = {
-            reservador: "Pepita",
+            reservador: {nombre: "Pepita", email: "pepita@example.com"},
             cantHuespedes: 2,
-            alojamiento: "Casa de playa",
-            fechas: {
-                fechaInicio: "2023-10-01",
-                fechaFin: "2023-10-05"
+            alojamiento: {nombre: "Casa de playa"},
+            rangoFechas: {
+                fechaInicio: new Date("2023-10-01"),
+                fechaFin: new Date("2023-10-05")
             }
         }
 
