@@ -15,5 +15,10 @@ export default function reservaRoutes(getController) {
   router.get("/reservas",(req,res,next) => {
     getController(ReservaController).findAll(req, res, next)
   })
+
+  router.get("/reservas/:id", (req, res, next) => {
+    getController(ReservaController).findByUsuario(req, res, next)
+  })
+
   return router
 }

@@ -74,4 +74,17 @@ export class HuespedController {
       next(error)
     }
   }
+
+  async getNotificaciones(req, res, next) {
+    try {
+      const id = req.query.id
+      const leida = req.query.leida
+
+      const notificaciones = await this.huespedService.getNotificaciones(id, leida)
+
+      res.json(notificaciones)
+    } catch(error) {
+      next(error)
+    }
+  }
 }

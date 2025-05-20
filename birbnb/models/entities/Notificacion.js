@@ -1,6 +1,4 @@
 export class Notificacion {
-  nro
-
   constructor(mensaje) {
     this.mensaje = mensaje;
     this.fechaAlta = new Date();

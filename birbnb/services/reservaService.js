@@ -38,6 +38,31 @@ export class ReservaService {
         return reserva ? this.toDTO(reserva) : null;
     }
 
+    async findByUsuario({page = 1, limit = 10, id}) {
+
+        const pageNum = Math.max(Number(page), 1)
+        const limitNum = Math.min(Math.max(Number(limit), 1), 100)
+
+        const huesped = await this.huespedRepository.findById(id)
+        if(!huesped) {
+            throw new NotFoundError("Huesped no existente")
+        }
+
+        const reservas = await this.reservaRepository.findByUsuario(pageNum, limit, id)
+
+        const total = await this.reservaRepository.countAll()
+        const total_pages = Math.ceil(total / limitNum);
+        const data = reservas.map(r => this.toDTO(r))
+
+        return {
+            page: pageNum,
+            per_page: limitNum,
+            total: total,
+            total_pages: total_pages,
+            data: data
+        }
+    }
+
     async create(reserva) {
         const { reservador, cantHuespedes, alojamiento, rangoFechas } = reserva
 
@@ -107,6 +132,7 @@ export class ReservaService {
 
             const huespedActualizado = reserva.notificarCambioEstado(EstadoReserva.CONFIRMADA)
             await this.huespedRepository.save(huespedActualizado)
+            await this.reservaRepository.save(reserva)
         
         } else if(nuevoEstado == "CANCELADA") {
             const huesped = await this.huespedRepository.findById(idUsuario)
@@ -117,10 +143,15 @@ export class ReservaService {
                 throw new ValidationError("Huesped pasado no corresponde al de la reserva")
             }
 
-            // TODO: Verificar que la fecha de la reserva sea despues de la fecha actual
+            const fechaActual = new Date()
+            if(reserva.rangoFechas.fechaInicio < fechaActual) {
+                throw new ValidationError("No se puede cancelar luego de pasada la fecha inicio")
+            }
             
             const anfitrionActualizado = reserva.notificarCambioEstado(EstadoReserva.CANCELADA)
             await this.anfitrionRepository.save(anfitrionActualizado)
+            await this.reservaRepository.save(reserva)
+
         } else {
             throw new ValidationError(`Estado ${nuevoEstado} desconocido`)
         }

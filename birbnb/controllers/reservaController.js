@@ -23,5 +23,17 @@ export class ReservaController {
             next(error)
         }
     }
+
+    async findByUsuario(req, res, next) {
+        try {
+            const { page, limit, id} = req.query
+
+            const reservas = await this.reservaService.findByUsuario({page, limit, id})
+            
+            res.json(reservas)
+        } catch(error) {
+            next(error)
+        }
+    }
 }
 

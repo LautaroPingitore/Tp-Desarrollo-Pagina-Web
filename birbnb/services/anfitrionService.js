@@ -95,17 +95,59 @@ export class AnfitrionService {
         return this.toDTO(actualizado)
     }
 
-        toDTO(anfitrion) {
-    return {
+    async getNotificaciones(id, leida) {
+        const huesped = await this.huespedRepository.findById(id)
+        if(!huesped) {
+            throw new NotFoundError(`Huesped con id ${id} no encontrado`)
+        }
+
+        leida = leida.toLowerCase()
+        const notificaciones = huesped.notificaciones;
+        if(leida == "true") {
+            return notificaciones.filter(n => n.leida).map(n => this.notificacionToDTO(n))
+        } else if(leida == "false") {
+            return notificaciones.filter(n => !n.leida).map(n => this.notificacionToDTO(n))
+        } else {
+            throw new ValidationError(`${leida} no corresponde a true o false`)
+        }
+    }
+
+    async leerNotificacion(idUsuario, idNotificacion) {
+        const huesped = await this.huespedRepository.findById(idUsuario)
+        if(!huesped) {
+            throw new NotFoundError(`Huesped con id ${id} no encontrado`)
+        }
+
+        const index = huesped.notificaciones.findIndex(n => n.id == idNotificacion)
+        if(index == -1) {
+            throw new NotFoundError(`Notificacion con ${idNotificacion} no encontrada`)
+        }
+        
+        const notificacion = huesped.notificaciones[index]
+        notificacion.leida = true
+        notificacion.fechaLeida = new Date()
+        huesped.notificaciones[index] = notificacion
+
+        await this.huespedRepository.save(huesped)
+
+        return this.notificacionToDTO(notificacion)
+    }
+
+    toDTO(anfitrion) {
+        return {
             id: anfitrion.id.toString(),
             nombre: anfitrion.nombre,
             email: anfitrion.email,
-            notificaciones: (anfitrion.notificaciones || []).map(notificacion => ({
+            notificaciones: (anfitrion.notificaciones || []).map(n => this.notificacionToDTO(n))
+        }
+    }
+
+    notificacionToDTO(notificacion) {
+        return {
+            id: notificacion.id,
             mensaje: notificacion.mensaje,
-            fechaDeAlta: notificacion.fechaDeAlta, 
-            leida: notificacion.leida,
+            fechaAlta: notificacion.fechaAlta,
             fechaLeida: notificacion.fechaLeida
-         }))
         }
     }
 }

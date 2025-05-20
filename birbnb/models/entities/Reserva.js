@@ -14,7 +14,6 @@ export class Reserva {
   notificar() {
     const notificacion = FactoryNotificacion.crearSegunReserva(this);
     const anfitrion = this.alojamiento.anfitrion
-    notificacion.nro = anfitrion.notificaciones.length + 1
     anfitrion.recibirNotificacion(notificacion);
     return anfitrion;
   }
@@ -44,7 +43,5 @@ export class Reserva {
     } else {
       return null
     }
-    
-    
   }
 }

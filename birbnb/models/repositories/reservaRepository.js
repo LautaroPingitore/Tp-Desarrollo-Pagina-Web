@@ -104,7 +104,7 @@ export class ReservaRepository {
     }
 
     async findByAlojamiento(alojamiento) {
-        return await this.model.find({alojamiento})
+        return await this.model.find({ alojamiento })
             .populate('huesped')
             .populate({
                 path: 'alojamiento',
@@ -117,4 +117,23 @@ export class ReservaRepository {
                 ]
             })
     }
+
+    async findByUsuario(pageNum, limitNum, huespedReservador ) {
+        const skip = (pageNum - 1) * limitNum
+        return await this.model.find({ huespedReservador })
+            .skip(skip)
+            .limit(limitNum)
+            .populate('huesped')
+            .populate({
+                path: 'alojamiento',
+                populate: [
+                    { path: 'anfitrion' },
+                    {
+                        path: 'direccion.ciudad',
+                        populate: { path: 'pais' }
+                    }
+                ]
+            })
+    }
+
 }
