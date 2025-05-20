@@ -1,4 +1,3 @@
-import { populate } from "dotenv"
 import { ReservaModel } from "../schemas/reservaSchema.js"
 
 export class ReservaRepository {
@@ -91,6 +90,21 @@ export class ReservaRepository {
 
     async findById(id) {
         return await this.model.findById(id)
+            .populate('huesped')
+            .populate({
+                path: 'alojamiento',
+                populate: [
+                    {path: 'anfitrion'},
+                    {
+                        path: 'direccion.ciudad',
+                        populate: {path: 'pais'}
+                    }
+                ]
+            })
+    }
+
+    async findByAlojamiento(alojamiento) {
+        return await this.model.find({alojamiento})
             .populate('huesped')
             .populate({
                 path: 'alojamiento',

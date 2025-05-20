@@ -1,6 +1,7 @@
 import { NotFoundError, ValidationError } from "../errors/AppError.js";
 import { RangoFechas } from "../models/entities/RangoFechas.js"
 import { Reserva } from "../models/entities/Reserva.js";
+import dayjs from "dayjs";
 
 export class ReservaService {
     constructor(reservaRepository, alojamientoRepository, huespedRepository, anfitrionRepository) {
@@ -50,17 +51,19 @@ export class ReservaService {
             throw new NotFoundError("Alojamiento no existente")
         }
 
-        const objectFechas = new RangoFechas(fechas.fechaInicio, fechas.fechaFin)
+        const objectFechas = new RangoFechas(
+            dayjs(fechas.fechaInicio, 'DD/MM/YYYY').toDate(),
+            dayjs(fechas.fechaFin, 'DD/MM/YYYY').toDate()
+        )
+
         const fechaActual = new Date()
 
         if (!alojamientoObject.puedenAlojarse(cantHuespedes)) {
             throw new ValidationError("Cantidad de huéspedes supera la capacidad")
         }
 
-        // TODO: Buscar las reservas de ese alojamiento y comprobar si se superpones o que el alojamiento conosca sus reservas
-        // const idAlojamiento = this.alojamientoRepository.findId(alojamientoObject.nombre)
-        // const reservasDeAlojamiento = this.reservaRepository.findByAlojamiento(idAlojamiento)
-        if (!alojamientoObject.estasDisponibleEn(objectFechas)) {
+        const reservasDeAlojamiento = await this.reservaRepository.findByAlojamiento(alojamientoObject.id)
+        if (!alojamientoObject.estasDisponibleEn(reservasDeAlojamiento, objectFechas)) {
             throw new ValidationError("El alojamiento no está disponible en las fechas indicadas")
         }
         
@@ -133,7 +136,10 @@ export class ReservaService {
 
         const alojamiento = reserva.alojamiento
 
-        const objectFechas = new RangoFechas(fechas.fechaInicio, fechas.fechaFin)
+        const objectFechas = new RangoFechas(
+            dayjs(fechas.fechaInicio, 'DD/MM/YYYY'),
+            dayjs(fechas.fechaFin, 'DD/MM/YYYY')
+        )
         
         if (!alojamiento.puedenAlojarse(cantHuespedes)) {
             throw new ValidationError("Cantidad de huéspedes supera la capacidad")

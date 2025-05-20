@@ -15,8 +15,8 @@ export class Alojamiento {
     this.fotos = fotos;
   }
 
-  estasDisponibleEn(rangoFecha) {
-    return this.reservas.every(res => res.estado !== EstadoReserva.CONFIRMADA && !res.rangoFechas.seSuperponeCon(rangoFecha));
+  estasDisponibleEn(reservas, rangoFecha) {
+    return reservas.every(res => res.estado !== EstadoReserva.CONFIRMADA && !res.rangoFechas.seSuperponeCon(rangoFecha));
   } 
 
   tuPrecioEstaDentroDe(valorMinimo, valorMaximo) {

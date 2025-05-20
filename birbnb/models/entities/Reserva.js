@@ -2,10 +2,10 @@ import { EstadoReserva } from './enums/EstadoReserva.js';
 import { FactoryNotificacion } from './FactorYNotificacion.js';
 
 export class Reserva {
-  constructor(fechaAlta, huespedReservador, cantHuespedes, alojamiento, rangoFechas) {
+  constructor(fechaAlta, huespedReservador, cantidadHuespedes, alojamiento, rangoFechas) {
     this.fechaAlta = fechaAlta;
     this.huespedReservador = huespedReservador;
-    this.cantHuespedes = cantHuespedes;
+    this.cantidadHuespedes = cantidadHuespedes;
     this.alojamiento = alojamiento;
     this.rangoFechas = rangoFechas;
     this.estado = EstadoReserva.PENDIENTE;
