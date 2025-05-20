@@ -51,10 +51,9 @@ export class AnfitrionController {
 
   async confirmarReserva(req, res, next) {
     try {
-      const id = req.query.id
-      const idReserva = req.query.idReserva
+      const { id, idReserva } = req.params
   
-      await this.reservaService.updateEstado(id, idReserva, "CONFIRMADA")
+      await this.reservaService.modificarEstado(id, idReserva, "CONFIRMADA")
 
       res.status(200)
     } catch(error) {

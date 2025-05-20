@@ -26,7 +26,8 @@ export class ReservaController {
 
     async findByUsuario(req, res, next) {
         try {
-            const { page, limit, id} = req.query
+            const { page, limit } = req.query
+            const {id} = req.params
 
             const reservas = await this.reservaService.findByUsuario({page, limit, id})
             

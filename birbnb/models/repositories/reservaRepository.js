@@ -18,7 +18,7 @@ export class ReservaRepository {
                 { new: true , runValidators: true }
             )
             return await this.model.populate(reservaExistente, [
-                { path: 'huesped'},
+                { path: 'huespedReservador'},
                 {
                     path: 'alojamiento',
                     populate: [
@@ -34,7 +34,7 @@ export class ReservaRepository {
             const nuevaReserva = new this.model(reserva)
             const reservaGuardada = await nuevaReserva.save()
             return await this.model.populate(reservaGuardada, [
-                { path: 'huesped'},
+                { path: 'huespedReservador'},
                 {
                     path: 'alojamiento',
                     populate: [
@@ -59,7 +59,7 @@ export class ReservaRepository {
         const reservas = await this.model.find()
             .skip(skip)
             .limit(limitNum)
-            .populate('huesped')
+            .populate('huespedReservador')
             .populate({
                 path: 'alojamiento',
                 populate: [
@@ -75,7 +75,7 @@ export class ReservaRepository {
 
     async findAll() {
         return await this.model.find()
-            .populate('huesped')
+            .populate('huespedReservador')
             .populate({
                 path: 'alojamiento',
                 populate: [
@@ -90,7 +90,7 @@ export class ReservaRepository {
 
     async findById(id) {
         return await this.model.findById(id)
-            .populate('huesped')
+            .populate('huespedReservador')
             .populate({
                 path: 'alojamiento',
                 populate: [
@@ -105,7 +105,7 @@ export class ReservaRepository {
 
     async findByAlojamiento(alojamiento) {
         return await this.model.find({ alojamiento })
-            .populate('huesped')
+            .populate('huespedReservador')
             .populate({
                 path: 'alojamiento',
                 populate: [
@@ -123,7 +123,7 @@ export class ReservaRepository {
         return await this.model.find({ huespedReservador })
             .skip(skip)
             .limit(limitNum)
-            .populate('huesped')
+            .populate('huespedReservador')
             .populate({
                 path: 'alojamiento',
                 populate: [

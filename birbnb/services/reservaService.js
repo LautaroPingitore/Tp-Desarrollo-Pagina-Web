@@ -118,7 +118,7 @@ export class ReservaService {
 
         const reserva = await this.reservaRepository.findById(idReserva)
         if(!reserva) {
-            throw new NotFoundError("Reserva no existente")
+            throw new NotFoundError(`Reserva ${idReserva} inexistente`)
         }
 
         if(nuevoEstado == "CONFIRMADA") {
