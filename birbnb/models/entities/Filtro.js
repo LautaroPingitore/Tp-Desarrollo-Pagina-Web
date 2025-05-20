@@ -1,12 +1,10 @@
 import { RangoFechas } from "./RangoFechas.js";
 
 export class Filtro {
-    constructor(ciudad=null, pais=null, cantHuespedes=null, fechaInicio=null, fechaFin=null, precioMin=null, precioMax=null, caracteristicas=[]) {
+    constructor(ciudad=null, pais=null, cantHuespedes=null, precioMin=null, precioMax=null, caracteristicas=[]) {
         this.ciudad = ciudad;
         this.pais = pais;
         this.cantHuespedes = cantHuespedes;
-        this.fechaInicio = fechaInicio;
-        this.fechaFin = fechaFin;
         this.precioMin = precioMin;
         this.precioMax = precioMax;
         this.caracteristicas = caracteristicas;
@@ -25,15 +23,6 @@ export class Filtro {
     validarCantidadHuespedes(alojamiento, cantidadHuespedes) {
         if(cantidadHuespedes == null) return true;
         return alojamiento.puedenAlojarse(cantidadHuespedes);
-    }
-
-    validarFechas(alojamiento, fechaInicio, fechaFin) {
-        if(fechaInicio == null) return true;
-        if(fechaFin == null) {
-            fechaFin = new Date();
-        }
-        const rangoFechas = new RangoFechas(fechaInicio, fechaFin)
-        return alojamiento.estasDisponibleEn(rangoFechas);
     }
 
     validarPrecio(alojamiento, precioMin, precioMax) {

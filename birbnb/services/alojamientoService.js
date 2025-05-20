@@ -31,14 +31,6 @@ export class AlojamientoService {
         };
     }
 
-    async findById(id) {
-        let alojamiento = await this.alojamientoRepository.findById(id)
-        if(!alojamiento) {
-            throw new NotFoundError(`Alojamiento con id ${id} no encontrado`)
-        }
-        return this.toDTO(alojamiento)
-    }
-
     async findByFilters(filtro,{page=1,limit=10}) {
         const pageNum = Math.max(Number(page), 1)
         const limitNum = Math.min(Math.max(Number(limit), 1), 100)
@@ -59,6 +51,14 @@ export class AlojamientoService {
             total_pages: total_pages,
             data: data
         };
+    }
+
+    async findById(id) {
+        let alojamiento = await this.alojamientoRepository.findById(id)
+        if(!alojamiento) {
+            throw new NotFoundError(`Alojamiento con id ${id} no encontrado`)
+        }
+        return this.toDTO(alojamiento)
     }
 
     async create(alojamiento) {

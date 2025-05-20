@@ -57,6 +57,46 @@ export class AlojamientoRepository {
         return alojamientos
     }
 
+   async findByFilters(filtro) {
+        
+        const query = {}
+
+        if(filtro.precioMax != null) {
+            query.precioPorNoche = {}
+            query.precioPorNoche.$lte = filtro.precioMax
+        }
+        
+        if(filtro.precioMin != null) {
+            query.precioPorNoche.$gte = filtro.precioMin
+        }
+
+        if(filtro.cantHuespedes != null) {
+            query.cantHuespedesMax = { $gte: filtro.cantHuespedes}
+        }
+
+        if(filtro.caracteristicas && filtro.caracteristicas.length > 0) {
+            query.caracteristicas = { $all: filtro.caracteristicas }
+        }
+
+        const resultadosFiltro1 = await this.model.find(query)
+            .populate('anfitrion')
+            .populate({
+                path: 'direccion.ciudad',
+                populate: {path: 'pais'}
+            })
+
+        return resultadosFiltro1.filter(r => {
+            const ciudad = r.direccion?.ciudad
+            const pais = ciudad?.pais
+
+            const coincideCiudad = filtro.ciudad ? ciudad?.nombre === filtro.ciudad : true
+            const coincidePais = filtro.pais ? pais?.nombre === filtro.pais : true
+
+            return coincideCiudad && coincidePais
+        })
+
+    }
+
     async findById(id) {
         return await this.model.findById(id)
             .populate('anfitrion')
@@ -64,44 +104,6 @@ export class AlojamientoRepository {
                 path: 'direccion.ciudad',
                 populate: {path: 'pais'}
             })
-    }
-
-   async findByFilters(filtro) {
-        
-        const query = {};
-
-        if (filtro.ciudad) {
-            query.filtro.ciudad = { $regex: filtro.ciudad, $options: 'i' };
-        }
-        if (filtro.pais) {
-            query.filtro.pais = { $regex: filtro.pais, $options: 'i' };
-        }
-        if (filtro.cantHuespedes) {
-            query.filtro.cantHuespedes = { $gte: filtro.cantHuespedes };
-        }
-        if (filtro.fechaInicio) {
-            query.filtro.fechaInicio = { $gte: new Date(filtro.fechaInicio) };
-        }
-        if (filtro.fechaFin) {
-            query.filtro.fechaFin = { $lte: new Date(filtro.fechaFin) };
-        }
-        if (filtro.precioMin) {
-            query.filtro.precioMin = { $gte: filtro.precioMin };
-        }
-        if (filtro.precioMax) {
-            query.filtro.precioMax = { $lte: filtro.precioMax };
-        }
-        if (filtro.caracteristicas && filtro.caracteristicas.length > 0) {
-            query.filtro.caracteristicas = { $in: filtro.caracteristicas };
-        }        
-
-        return await this.model.find(query)
-            .populate('anfitrion')
-            .populate({
-                path: 'direccion.ciudad',
-                populate: {path: 'pais'}
-            })
-
     }
 
     async findByName(nombre) {

@@ -8,10 +8,24 @@ export class AlojamientoController {
     // Endpoint alojamientos disponibles
     async findAll(req, res, next){
         try {
-            const { page = 1, limit = 10} = req.query;
-            const { ciudad=null, pais=null, cantidadHuespedes=null, fechaInicio=null, fechaFin=null, precioMin=null, precioMax=null, caracteristicas=[]} = req.body
-            const filtro = new Filtro(ciudad, pais, cantidadHuespedes, fechaInicio, fechaFin, precioMin, precioMax, caracteristicas)
-            const alojamientos = await this.alojamientoService.findByFilter(filtro, {page, limit});
+            const { page = 1, limit = 10} = req.query
+            if(req.body != null) {
+                const { ciudad=null, pais=null, cantidadHuespedes=null, precioMin=null, precioMax=null, caracteristicas=[]} = req.body
+            }
+            
+            const hasFilters = req.body && Object.values(req.body).some(value => value !== null && 
+                value !== undefined 
+                && !(Array.isArray(value) 
+                && value.length === 0
+            ))
+
+            let alojamientos
+            if(hasFilters) {
+                const filtro = new Filtro(ciudad, pais, cantidadHuespedes, precioMin, precioMax, caracteristicas)
+                alojamientos = await this.alojamientoService.findByFilters(filtro, {page, limit});
+            } else {
+                alojamientos = await this.alojamientoService.findAll({ page, limit })
+            }
 
             res.json(alojamientos);
         } catch (error) {
