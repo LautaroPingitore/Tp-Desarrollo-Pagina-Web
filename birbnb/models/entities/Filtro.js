@@ -1,7 +1,7 @@
 import { RangoFechas } from "./RangoFechas.js";
 
 export class Filtro {
-    constructor({ciudad=null, pais=null, cantHuespedes=null, fechaInicio=null, fechaFin=null, precioMin=null, precioMax=null, caracteristicas=null} = {}) {
+    constructor(ciudad=null, pais=null, cantHuespedes=null, fechaInicio=null, fechaFin=null, precioMin=null, precioMax=null, caracteristicas=[]) {
         this.ciudad = ciudad;
         this.pais = pais;
         this.cantHuespedes = cantHuespedes;

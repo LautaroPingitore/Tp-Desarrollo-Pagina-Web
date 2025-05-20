@@ -11,8 +11,6 @@ export default function alojamientoRoutes(getController) {
   router.get("/alojamientos/:id", (req, res, next) => {
     getController(AlojamientoController).findById(req, res, next)
   })
-
-    // TODO: finByFilters
   
   router.post("/alojamientos", (req, res, next) => {
     getController(AlojamientoController).create(req, res, next)

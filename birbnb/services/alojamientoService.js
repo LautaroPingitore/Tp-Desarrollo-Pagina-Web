@@ -81,13 +81,13 @@ export class AlojamientoService {
         let paisExistente = await this.paisRepository.findByName(direccion.ciudad.pais.nombre)
         if(!paisExistente) {
             paisExistente = new Pais(direccion.ciudad.pais.nombre)
-            await this.paisRepository.save(paisExistente)
+            paisExistente = await this.paisRepository.save(paisExistente)
         }
 
         let ciudadExistente = await this.ciudadRepository.findByName(direccion.ciudad.nombre)
         if(!ciudadExistente) {
             ciudadExistente = new Ciudad(direccion.ciudad.nombre, paisExistente)
-            await this.ciudadRepository.save(ciudadExistente)
+            ciudadExistente = await this.ciudadRepository.save(ciudadExistente)
         }
 
         const objectDireccion = new Direccion(direccion.calle, direccion.altura, ciudadExistente)

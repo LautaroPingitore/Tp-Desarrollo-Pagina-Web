@@ -1,3 +1,5 @@
+import { Filtro } from "../models/entities/Filtro.js";
+
 export class AlojamientoController {
     constructor(alojamientoService) {
         this.alojamientoService = alojamientoService;
@@ -7,7 +9,9 @@ export class AlojamientoController {
     async findAll(req, res, next){
         try {
             const { page = 1, limit = 10} = req.query;
-            const alojamientos = await this.alojamientoService.findAll({page, limit});
+            const { ciudad=null, pais=null, cantidadHuespedes=null, fechaInicio=null, fechaFin=null, precioMin=null, precioMax=null, caracteristicas=[]} = req.body
+            const filtro = new Filtro(ciudad, pais, cantidadHuespedes, fechaInicio, fechaFin, precioMin, precioMax, caracteristicas)
+            const alojamientos = await this.alojamientoService.findByFilter(filtro, {page, limit});
 
             res.json(alojamientos);
         } catch (error) {
