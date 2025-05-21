@@ -49,6 +49,19 @@ export class HuespedController {
     }
   }
 
+async marcarLeidaNotificacion(req, res, next) {
+    try {
+      const id = Number(req.params.id);
+      const idNotificacion = Number(req.params.idNotificacion);
+
+      const actualizado = await this.huespedService.updateNotificacionLeida(id, idNotificacion);
+
+      res.json(actualizado);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async updateReserva(req, res, next) {
     try {
       const id = req.query
@@ -62,6 +75,7 @@ export class HuespedController {
     }
   }
 
+ 
   async cancelReserva(req, res, next) {
     try {
       const id = req.query.id

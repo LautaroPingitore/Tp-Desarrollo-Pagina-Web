@@ -83,6 +83,22 @@ export class AnfitrionService {
         return this.toDTO(actualizado)
     }
 
+    async updateNotificacionLeida(id, idNotificacion) {
+        const anfitrion = await this.anfitrionRepository.findById(id)
+        if(!anfitrion) {
+            throw new NotFoundError(`Anfitrion con id ${id} no encontrado`)
+        }
+        const notificacion = anfitrion.notificaciones.find(n => n.id == idNotificacion)
+        if(!notificacion) {
+            throw new NotFoundError(`Notificacion con id ${indexNotificacion} no encontrada`)
+        }
+        notificacion.leida = true
+        notificacion.fechaLeida = new Date()
+        anfitrion.notificaciones[indexNotificacion] = notificacion
+        const actualizado = await this.anfitrionRepository.save(anfitrion)
+        return this.toDTO(actualizado)
+    }
+
     async updateNotificacion(id, notificacion) {
         const anfitrion = await this.anfitrionRepository.findById(id)
         if(!anfitrion) {

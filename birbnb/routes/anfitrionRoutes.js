@@ -28,7 +28,14 @@ export default function anfitrionRoutes(getController) {
         getController(AnfitrionController).confirmarReserva(req, res, next)
     )
 
+    router.put("/anfitrion/:id/notificaciones/:idNotificacion", (req, res, next) =>
+        getController(AnfitrionController).marcarLeidaNotificacion(req, res, next)
+    )
+
     router.get("/anfitrion/:id/notificaciones/:leida", (req, res, next) =>
+            getController(AnfitrionController).getNotificaciones(req, res, next)
+    )
+    router.get("/anfitrion/:id/notificaciones/:noleida", (req, res, next) =>
             getController(AnfitrionController).getNotificaciones(req, res, next)
     )
 

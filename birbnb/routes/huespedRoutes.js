@@ -28,7 +28,15 @@ export default function huespedRoutes(getController) {
         getController(HuespedController).cancelReserva(req, res, next)
     )
 
+    router.put("/huesped/:id/notificaciones/:idNotificacion", (req, res, next) =>
+            getController(AnfitrionController).marcarLeidaNotificacion(req, res, next)
+    )
+
     router.get("huesped/:id/notificaciones/:leida", (req, res, next) =>
+        getController(HuespedController).getNotificaciones(req, res, next)
+    )
+
+    router.get("huesped/:id/notificaciones/:noleida", (req, res, next) =>
         getController(HuespedController).getNotificaciones(req, res, next)
     )
 

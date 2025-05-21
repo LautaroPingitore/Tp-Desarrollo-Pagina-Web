@@ -49,6 +49,19 @@ export class AnfitrionController {
     }
   }
 
+  async marcarLeidaNotificacion(req, res, next) {
+    try {
+      const id = Number(req.params.id);
+      const idNotificacion = Number(req.params.idNotificacion);
+
+      const actualizado = await this.anfitrionService.updateNotificacionLeida(id, idNotificacion);
+
+      res.json(actualizado);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async confirmarReserva(req, res, next) {
     try {
       const { id, idReserva } = req.params
@@ -56,6 +69,30 @@ export class AnfitrionController {
       await this.reservaService.modificarEstado(id, idReserva, "CONFIRMADA")
 
       res.status(200)
+    } catch(error) {
+      next(error)
+    }
+  }
+
+  async rechazarReserva(req, res, next) {
+    try {
+      const { id, idReserva } = req.params
+  
+      await this.reservaService.modificarEstado(id, idReserva, "RECHAZADA")
+
+      res.status(200)
+    } catch(error) {
+      next(error)
+    }
+  }
+
+  
+  async getNotificaciones(req, res, next) {
+    try {
+      const { id , tipoLectura} = req.params
+      const notificaciones = await this.andfitrionService.getNotificaciones(id, tipoLectura)
+
+      res.status(200).json(notificaciones)
     } catch(error) {
       next(error)
     }

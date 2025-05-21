@@ -99,6 +99,23 @@ export class HuespedService {
         return this.toDTO(actualizado)
     }
 
+     async updateNotificacionLeida(id, idNotificacion) {
+          const huesped = await this.huespedRepository.findById(id)
+          if(!huesped) {
+              throw new NotFoundError(`huesped con id ${id} no encontrado`)
+          }
+          const notificacion = huesped.notificaciones.find(n => n.id == idNotificacion)
+          if(!notificacion) {
+              throw new NotFoundError(`Notificacion con id ${indexNotificacion} no encontrada`)
+          }
+          notificacion.leida = true
+          notificacion.fechaLeida = new Date()
+          huesped.notificaciones[indexNotificacion] = notificacion
+          const actualizado = await this.huespedRepository.save(huesped)
+          return this.toDTO(actualizado)
+      }
+
+
     async getNotificaciones(id, leida) {
         const huesped = await this.huespedRepository.findById(id)
         if(!huesped) {
