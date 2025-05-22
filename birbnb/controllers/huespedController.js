@@ -92,9 +92,9 @@ async marcarLeidaNotificacion(req, res, next) {
   async getNotificaciones(req, res, next) {
     try {
       const id = req.query.id
-      const leida = req.query.leida
+      const leida = req.query.tipoLeida
 
-      const notificaciones = await this.huespedService.getNotificaciones(id, leida)
+      const notificaciones = await this.huespedService.getNotificaciones(id, tipoLeida)
 
       res.json(notificaciones)
     } catch(error) {

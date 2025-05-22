@@ -88,13 +88,15 @@ export class AnfitrionService {
         if(!anfitrion) {
             throw new NotFoundError(`Anfitrion con id ${id} no encontrado`)
         }
-        const notificacion = anfitrion.notificaciones.find(n => n.id == idNotificacion)
-        if(!notificacion) {
-            throw new NotFoundError(`Notificacion con id ${indexNotificacion} no encontrada`)
+        const index = anfitrion.notificaciones.findIndex(n => n.id == idNotificacion)
+        if(index == -1) {
+            throw new NotFoundError(`Notificacion con id ${idNotificacion} no encontrada`)
         }
+
+        const notificacion = anfitrion.notificaciones[index]
         notificacion.leida = true
         notificacion.fechaLeida = new Date()
-        anfitrion.notificaciones[indexNotificacion] = notificacion
+        anfitrion.notificaciones[index] = notificacion
         const actualizado = await this.anfitrionRepository.save(anfitrion)
         return this.toDTO(actualizado)
     }

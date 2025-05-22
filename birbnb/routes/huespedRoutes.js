@@ -32,13 +32,11 @@ export default function huespedRoutes(getController) {
             getController(AnfitrionController).marcarLeidaNotificacion(req, res, next)
     )
 
-    router.get("huesped/:id/notificaciones/:leida", (req, res, next) =>
+    router.get("huesped/:id/notificaciones/:tipoleida", (req, res, next) =>
         getController(HuespedController).getNotificaciones(req, res, next)
     )
 
-    router.get("huesped/:id/notificaciones/:noleida", (req, res, next) =>
-        getController(HuespedController).getNotificaciones(req, res, next)
-    )
+   
 
     return router
 }

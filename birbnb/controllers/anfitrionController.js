@@ -89,8 +89,8 @@ export class AnfitrionController {
   
   async getNotificaciones(req, res, next) {
     try {
-      const { id , tipoLectura} = req.params
-      const notificaciones = await this.andfitrionService.getNotificaciones(id, tipoLectura)
+      const { id , tipoLeida} = req.params
+      const notificaciones = await this.andfitrionService.getNotificaciones(id, tipoLeida)
 
       res.status(200).json(notificaciones)
     } catch(error) {

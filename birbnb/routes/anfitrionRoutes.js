@@ -32,12 +32,10 @@ export default function anfitrionRoutes(getController) {
         getController(AnfitrionController).marcarLeidaNotificacion(req, res, next)
     )
 
-    router.get("/anfitrion/:id/notificaciones/:leida", (req, res, next) =>
+    router.get("/anfitrion/:id/notificaciones/:tipoleida", (req, res, next) =>
             getController(AnfitrionController).getNotificaciones(req, res, next)
     )
-    router.get("/anfitrion/:id/notificaciones/:noleida", (req, res, next) =>
-            getController(AnfitrionController).getNotificaciones(req, res, next)
-    )
+    
 
     return router
 }
