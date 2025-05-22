@@ -38,7 +38,7 @@ export class HuespedController {
 
   async update(req, res, next) {
     try {
-      const id = Number(req.params.id);
+      const id = req.params.id;
       const { nombre, email } = req.body;
 
       const actualizado = await this.huespedService.update(id, { nombre, email });
@@ -51,8 +51,7 @@ export class HuespedController {
 
 async marcarLeidaNotificacion(req, res, next) {
     try {
-      const id = Number(req.params.id);
-      const idNotificacion = Number(req.params.idNotificacion);
+      const { id, idNotificacion} = req.params
 
       const actualizado = await this.huespedService.updateNotificacionLeida(id, idNotificacion);
 
@@ -64,8 +63,7 @@ async marcarLeidaNotificacion(req, res, next) {
 
   async updateReserva(req, res, next) {
     try {
-      const id = req.query
-      const reservaModif = req.body
+      const { id, idNotificacion} = req.params
 
       const nuevaReserva = await this.reservaService.update(reservaModif, id)
 
@@ -78,11 +76,12 @@ async marcarLeidaNotificacion(req, res, next) {
  
   async cancelReserva(req, res, next) {
     try {
-      const id = req.query.id
-      const idReserva = req.query.idReserva
-  
-      await this.reservaService.updateEstado(id, idReserva, "CANCELADA")
+      const { id, idNotificacion} = req.params
 
+      const motivo = req.body && req.body.motivo ? req.body.motivo : null;
+  
+      await this.reservaService.modificarEstado(id, idReserva, "CANCELADA", motivo);
+    
       res.status(200)
     } catch(error) {
       next(error)
@@ -91,10 +90,9 @@ async marcarLeidaNotificacion(req, res, next) {
 
   async getNotificaciones(req, res, next) {
     try {
-      const id = req.query.id
-      const leida = req.query.tipoLeida
+      const { id, leida } = req.params
 
-      const notificaciones = await this.huespedService.getNotificaciones(id, tipoLeida)
+      const notificaciones = await this.huespedService.getNotificaciones(id, leida)
 
       res.json(notificaciones)
     } catch(error) {

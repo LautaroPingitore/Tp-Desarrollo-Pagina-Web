@@ -27,7 +27,7 @@ export class Reserva {
   notificarCambioEstado(nuevoEstado, motivo=null) {
     this.estado = nuevoEstado
 
-    const notificacion = null
+    let notificacion = null
     if(nuevoEstado === EstadoReserva.CANCELADA) {
 
       notificacion = FactoryNotificacion.crearCancelacion(this, motivo)

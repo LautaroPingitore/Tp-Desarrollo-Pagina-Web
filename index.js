@@ -4,6 +4,9 @@ dotenv.config();
 import express from "express";
 import { Server } from "./server.js";
 
+import swaggerUi from "swagger-ui-express";
+import YAML from "yamljs";
+
 import routes from "./birbnb/routes/routes.js";
 
 import { CiudadRepository } from "./birbnb/models/repositories/ciudadRepository.js";
@@ -71,6 +74,10 @@ routes.forEach(r => {
 })
 server.configureRoutes();
 
+
+const swaggerDocument = YAML.load("recursos/swagger.yaml")
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 app.use(errorHandler)
 
 server.launch();

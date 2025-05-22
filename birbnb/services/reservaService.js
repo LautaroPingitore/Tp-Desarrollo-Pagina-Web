@@ -3,6 +3,7 @@ import { RangoFechas } from "../models/entities/RangoFechas.js"
 import { Reserva } from "../models/entities/Reserva.js";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat.js";
+import { EstadoReserva } from "../models/entities/enums/EstadoReserva.js";
 
 dayjs.extend(customParseFormat)
 
@@ -113,7 +114,7 @@ export class ReservaService {
         return this.toDTO(nuevaReserva)
     }
 
-    async modificarEstado(idUsuario, idReserva, nuevoEstado) {
+    async modificarEstado(idUsuario, idReserva, nuevoEstado, motivo=null) {
         nuevoEstado = nuevoEstado.toUpperCase()
 
         const reserva = await this.reservaRepository.findById(idReserva)
@@ -122,11 +123,15 @@ export class ReservaService {
         }
 
         if(nuevoEstado == "CONFIRMADA") {
+            if(reserva.estado == EstadoReserva.CONFIRMADA) {
+                throw new ValidationError("Reserva ya confirmada")
+            }
+            
             const anfitrion = await this.anfitrionRepository.findById(idUsuario)
             if(!anfitrion) {
                 throw new NotFoundError("Anfitrion no encontrado")
             }
-            if(anfitrion.nombre !== reserva.alojamiento.aniftrion.nombre) {
+            if(anfitrion.nombre !== reserva.alojamiento.anfitrion.nombre) {
                 throw new ValidationError("Anfitrion pasado no corresponde al del alojamiento")
             }
 
@@ -135,8 +140,12 @@ export class ReservaService {
             await this.reservaRepository.save(reserva)
         
         } else if(nuevoEstado == "CANCELADA") {
+            if(reserva.estado == EstadoReserva.CANCELADA) {
+                throw new ValidationError("Reserva ya cancelada")
+            }
+
             const huesped = await this.huespedRepository.findById(idUsuario)
-            if(!anfitrion) {
+            if(!huesped) {
                 throw new NotFoundError("Huesped no encontrado")
             }
             if(huesped.nombre !== reserva.huespedReservador.nombre) {
@@ -148,14 +157,13 @@ export class ReservaService {
                 throw new ValidationError("No se puede cancelar luego de pasada la fecha inicio")
             }
             
-            const anfitrionActualizado = reserva.notificarCambioEstado(EstadoReserva.CANCELADA)
+            const anfitrionActualizado = reserva.notificarCambioEstado(EstadoReserva.CANCELADA, motivo)
             await this.anfitrionRepository.save(anfitrionActualizado)
             await this.reservaRepository.save(reserva)
 
         } else {
             throw new ValidationError(`Estado ${nuevoEstado} desconocido`)
         }
-        
     }
 
     async update(reserva, idHuesped) {

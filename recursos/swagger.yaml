@@ -1,0 +1,555 @@
+openapi: 3.0.0
+info:
+  title: API de Reservas
+  description: API para gestionar reservas, huéspedes, anfitriones y alojamientos.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+
+paths:
+  /reservar:
+    post:
+      summary: Crear reserva
+      tags: [Reservas]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - reservador
+                - cantHuespedes
+                - alojamiento
+                - rangoFechas
+              properties:
+                reservador:
+                  type: string
+                  example: Santino
+                cantHuespedes:
+                  type: integer
+                  example: 2
+                alojamiento:
+                  type: string
+                  example: La casa de Pepita
+                rangoFechas:
+                  type: object
+                  required:
+                    - fechaInicio
+                    - fechaFin
+                  properties:
+                    fechaInicio:
+                      type: string
+                      example: "22/10/2024"
+                    fechaFin:
+                      type: string
+                      example: "26/10/2024"
+    responses:
+      '201':
+        description: Reserva creada correctamente
+
+  /reserva/update:
+    put:
+      summary: Actualizar una reserva
+      tags: [Reservas]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Reserva actualizada
+        '400':
+          description: Error en la solicitud
+
+  /reservas:
+    get:
+      summary: Obtener todas las reservas
+      tags: [Reservas]
+      responses:
+        '200':
+          description: Lista de reservas
+
+  /reservas/{id}:
+    get:
+      summary: Obtener reservas por usuario
+      tags: [Reservas]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Reservas del usuario
+
+  /huespedes:
+    get:
+      summary: Obtener todos los huéspedes
+      tags: [Huespedes]
+      responses:
+        '200':
+          description: Lista de huéspedes
+
+  /login/huesped:
+    post:
+      summary: Crear huésped (login o registro)
+      tags: [Huespedes]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - nombre
+                - email
+              properties:
+                nombre:
+                  type: string
+                  example: Santino
+                email:
+                  type: string
+                  format: email
+                  example: santinoBouvet@example.com
+      responses:
+        '201':
+          description: Huésped creado
+
+  /huesped/{id}:
+    delete:
+      summary: Eliminar huésped
+      tags: [Huespedes]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Huésped eliminado
+
+    put:
+      summary: Actualizar datos del huésped
+      tags: [Huespedes]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                  example: Luka
+                email:
+                  type: string
+                  format: email
+                  example: luka@example.com
+      responses:
+        '200':
+          description: Huésped actualizado
+
+  /huesped/{id}/reserva:
+    put:
+      summary: Actualizar reserva del huésped
+      tags: [Huespedes]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                idReserva:
+                  type: string
+                  example: 123abc
+                nuevasFechas:
+                  type: object
+                  required:
+                    - fechaInicio
+                    - fechaFin
+                  properties:
+                    fechaInicio:
+                      type: string
+                      example: "24/12/2024"
+                    fechaFin:
+                      type: string
+                      example: "28/12/2024"
+      responses:
+        '200':
+          description: Reserva actualizada para el huésped
+
+  /huesped/{id}/cancelar/{idReserva}:
+    put:
+      summary: Cancelar reserva del huésped
+      tags: [Huespedes]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: idReserva
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Reserva cancelada exitosamente
+    
+  /huesped/{id}/notificaciones/{idNotificacion}:
+    put:
+      summary: Marcar como leida la notificacion
+      tags: [Huespedes, Notificaciones]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: idNotificacion
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          descripcion: Notificacion Leida
+
+  /huesped/{id}/notificaciones/{leida}:
+    get:
+      summary: Obtener las notificaciones leidas o no
+      tags: [Huespedes, Notificaciones]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: leida
+          required: true
+          schema:
+            type: bool
+
+  /anfitriones:
+    get:
+      summary: Obtener todos los anfitriones
+      tags: [Anfitriones]
+      responses:
+        '200':
+          description: Lista de anfitriones
+
+  /login/anfitrion:
+    post:
+      summary: Crear anfitrión (login o registro)
+      tags: [Anfitriones]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - nombre
+                - email
+              properties:
+                nombre:
+                  type: string
+                  example: Lautaro
+                email:
+                  type: string
+                  format: email
+                  example: Lautaro@example.com
+      responses:
+        '201':
+          description: Anfitrión creado
+
+  /anfitrion/{id}:
+    delete:
+      summary: Eliminar anfitrión
+      tags: [Anfitriones]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Anfitrión eliminado
+
+    put:
+      summary: Actualizar datos del anfitrión
+      tags: [Anfitriones]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                  example: Lautaro
+                email:
+                  type: string
+                  format: email
+                  example: Lautaro@example.com
+      responses:
+        '200':
+          description: Anfitrión actualizado
+
+  /anfitrion/{id}/confirmar/{idReserva}:
+    put:
+      summary: Aceptar la reserva del huésped
+      tags: [Anfitriones]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: idReserva
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Reserva aceptada exitosamente
+    
+  /anfitrion/{id}/confirmar/{idReserva}:
+    put:
+      summary: Marcar como leida la notificacion
+      tags: [Anfitriones, Notificaciones]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          descripcion: Notificacion Leida
+
+  /anfitrion/{id}/notificaciones/{leida}:
+    get:
+      summary: Obtener las notificaciones leidas o no
+      tags: [Anfitriones, Notificaciones]
+      parameters:
+        - in: path
+          name: leida
+          required: true
+          schema:
+            type: bool
+
+  /alojamientos:
+    get:
+      summary: Obtener todos los alojamientos (con filtros opcionales)
+      tags: [Alojamientos]
+      parameters:
+        - name: page
+          in: query
+          description: Página de resultados
+          required: false
+          schema:
+            type: integer
+            example: 1
+        - name: limit
+          in: query
+          description: Cantidad de resultados por página
+          required: false
+          schema:
+            type: integer
+            example: 10
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ciudad:
+                  type: string
+                  example: Buenos Aires
+                pais:
+                  type: string
+                  example: Argentina
+                cantidadHuespedes:
+                  type: integer
+                  example: 2
+                precioMin:
+                  type: number
+                  example: 50
+                precioMax:
+                  type: number
+                  example: 150
+                caracteristicas:
+                  type: array
+                  items:
+                    type: string
+                  example: ["WIFI", "TV"]
+      responses:
+        '200':
+          description: Lista de alojamientos encontrados
+
+
+  /alojamientos:    
+    post:
+      summary: Crear alojamiento
+      tags: [Alojamientos]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - anfitrion
+                - nombre
+                - descripcion
+                - precioPorNoche
+                - moneda
+                - horarioCheckIn
+                - horarioCheckOut
+                - direccion
+                - cantHuespedesMax
+                - caracteristicas
+                - fotos
+              properties:
+                anfitrion:
+                  type: string
+                  example: Pepe
+                nombre:
+                  type: string
+                  example: Departamento Moderno
+                descripcion:
+                  type: string
+                  example: Moderno, céntrico y cómodo.
+                precioPorNoche:
+                  type: number
+                  example: 80
+                moneda:
+                  type: string
+                  enum: [DOLAR_USA, PESO_ARG]
+                  example: DOLAR_USA
+                horarioCheckIn:
+                  type: string
+                  example: "14:00"
+                horarioCheckOut:
+                  type: string
+                  example: "10:00"
+                direccion:
+                  type: object
+                  required:
+                    - calle
+                    - altura
+                    - ciudad
+                  properties:
+                    calle:
+                      type: string
+                      example: Corrientes
+                    altura:
+                      type: string
+                      example: "820"
+                    ciudad:
+                      type: object
+                      required:
+                        - nombre
+                        - pais
+                      properties:
+                        nombre:
+                          type: string
+                          example: Buenos Aires
+                        pais:
+                          type: object
+                          required:
+                            - nombre
+                          properties:
+                            nombre:
+                              type: string
+                              example: Argentina
+                cantHuespedesMax:
+                  type: integer
+                  example: 2
+                caracteristicas:
+                  type: array
+                  items:
+                    type: string
+                    example: WIFI
+                fotos:
+                  type: array
+                  items:
+                    type: string
+                  example: []
+      responses:
+        '201':
+          description: Alojamiento creado correctamente
+
+
+  /alojamientos/{id}:
+    get:
+      summary: Obtener alojamiento por ID
+      tags: [Alojamientos]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Alojamiento encontrado
+
+    delete:
+      summary: Eliminar alojamiento
+      tags: [Alojamientos]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Alojamiento eliminado
+
+  /alojamientos/{id}/reservas:
+    get:
+      summary: Obtener reservas por alojamiento
+      tags: [Reservas]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de reservas del alojamiento

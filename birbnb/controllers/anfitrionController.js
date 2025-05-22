@@ -38,7 +38,7 @@ export class AnfitrionController {
 
   async update(req, res, next) {
     try {
-      const id = Number(req.params.id);
+      const { id } = req.params;
       const { nombre, email } = req.body;
 
       const actualizado = await this.anfitrionService.update(id, { nombre, email });
@@ -51,8 +51,7 @@ export class AnfitrionController {
 
   async marcarLeidaNotificacion(req, res, next) {
     try {
-      const id = Number(req.params.id);
-      const idNotificacion = Number(req.params.idNotificacion);
+      const { id, idNotificacion} = req.params
 
       const actualizado = await this.anfitrionService.updateNotificacionLeida(id, idNotificacion);
 

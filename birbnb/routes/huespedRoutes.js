@@ -20,11 +20,11 @@ export default function huespedRoutes(getController) {
         getController(HuespedController).update(req, res, next)
     )
 
-    router.put("huesped/:id/reserva", (req, res, next) =>
+    router.put("/huesped/:id/reserva", (req, res, next) =>
         getController(HuespedController).updateReserva(req, res, next)
     )
 
-    router.put("huesped/:id/cancelar/:idReserva", (req, res, next) =>
+    router.put("/huesped/:id/cancelar/:idReserva", (req, res, next) =>
         getController(HuespedController).cancelReserva(req, res, next)
     )
 
@@ -32,11 +32,9 @@ export default function huespedRoutes(getController) {
             getController(AnfitrionController).marcarLeidaNotificacion(req, res, next)
     )
 
-    router.get("huesped/:id/notificaciones/:tipoleida", (req, res, next) =>
+    router.get("/huesped/:id/notificaciones/:tipoleida", (req, res, next) =>
         getController(HuespedController).getNotificaciones(req, res, next)
     )
-
-   
 
     return router
 }
