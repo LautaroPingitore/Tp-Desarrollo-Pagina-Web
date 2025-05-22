@@ -1,7 +1,6 @@
 @startuml Birbnb
 
 class Alojamiento {
-  - id: Number
   - anfitrion: Anfitrion
   - nombre: String
   - descripcion: String
@@ -12,14 +11,12 @@ class Alojamiento {
   - direccion: Direccion
   - cantHuespedesMax: Number
   - caracteristicas: Lst<Caracteristica>
-  - reservas: Lst<Reserva>
   - fotos: Lst<Foto>
 
   + estasDisponibleEn(rangoDeFechas): boolean
   + tuPrecioEstaEntre(valorMinimo, valorMaximo): boolean
   + tenesCaracteristica(caracteristica): boolean
-  + puedenAlojarse(cantHuespedes): 
-  + reservar(Huesped, Number, RangoFechas): Reserva
+  + puedenAlojarse(cantHuespedes): boolean
 }
 
 enum Moneda {
@@ -45,8 +42,6 @@ class Direccion {
   - calle: String
   - altura: String
   - ciudad: Ciudad
-  - lat: String
-  - long: String
 }
 
 class Ciudad {
@@ -65,15 +60,15 @@ class Foto {
 
 class Reserva {
   - fechaAlta: Date
-  - huespedReservador: Usuario
+  - huespedReservador: Huesped
   - cantHuespedes: Number
   - alojamiento: Alojamiento
   - rangoFechas: RangoFechas
   - estado: EstadoReserva
-  - precioPorNoche: Double
 
-  + reservar(Alojamiento, Huesped, Number, RangoFecha)
-  + actualizarEstado(EstadoReserva): void
+  + notificarCambioEstado(EstadoReserva, String): Usuario
+  + notificarActualizacion(): Anfitrion
+  + notificar(): Anfitrion 
 }
 
 class RangoFechas {
@@ -112,12 +107,14 @@ class Anfitrion {
 
 class Huesped {
     + cancelarReserva(Reserva)
+    + modificarReserva(Reserva, Integer, RangoFechas)
 }
 
 ' Relaciones '
 Usuario --> Notificacion
 Anfitrion --|> Usuario
 Huesped --|> Usuario
+Huesped ..> Reserva
 
 Alojamiento --> Direccion
 Alojamiento --> Foto
@@ -130,9 +127,9 @@ Alojamiento --> Caracteristica
 Direccion --> Ciudad
 Ciudad --> Pais
 
-Reserva --> Huesped
 Reserva --> RangoFechas
 Reserva --> EstadoReserva
+Reserva --> Usuario
 
 FactoryNotificacion ..> Notificacion
 FactoryNotificacion ..> Reserva
