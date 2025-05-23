@@ -14,12 +14,10 @@ import { PaisRepository } from "./birbnb/models/repositories/paisRepository.js";
 import { CiudadService } from "./birbnb/services/ciudadService.js";
 import { CiudadController } from "./birbnb/controllers/ciudadController.js";
 
-
 import { AlojamientoRepository } from "./birbnb/models/repositories/alojamientoRepository.js";
 import { AnfitrionRepository } from "./birbnb/models/repositories/anfitrionRepository.js";
 import { HuespedRepository } from "./birbnb/models/repositories/huespedRepository.js";
 import { ReservaRepository } from "./birbnb/models/repositories/reservaRepository.js";
-
 
 import { AlojamientoService } from "./birbnb/services/alojamientoService.js";
 import { AnfitrionService } from "./birbnb/services/anfitrionService.js";
@@ -73,7 +71,6 @@ routes.forEach(r => {
     server.addRoute(r);
 })
 server.configureRoutes();
-
 
 const swaggerDocument = YAML.load("recursos/swagger.yaml")
 

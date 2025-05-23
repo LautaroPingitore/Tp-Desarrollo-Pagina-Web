@@ -82,7 +82,7 @@ export class ReservaService {
         }
 
         const parsearFecha = (fechaStr, formato) => {
-            const fecha = dayjs(fechaStr, formato, true); // true = modo estricto
+            const fecha = dayjs(fechaStr, formato, true) // true = modo estricto
             if (!fecha.isValid()) {
                 throw new ValidationError(`Fecha inválida: ${fechaStr}. Formato requerido: ${formato}`);
             }
