@@ -1,35 +1,34 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import './App.css';
+import {BrowserRouter} from 'react-router-dom';
+import {Routes, Route} from 'react-router-dom';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Layout from './features/layout/Layout';
+import Home from './features/home/Home';
+import AlojamientoDetail from './features/alojamientoDetail/AlojamientoDetail';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#1976d2',
+    }
+  }
+});
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1 className='text-red-500'>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <ThemeProvider theme={theme}>
+
+       <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Layout />} >
+              <Route index element={<Home />} />
+              <Route path="/alojamientos/:id" element={<AlojamientoDetail />} />
+            </Route>
+          </Routes>
+      </BrowserRouter> 
+
+    </ThemeProvider>
+  );
 }
 
-export default App
+export default App;
