@@ -1,0 +1,67 @@
+@import "antd/dist/reset.css";
+
+
+/* Corrige el fondo blanco del rango seleccionado */
+.antd-dark-calendar .ant-picker-cell-in-range::before,
+.antd-dark-calendar .ant-picker-cell-range-start::before,
+.antd-dark-calendar .ant-picker-cell-range-end::before {
+  background-color: #374151 !important; /* bg-gray-700 o similar */
+  border-radius: 0;
+}
+
+/* Opcional: para redondear bordes de inicio y fin del rango */
+:where(.css-dev-only-do-not-override-mc1tut).ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-selected:not(.ant-picker-cell-disabled) .ant-picker-cell-inner, :where(.css-dev-only-do-not-override-mc1tut).ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-range-start:not(.ant-picker-cell-disabled) .ant-picker-cell-inner, :where(.css-dev-only-do-not-override-mc1tut).ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-range-end:not(.ant-picker-cell-disabled) .ant-picker-cell-inner {
+    color: #fff;
+    background: #00a26c;
+}
+:where(.css-dev-only-do-not-override-mc1tut).ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before {
+    border: none;
+}
+
+:where(.css-dev-only-do-not-override-mc1tut).ant-picker-dropdown .ant-picker-header >button {
+    color: white;
+    min-width: 1.6em;
+    
+}
+/* Ajuste de texto para evitar contrastes malos dentro del rango */
+.antd-dark-calendar .ant-picker-cell-in-range .ant-picker-cell-inner {
+  color: #f9fafb;
+}
+/* Calendario en modo oscuro */
+.antd-dark-calendar .ant-picker-dropdown {
+  background-color: #1f2937; /* bg-gray-800 */
+  color: #f9fafb; /* text-gray-100 */
+}
+
+.antd-dark-calendar .ant-picker-cell-inner {
+  color: #f9fafb;
+}
+
+.antd-dark-calendar .ant-picker-header {
+  background-color: #111827;
+  color: #f9fafb;
+}
+
+.antd-dark-calendar .ant-picker-content th {
+  color: #9ca3af;
+}
+
+.antd-dark-calendar .ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner {
+  background-color: #10b981; /* emerald-500 */
+  color: white;
+}
+
+.antd-dark-calendar .ant-picker-cell-in-view.ant-picker-cell-range-start .ant-picker-cell-inner,
+.antd-dark-calendar .ant-picker-cell-in-view.ant-picker-cell-range-end .ant-picker-cell-inner {
+  background-color: #059669;
+  color: white;
+}
+
+.antd-dark-calendar .ant-picker-cell-disabled .ant-picker-cell-inner {
+  color: #6b7280;
+}
+
+:where(.css-dev-only-do-not-override-mc1tut).ant-picker-dropdown .ant-picker-date-panel .ant-picker-body {
+    padding: 8px 18px;
+    background-color: #111827;
+}

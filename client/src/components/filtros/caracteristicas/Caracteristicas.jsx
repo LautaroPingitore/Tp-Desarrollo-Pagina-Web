@@ -22,8 +22,8 @@ const Caracteristicas = () => {
                     className={`px-4 py-2 rounded-full shadow-sm text-sm transition-all cursor-pointer focus:outline-none
                         ${
                             seleccionadas.includes(index) 
-                            ? 'border-2 border-emerald-500 bg-gray-800 text-gray-100 hover:bg-gray-700' 
-                            : 'border border-gray-700 bg-gray-800 text-gray-100 hover:bg-gray-700'
+                            ? 'border-2 border-emerald-500 bg-gray-800 !text-gray-300 hover:bg-gray-700' 
+                            : 'border border-gray-700 bg-gray-800 !text-gray-300 hover:bg-gray-700'
                         }`}
                 >
                     {c}
