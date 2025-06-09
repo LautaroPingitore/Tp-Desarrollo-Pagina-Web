@@ -1,17 +1,20 @@
-import Header from '../componennts/header/Header';
-import Footer from '../components/footer/Footer';
-import Navbar from '../components/navBar/NavBar';
-import { Outlet } from 'react-router-dom';
+import Header from '../../components/header/Header';
+import Footer from '../../components/footer/Footer';
+import NavBar from '../../components/navBar/NavBar';
+
+
+import { Outlet } from "react-router";
 
 const Layout = () => {
   return (
     <>
         <Header></Header>
-        <Navbar></Navbar>
-        <Outlet></Outlet>
-        <Footer></Footer>
+        <NavBar></NavBar>
+        <Outlet />
     </>
   );
 }
 
 export default Layout;
+
+

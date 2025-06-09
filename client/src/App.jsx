@@ -7,7 +7,7 @@ import Home from './features/home/Home';
 import AlojamientoDetail from './features/alojamientoDetail/AlojamientoDetail';
 
 const theme = createTheme({
-  pallete: {
+  palette: {
     primary: {
       main: '#1976d2',
     }
@@ -18,13 +18,14 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
 
-      <BrowserRouter>
+       <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Layout></Layout>} />
-            <Route path="/about" element={<Home/>} />
-            <Route path="/alojamientos/:id" element={<AlojamientoDetail />} />
+            <Route path="/" element={<Layout />} >
+              <Route index element={<Home />} />
+              <Route path="/alojamientos/:id" element={<AlojamientoDetail />} />
+            </Route>
           </Routes>
-      </BrowserRouter>
+      </BrowserRouter> 
 
     </ThemeProvider>
   );

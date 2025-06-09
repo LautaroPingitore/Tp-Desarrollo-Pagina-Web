@@ -1,8 +1,8 @@
-import './Caracteristicas.css'
-import { caracteristicas } from '../../mock/caracteristicas.js'
-import { Card } from '@mui/material'
+import './Caracteristicas.css';
+import { caracteristicas } from '../../../mock/caracteristicas.js';
+import { Card } from '@mui/material';
 
-const caracteristicas = () => {
+const Caracteristicas = () => {
 
     return (
         <div className="caracteristicas">
@@ -15,4 +15,4 @@ const caracteristicas = () => {
     )
 }
 
-export default caracteristicas
+export default Caracteristicas

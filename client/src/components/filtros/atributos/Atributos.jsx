@@ -1,4 +1,4 @@
-import './Filtros.css'
+import './Atributos.css';
 import { Card, InputLabel, TextField, IconButton } from '@mui/material';
 
 const Filtros = () => {

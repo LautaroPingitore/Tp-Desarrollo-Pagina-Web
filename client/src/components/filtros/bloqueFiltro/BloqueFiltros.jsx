@@ -1,9 +1,9 @@
-import './BloqueFiltro.css'
+import './BloqueFiltros.css'
 import {AppBar} from "@mui/material"
-import Atributos from "../../filtros/atributos/atributos";
-import Caracteristicas from "../../filtros/caracteristicas/caracteristicas";
+import Atributos from "../../filtros/atributos/Atributos";
+import Caracteristicas from "../../filtros/caracteristicas/Caracteristicas";
 
-const BloqueFiltro = () => {
+const BloqueFiltros = () => {
 
     return (
         <AppBar position="static">
@@ -13,7 +13,6 @@ const BloqueFiltro = () => {
             </div>
         </AppBar>
     )
-
 }
 
-export default BloqueFiltro
+export default BloqueFiltros
