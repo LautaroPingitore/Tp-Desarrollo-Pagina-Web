@@ -1,6 +1,6 @@
-import Header from '../components/header/Header';
+import Header from '../componennts/header/Header';
 import Footer from '../components/footer/Footer';
-import Navbar from '../components/navbar/Navbar';
+import Navbar from '../components/navBar/NavBar';
 import { Outlet } from 'react-router-dom';
 
 const Layout = () => {
@@ -8,7 +8,7 @@ const Layout = () => {
     <>
         <Header></Header>
         <Navbar></Navbar>
-        <Outlet> </Outlet>
+        <Outlet></Outlet>
         <Footer></Footer>
     </>
   );
