@@ -1,18 +1,36 @@
-import './Caracteristicas.css';
-import { caracteristicas } from '../../../mock/caracteristicas.js';
-import { Card } from '@mui/material';
+import React, { useState } from "react";
+import { caracteristicas } from "../../../mock/caracteristicas.js";
 
 const Caracteristicas = () => {
+    const [seleccionadas, setSeleccionadas] = useState([]);
+
+    const toggleCaracteristica = (index) => {
+        if (seleccionadas.includes(index)) {
+            setSeleccionadas(seleccionadas.filter(i => i !== index));
+        } else {
+            setSeleccionadas([...seleccionadas, index]);
+        }
+    };
 
     return (
-        <div className="caracteristicas">
-            {caracteristicas.map((c, index) => 
-                <Card key={index} className='caracteristica-item'>
+        <div className="flex flex-wrap gap-3 max-w-4xl justify-start">
+            {caracteristicas.map((c, index) => (
+                <button
+                    type="button"
+                    key={index}
+                    onClick={() => toggleCaracteristica(index)}
+                    className={`px-4 py-2 rounded-full shadow-sm text-sm transition-all cursor-pointer focus:outline-none
+                        ${
+                            seleccionadas.includes(index) 
+                            ? 'border-2 border-emerald-500 bg-gray-800 text-gray-100 hover:bg-gray-700' 
+                            : 'border border-gray-700 bg-gray-800 text-gray-100 hover:bg-gray-700'
+                        }`}
+                >
                     {c}
-                </Card>
-            )}
+                </button>
+            ))}
         </div>
-    )
-}
+    );
+};
 
-export default Caracteristicas
+export default Caracteristicas;

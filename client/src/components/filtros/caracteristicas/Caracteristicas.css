@@ -1,22 +1,19 @@
+/* Caracteristicas.css */
 .caracteristicas {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
   justify-content: center;
   margin-top: 16px;
+  padding: 10px 0;
 }
 
 .caracteristica-item {
   border-radius: 999px;
   padding: 10px 20px;
-  background-color: #ffffff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
   font-weight: 500;
   cursor: pointer;
   transition: 0.3s ease all;
   text-align: center;
-}
-
-.caracteristica-item:hover {
-  background-color: #f0f0f0;
 }

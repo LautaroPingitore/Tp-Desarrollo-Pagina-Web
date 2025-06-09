@@ -1,6 +1,8 @@
+/* BloqueFiltros.css */
 .bloque-filtros {
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 10px;
+  margin-bottom: 10px;
 }
