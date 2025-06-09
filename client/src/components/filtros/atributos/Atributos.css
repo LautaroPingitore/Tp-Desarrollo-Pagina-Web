@@ -22,3 +22,24 @@
   justify-content: center;
   margin-left: 10px;
 }
+
+.selector-personas {
+  background-color: #1f2937;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.contador-btn {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.contador-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
