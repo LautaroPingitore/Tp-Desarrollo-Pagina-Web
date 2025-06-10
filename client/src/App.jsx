@@ -4,7 +4,7 @@ import {Routes, Route} from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Layout from './features/layout/Layout';
 import Home from './features/home/Home';
-import AlojamientoDetail from './features/alojamientoDetail/AlojamientoDetail';
+import AlojamientoDetail from './components/alojamientoDetail/AlojamientoDetail';
 
 const theme = createTheme({
   palette: {

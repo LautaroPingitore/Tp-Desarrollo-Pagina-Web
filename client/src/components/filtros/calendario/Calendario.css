@@ -29,7 +29,7 @@
 }
 /* Calendario en modo oscuro */
 .antd-dark-calendar .ant-picker-dropdown {
-  background-color: #1f2937; /* bg-gray-800 */
+  background-color: black; /* bg-gray-800 */
   color: #f9fafb; /* text-gray-100 */
 }
 
@@ -38,7 +38,7 @@
 }
 
 .antd-dark-calendar .ant-picker-header {
-  background-color: #111827;
+  background-color: black;
   color: #f9fafb;
 }
 
@@ -58,10 +58,10 @@
 }
 
 .antd-dark-calendar .ant-picker-cell-disabled .ant-picker-cell-inner {
-  color: #6b7280;
+  color: #111827;
 }
 
 :where(.css-dev-only-do-not-override-mc1tut).ant-picker-dropdown .ant-picker-date-panel .ant-picker-body {
     padding: 8px 18px;
-    background-color: #111827;
+    background-color: black;
 }

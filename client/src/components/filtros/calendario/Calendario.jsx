@@ -26,6 +26,7 @@ const Calendario = ({ onChange }) => {
         <div ref={containerRef} className="antd-dark-calendar">
             <Space size={12} direction="vertical">
                 <DatePicker.RangePicker
+            
                     onChange={onChange}
                     cellRender={cellRender}
                     getPopupContainer={() => containerRef.current}

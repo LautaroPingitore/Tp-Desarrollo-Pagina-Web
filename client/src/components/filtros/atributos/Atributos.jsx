@@ -91,11 +91,9 @@ const Atributos = () => {
                         onFocus={() => setMostrarDropdownLugar(true)}
                         onBlur={() => setTimeout(() => setMostrarDropdownLugar(false), 200)}
                         placeholder="Explorar destinos"
-                        className="w-full mt-1 px-4 py-2 text-sm text-gray-600 rounded-full bg-gray-200 border border-gray-700 placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-gray-500"
-                    />
-
-                    {mostrarDropdownLugar && (
-            <div className="bg-gray-900 absolute mt-2 w-[26rem] rounded-2xl shadow-lg z-50 max-h-96 overflow-y-auto scroll-dark">
+                        className="w-full mt-1 px-4 py-2 text-sm text-white rounded-full bg-black border border-gray-700 placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-gray-500"
+                    />                    {mostrarDropdownLugar && (
+                <div className="bg-black absolute mt-2 w-[26rem] rounded-2xl shadow-lg z-[99999] max-h-96 overflow-y-auto scroll-dark">
                 <div className="p-3 text-sm text-gray-500 font-semibold">Sugerencias de destinos</div>
                 {destinosSugerencia
                     .filter((d) => d.title.toLowerCase().includes(busquedaLugar.toLowerCase()))
@@ -151,12 +149,10 @@ const Atributos = () => {
                         <span className="text-gray-300 font-medium">
                             {getTextoViajeros()}
                         </span>
-                    </button>
-
-                    {mostrarViajeros && (
+                    </button>                    {mostrarViajeros && (
                         <div 
                                 ref={viajerosRef}
-                                className="absolute z-50 top-12 left-0 bg-gray-900 rounded-xl shadow-lg p-4 w-84"
+                                className="absolute z-[99999] top-12 left-0 bg-black rounded-xl shadow-lg p-4 w-84"
                         >
                             <div className="space-y-4">
                                 {/* Personas */}
@@ -218,11 +214,9 @@ const Atributos = () => {
                         </div>
                     )}
                 </div>
-            </div>
-
-            {/* CALENDARIO */}
+            </div>            {/* CALENDARIO */}
             {mostrarCalendario && (
-                <div ref={calendarioRef} className="absolute z-50 top-8 left-1/3 transform -translate-x-1/2 bg-white rounded-lg shadow-lg">
+                <div ref={calendarioRef} className="absolute z-[99999] top-8 left-1/3 transform -translate-x-1/2 bg-black rounded-lg shadow-lg">
                     <Calendario onChange={handleFechasSeleccionadas} />
                 </div>
             )}

@@ -1,0 +1,246 @@
+import React, { useState } from 'react';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import { ArrowLeft, Heart, Share, Star, MapPin, Users, Bed, Bath, Wifi, Car, AirVent, Waves, Calendar, User } from 'lucide-react';
+
+const AlojamientoDetail = () => {
+  const { id } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const alojamiento = location.state?.alojamiento;
+
+  // Si no hay alojamiento en el state, usar datos por defecto
+  const property = alojamiento || {
+    id: id,
+    nombre: "Alojamiento no encontrado",
+    descripcion: "No se pudieron cargar los datos del alojamiento",
+    precio: 0,
+    images: ["https://images.unsplash.com/photo-1499696010180-025ef6e1a8f9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"],
+    location: "Ubicación no disponible",
+    rating: 0,
+    reviewCount: 0,
+    propertyType: "Alojamiento",
+    guests: 1,
+    bedrooms: 1,
+    bathrooms: 1,
+    amenities: []
+  };
+
+  // Datos del host (mock)
+  const hostData = {
+    name: "María",
+    avatar: "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=100",
+    superhost: true
+  };
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [isLiked, setIsLiked] = useState(false);
+  const [checkIn, setCheckIn] = useState('');
+  const [checkOut, setCheckOut] = useState('');
+  const [guests, setGuests] = useState(1);
+
+  const amenityIcons = {
+    'WiFi': <Wifi className="w-5 h-5" />,
+    'Kitchen': <div className="w-5 h-5 bg-gray-600 rounded"></div>,
+    'Pool': <Waves className="w-5 h-5" />,
+    'Parking': <Car className="w-5 h-5" />,
+    'AC': <AirVent className="w-5 h-5" />,
+    'Fireplace': <div className="w-5 h-5 bg-orange-500 rounded-full"></div>,
+    'Hot Tub': <Waves className="w-5 h-5" />,
+    'BBQ Grill': <div className="w-5 h-5 bg-gray-600 rounded"></div>,
+  };
+  const calculateTotal = () => {
+    if (!checkIn || !checkOut) return 0;
+    const days = Math.ceil((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 60 * 60 * 24));
+    return days > 0 ? days * property.precio : 0;
+  };
+
+  return (
+    <div className="min-h-screen bg-black">
+      {/* Header */}
+      <div className="top-0 z-10 bg-black backdrop-blur-xl border-b border-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">            <button
+              onClick={() => navigate(-1)}
+              className="flex items-center space-x-2 text-white hover:text-pink-500 transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span>Volver</span>
+            </button>
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={() => setIsLiked(!isLiked)}
+                className="flex items-center space-x-2 text-white hover:text-pink-500 transition-colors"
+              >                <Heart className={`w-5 h-5 ${isLiked ? 'fill-current text-pink-500' : ''}`} />
+                <span>Guardar</span>
+              </button>
+              <button className="flex items-center space-x-2 text-white hover:text-pink-500 transition-colors">
+                <Share className="w-5 h-5" />
+                <span>Compartir</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">        {/* Title */}
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold text-white mb-2">{property.nombre}</h1>
+          <div className="flex items-center space-x-4 text-gray-300">
+            <div className="flex items-center space-x-1">
+              <Star className="w-4 h-4 fill-current text-pink-500" />
+              <span>{property.rating || 4.8}</span>
+              <span>({property.reviewCount || 127} reseñas)</span>
+            </div>
+            <div className="flex items-center space-x-1">
+              <MapPin className="w-4 h-4" />
+              <span>{property.location || "Buenos Aires, Argentina"}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Image Gallery */}
+        <div className="grid grid-cols-4 gap-2 mb-8 h-96">          <div className="col-span-2 row-span-2">
+            <img
+              src={property.images?.[0] || "https://images.unsplash.com/photo-1499696010180-025ef6e1a8f9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"}
+              alt={property.nombre}
+              className="w-full h-full object-cover rounded-l-xl cursor-pointer"
+              onClick={() => setSelectedImageIndex(0)}
+            />
+          </div>
+          {property.images?.slice(1, 5).map((image, index) => (
+            <div key={index} className="relative">
+              <img
+                src={image}
+                alt={`${property.nombre} ${index + 2}`}
+                className={`w-full h-full object-cover cursor-pointer ${
+                  index === 1 ? 'rounded-tr-xl' : index === 3 ? 'rounded-br-xl' : ''
+                }`}
+                onClick={() => setSelectedImageIndex(index + 1)}
+              />
+              {index === 3 && property.images?.length > 5 && (
+                <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-br-xl">
+                  <span className="text-white font-medium">+{property.images.length - 5} fotos</span>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-60 grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main Content */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* Host Info */}
+            <div className="flex items-center justify-between pb-8 border-b border-gray-800">              <div>
+                <h2 className="text-2xl font-semibold text-white mb-2">
+                  {property.propertyType || "Alojamiento completo"} ofrecido por {hostData.name}
+                </h2>
+                <div className="flex items-center space-x-4 text-gray-300">
+                  <span>{property.guests || 4} huéspedes</span>
+                  <span>{property.bedrooms || 2} habitaciones</span>
+                  <span>{property.bathrooms || 1} baños</span>
+                </div>
+              </div>
+            </div>            {/* Description */}
+            <div className="pb-8 border-b border-gray-800">
+              <h3 className="text-xl font-semibold text-white mb-4">Acerca de este lugar</h3>
+              <p className="text-gray-300 leading-relaxed">{property.descripcion}</p>
+            </div>
+
+            {/* Amenities */}
+            <div className="pb-8 border-b border-gray-800">
+              <h3 className="text-xl font-semibold text-white mb-4">Lo que ofrece este lugar</h3>
+              <div className="grid grid-cols-2 gap-4">
+                {(property.amenities || ['WiFi', 'Kitchen', 'AC', 'Parking']).map((amenity, index) => (
+                  <div key={index} className="flex items-center space-x-3 text-gray-300">
+                    {amenityIcons[amenity] || <div className="w-5 h-5 bg-gray-600 rounded"></div>}
+                    <span>{amenity}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Reviews Section */}
+            
+          </div>
+
+          {/* Booking Card */}
+          <div className="lg:col-span-1 relative">
+            <div className="sticky top-24 bg-black rounded-xl border border-gray-700 p-6 shadow-xl">              <div className="flex items-baseline space-x-2 mb-6">
+                <span className="text-2xl font-bold text-white">${property.precio}</span>
+                <span className="text-gray-400">noche</span>
+              </div>
+
+              {/* Date Selection */}
+              <div className="space-y-4 mb-6">
+                <div className="grid grid-cols-2 gap-2">                  <div className="space-y-1">
+                    <label className="text-xs font-medium text-gray-400 uppercase tracking-wide">
+                      Entrada
+                    </label>
+                    <input
+                      type="date"
+                      value={checkIn}
+                      onChange={(e) => setCheckIn(e.target.value)}
+                      className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-pink-500"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs font-medium text-gray-400 uppercase tracking-wide">
+                      Salida
+                    </label>
+                    <input
+                      type="date"
+                      value={checkOut}
+                      onChange={(e) => setCheckOut(e.target.value)}
+                      className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-pink-500"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-xs font-medium text-gray-400 uppercase tracking-wide">
+                    Huéspedes
+                  </label>
+                  <select
+                    value={guests}
+                    onChange={(e) => setGuests(Number(e.target.value))}
+                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-pink-500"
+                  >
+                    {Array.from({ length: property.guests || 4 }, (_, i) => i + 1).map((num) => (
+                      <option key={num} value={num}>
+                        {num} huésped{num > 1 ? 'es' : ''}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>              {/* Reserve Button */}
+              <button className="w-full cursor-pointer bg-gradient-to-r from-emerald-300 to-emerald-400 hover:from-emerald-400 hover:to-emerald-500 flex items-center justify-center py-4 px-4 font-medium transition duration-200 shadow-lg hover:shadow-xl mb-4 rounded-lg">
+                Reservar
+              </button>
+
+              <p className="text-center text-gray-400 text-sm mb-4">
+                Aún no se te cobrará
+              </p>
+
+              {/* Price Breakdown */}
+              {checkIn && checkOut && (                <div className="space-y-2 pt-4 border-t border-gray-700">
+                  <div className="flex justify-between text-gray-300">
+                    <span>${property.precio} x {Math.ceil((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 60 * 60 * 24))} noches</span>
+                    <span>${calculateTotal()}</span>
+                  </div>
+                  <div className="flex justify-between text-gray-300">
+                    <span>Tarifa del servicio</span>
+                    <span>${Math.round(calculateTotal() * 0.14)}</span>
+                  </div>
+                  <div className="flex justify-between font-semibold text-white pt-2 border-t border-gray-700">
+                    <span>Total</span>
+                    <span>${calculateTotal() + Math.round(calculateTotal() * 0.14)}</span>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>    </div>
+  );
+};
+
+export default AlojamientoDetail;
