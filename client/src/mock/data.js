@@ -1,7 +1,7 @@
 export const mockProperties = [
   {
     id: '1',
-    title: 'Stunning Ocean View Villa with Private Pool',
+    title: 'Stunning Ocean View Villa with Private PILETA',
     location: 'Malibu, California, USA',
     price: 450,
     rating: 4.95,
@@ -19,8 +19,8 @@ export const mockProperties = [
       superhost: true,
       joinedYear: 2018
     },
-    amenities: ['WiFi', 'Kitchen', 'Pool', 'Parking', 'AC', 'Ocean View', 'Hot Tub', 'BBQ Grill'],
-    description: 'Experience luxury living in this stunning oceanfront villa with breathtaking panoramic views of the Pacific Ocean. This modern retreat features floor-to-ceiling windows, a private infinity pool, and direct beach access.',
+    amenities: ['WIFI', 'MASCOTA', 'PILETA', 'ESTACIONAMIENTO', 'AC', 'Ocean View', 'Hot Tub', 'BBQ Grill'],
+    description: 'Experience luxury living in this stunning oceanfront villa with breathtaking panoramic views of the Pacific Ocean. This modern retreat features floor-to-ceiling windows, a private infinity PILETA, and direct beach access.',
     bedrooms: 4,
     bathrooms: 3,
     guests: 8,
@@ -45,7 +45,7 @@ export const mockProperties = [
       superhost: false,
       joinedYear: 2020
     },
-    amenities: ['WiFi', 'Kitchen', 'Fireplace', 'Parking', 'Heating', 'Mountain View', 'Ski Storage'],
+    amenities: ['WIFI', 'MASCOTA', 'Fireplace', 'ESTACIONAMIENTO', 'Heating', 'Mountain View', 'Ski Storage'],
     description: 'Escape to this charming mountain cabin surrounded by snow-capped peaks. Perfect for a cozy retreat with rustic charm and modern amenities.',
     bedrooms: 2,
     bathrooms: 2,
@@ -71,7 +71,7 @@ export const mockProperties = [
       superhost: true,
       joinedYear: 2019
     },
-    amenities: ['WiFi', 'Kitchen', 'AC', 'Elevator', 'City View', 'Rooftop Access', 'Gym'],
+    amenities: ['WIFI', 'MASCOTA', 'AC', 'Elevator', 'City View', 'Rooftop Access', 'Gym'],
     description: 'Stylish loft in the heart of Manhattan with floor-to-ceiling windows and stunning city skyline views. Walking distance to subway and major attractions.',
     bedrooms: 1,
     bathrooms: 1,
@@ -97,7 +97,7 @@ export const mockProperties = [
       superhost: true,
       joinedYear: 2017
     },
-    amenities: ['WiFi', 'Kitchen', 'Pool', 'Beach Access', 'AC', 'Tropical Garden', 'Hammock'],
+    amenities: ['WIFI', 'MASCOTA', 'PILETA', 'Beach Access', 'AC', 'Tropical Garden', 'Hammock'],
     description: 'Wake up to the sound of waves in this beautiful beachfront casa. Featuring traditional Mexican architecture with modern amenities and direct beach access.',
     bedrooms: 3,
     bathrooms: 2,
@@ -123,7 +123,7 @@ export const mockProperties = [
       superhost: true,
       joinedYear: 2016
     },
-    amenities: ['WiFi', 'Kitchen', 'Fireplace', 'Garden', 'Library', 'Historical Features', 'Parking'],
+    amenities: ['WIFI', 'MASCOTA', 'Fireplace', 'Garden', 'Library', 'Historical Features', 'ESTACIONAMIENTO'],
     description: 'Stay in a piece of history in this beautifully restored 16th-century castle. Experience royal treatment with modern comforts in the heart of Scotland.',
     bedrooms: 5,
     bathrooms: 4,
@@ -149,7 +149,7 @@ export const mockProperties = [
       superhost: false,
       joinedYear: 2021
     },
-    amenities: ['WiFi', 'Kitchen', 'AC', 'Desert View', 'Stargazing Deck', 'Solar Power', 'Hot Tub'],
+    amenities: ['WIFI', 'MASCOTA', 'AC', 'Desert View', 'Stargazing Deck', 'Solar Power', 'Hot Tub'],
     description: 'Disconnect from the world in this stunning minimalist retreat surrounded by Joshua Tree National Park. Perfect for stargazing and desert adventures.',
     bedrooms: 2,
     bathrooms: 1,

@@ -1,6 +1,6 @@
 export const caracteristicas = [
     "PILETA",
     "WIFI",
-    "MASCOTAS PERMITIDAS",
+    "MASCOTA",
     "ESTACIONAMIENTO"
 ]
