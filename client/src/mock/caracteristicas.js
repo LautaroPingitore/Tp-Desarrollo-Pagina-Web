@@ -1,5 +1,5 @@
 export const caracteristicas = [
-    "PILETA",
+    "Pileta",
     "Wifi",
     "Mascotas",
     "Estacionamiento"

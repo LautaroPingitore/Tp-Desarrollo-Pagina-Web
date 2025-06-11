@@ -61,11 +61,10 @@ const AlojamientoDetail = () => {
             setMostrarCalendario(null);
         }
     };
-
   const amenityIcons = {
     'Wifi': <Wifi className="w-5 h-5" />,
     'Mascotas': <Dog  className="w-5 h-5" />,
-    'PILETA': <Waves className="w-5 h-5" />,
+    'Pileta': <Waves className="w-5 h-5" />,
     'Estacionamiento': <Car className="w-5 h-5" />,
   };  const calculateTotal = () => {
     if (!fechas.checkin || !fechas.checkout) return 0;
@@ -202,9 +201,12 @@ const AlojamientoDetail = () => {
                     </div>
                   </button>                </div>                {/* CALENDARIO */}
                 {mostrarCalendario && (
-                  <div ref={calendarioRef} className="absolute z-[99999] top-95 -right-2 bg-black rounded-lg !shadow-lg border border-gray-600">
-                    <Calendario onChange={handleFechasSeleccionadas} />
-                  </div>
+                  <div
+                  ref={calendarioRef}
+                  className="relative z-[99999] top-78 -right-43 bg-black rounded-lg !shadow-lg border border-gray-600"
+                >
+                  <Calendario onChange={handleFechasSeleccionadas} />
+                </div>
                 )}
 
                 <div className="space-y-1 !font-xl">

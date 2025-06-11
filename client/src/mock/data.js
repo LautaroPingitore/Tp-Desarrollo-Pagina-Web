@@ -1,7 +1,7 @@
 export const mockProperties = [
   {
     id: '1',
-    title: 'Stunning Ocean View Villa with Private PILETA',
+    title: 'Stunning Ocean View Villa with Private Pileta',
     location: 'Malibu, California, USA',
     price: 450,
     rating: 4.95,
@@ -19,8 +19,8 @@ export const mockProperties = [
       superhost: true,
       joinedYear: 2018
     },
-    amenities: ['Wifi', 'Mascotas', 'PILETA', 'Estacionamiento', 'AC', 'Ocean View', 'Hot Tub', 'BBQ Grill'],
-    description: 'Experience luxury living in this stunning oceanfront villa with breathtaking panoramic views of the Pacific Ocean. This modern retreat features floor-to-ceiling windows, a private infinity PILETA, and direct beach access.',
+    amenities: ['Wifi', 'Mascotas', 'Pileta', 'Estacionamiento', 'AC', 'Ocean View', 'Hot Tub', 'BBQ Grill'],
+    description: 'Experience luxury living in this stunning oceanfront villa with breathtaking panoramic views of the Pacific Ocean. This modern retreat features floor-to-ceiling windows, a private infinity Pileta, and direct beach access.',
     bedrooms: 4,
     bathrooms: 3,
     guests: 8,
@@ -97,7 +97,7 @@ export const mockProperties = [
       superhost: true,
       joinedYear: 2017
     },
-    amenities: ['Wifi', 'Mascotas', 'PILETA', 'Beach Access', 'AC', 'Tropical Garden', 'Hammock'],
+    amenities: ['Wifi', 'Mascotas', 'Pileta', 'Beach Access', 'AC', 'Tropical Garden', 'Hammock'],
     description: 'Wake up to the sound of waves in this beautiful beachfront casa. Featuring traditional Mexican architecture with modern amenities and direct beach access.',
     bedrooms: 3,
     bathrooms: 2,

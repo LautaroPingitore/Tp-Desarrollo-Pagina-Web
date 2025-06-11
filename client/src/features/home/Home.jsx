@@ -21,7 +21,7 @@ const Home = () => {    const alojamientos = [
             guests: 6,
             bedrooms: 3,
             bathrooms: 2,
-            amenities: ['Wifi', 'PILETA', 'Estacionamiento', 'AC', 'Mascotas']
+            amenities: ['Wifi', 'Pileta', 'Estacionamiento', 'AC', 'Mascotas']
         },
         {
             id: 2,
@@ -78,7 +78,7 @@ const Home = () => {    const alojamientos = [
             guests: 8,
             bedrooms: 4,
             bathrooms: 3,
-            amenities: ['Wifi', 'PILETA', 'Mascotas', 'Estacionamiento', 'AC', 'Hot Tub']
+            amenities: ['Wifi', 'Pileta', 'Mascotas', 'Estacionamiento', 'AC', 'Hot Tub']
         },
         {
             id: 5,
@@ -164,12 +164,12 @@ const Home = () => {    const alojamientos = [
        <>
   <BloqueFiltro />
   <div className="flex pt-10 justify-center bg-black relative z-10">
-    <div className="grid grid-cols-5 gap-[9px] bg-black max-w-6xl w-full p-0 m-0 relative z-10">
-      {alojamientos.map((alojamiento) => (
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 bg-black max-w-6xl w-full px-4">
+        {alojamientos.map((alojamiento) => (
         <BloqueAlojamiento key={alojamiento.id} alojamiento={alojamiento} />
-      ))}
+        ))}
     </div>
-  </div>
+</div>
 </>
         
     );
