@@ -23,26 +23,26 @@ const Calendario = ({ onChange }) => {
     };
 
     return (
-        <div ref={containerRef} className="antd-dark-calendar">
+        <div ref={containerRef} className="antd-dark-calendar border border-gray-700 shadow-lg">
             <Space size={12} direction="vertical">
                 <DatePicker.RangePicker
-            
-                    onChange={onChange}
-                    cellRender={cellRender}
-                    getPopupContainer={() => containerRef.current}
-                    allowClear={false}
-                    placeholder={['', '']}
-                    open={true}
-                    style={{
-                        opacity: 0,
-                        position: 'absolute',
-                        pointerEvents: 'none',
-                        width: 0,
-                        height: 0,
-                        margin: 0,
-                        padding: 0,
-                        border: 'none',
-                    }}
+                onChange={onChange}
+                cellRender={cellRender}
+                getPopupContainer={() => containerRef.current}
+                allowClear={false}
+                placeholder={['', '']}
+                open={true}
+                popupClassName="shadow-lg border border-gray-700 rounded-xl bg-neutral-900"
+                style={{
+                    opacity: 0,
+                    position: 'absolute',
+                    pointerEvents: 'none',
+                    width: 0,
+                    height: 0,
+                    margin: 0,
+                    padding: 0,
+                    border: 'none',
+                }}
                 />
             </Space>
         </div>

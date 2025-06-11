@@ -21,7 +21,7 @@ const Home = () => {    const alojamientos = [
             guests: 6,
             bedrooms: 3,
             bathrooms: 2,
-            amenities: ['WIFI', 'PILETA', 'ESTACIONAMIENTO', 'AC', 'MASCOTA']
+            amenities: ['Wifi', 'PILETA', 'Estacionamiento', 'AC', 'Mascotas']
         },
         {
             id: 2,
@@ -40,7 +40,7 @@ const Home = () => {    const alojamientos = [
             guests: 4,
             bedrooms: 2,
             bathrooms: 1,
-            amenities: ['WIFI', 'Fireplace', 'MASCOTA', 'ESTACIONAMIENTO', 'BBQ Grill']
+            amenities: ['Wifi', 'Fireplace', 'Mascotas', 'Estacionamiento', 'BBQ Grill']
         },
         {
             id: 3,
@@ -59,7 +59,7 @@ const Home = () => {    const alojamientos = [
             guests: 4,
             bedrooms: 2,
             bathrooms: 1,
-            amenities: ['WIFI', 'MASCOTA', 'AC', 'ESTACIONAMIENTO']
+            amenities: ['Wifi', 'Mascotas', 'AC', 'Estacionamiento']
         },
         {
             id: 4,
@@ -78,7 +78,7 @@ const Home = () => {    const alojamientos = [
             guests: 8,
             bedrooms: 4,
             bathrooms: 3,
-            amenities: ['WIFI', 'PILETA', 'MASCOTA', 'ESTACIONAMIENTO', 'AC', 'Hot Tub']
+            amenities: ['Wifi', 'PILETA', 'Mascotas', 'Estacionamiento', 'AC', 'Hot Tub']
         },
         {
             id: 5,
@@ -97,7 +97,7 @@ const Home = () => {    const alojamientos = [
             guests: 2,
             bedrooms: 1,
             bathrooms: 1,
-            amenities: ['WIFI', 'MASCOTA']
+            amenities: ['Wifi', 'Mascotas']
         },
         {
             id: 6,
@@ -116,7 +116,7 @@ const Home = () => {    const alojamientos = [
             guests: 6,
             bedrooms: 3,
             bathrooms: 2,
-            amenities: ['WIFI', 'MASCOTA', 'BBQ Grill', 'ESTACIONAMIENTO']
+            amenities: ['Wifi', 'Mascotas', 'BBQ Grill', 'Estacionamiento']
         }/* ,
         {
             id: 7,

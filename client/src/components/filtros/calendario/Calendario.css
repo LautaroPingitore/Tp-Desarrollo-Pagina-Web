@@ -9,6 +9,10 @@
   border-radius: 0;
 }
 
+.custom-calendar-popup {
+  /* Vacío, o puedes poner aquí ajustes de CSS puros */
+}
+
 /* Opcional: para redondear bordes de inicio y fin del rango */
 :where(.css-dev-only-do-not-override-mc1tut).ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-selected:not(.ant-picker-cell-disabled) .ant-picker-cell-inner, :where(.css-dev-only-do-not-override-mc1tut).ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-range-start:not(.ant-picker-cell-disabled) .ant-picker-cell-inner, :where(.css-dev-only-do-not-override-mc1tut).ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-range-end:not(.ant-picker-cell-disabled) .ant-picker-cell-inner {
     color: #fff;

@@ -19,7 +19,7 @@ export const mockProperties = [
       superhost: true,
       joinedYear: 2018
     },
-    amenities: ['WIFI', 'MASCOTA', 'PILETA', 'ESTACIONAMIENTO', 'AC', 'Ocean View', 'Hot Tub', 'BBQ Grill'],
+    amenities: ['Wifi', 'Mascotas', 'PILETA', 'Estacionamiento', 'AC', 'Ocean View', 'Hot Tub', 'BBQ Grill'],
     description: 'Experience luxury living in this stunning oceanfront villa with breathtaking panoramic views of the Pacific Ocean. This modern retreat features floor-to-ceiling windows, a private infinity PILETA, and direct beach access.',
     bedrooms: 4,
     bathrooms: 3,
@@ -45,7 +45,7 @@ export const mockProperties = [
       superhost: false,
       joinedYear: 2020
     },
-    amenities: ['WIFI', 'MASCOTA', 'Fireplace', 'ESTACIONAMIENTO', 'Heating', 'Mountain View', 'Ski Storage'],
+    amenities: ['Wifi', 'Mascotas', 'Fireplace', 'Estacionamiento', 'Heating', 'Mountain View', 'Ski Storage'],
     description: 'Escape to this charming mountain cabin surrounded by snow-capped peaks. Perfect for a cozy retreat with rustic charm and modern amenities.',
     bedrooms: 2,
     bathrooms: 2,
@@ -71,7 +71,7 @@ export const mockProperties = [
       superhost: true,
       joinedYear: 2019
     },
-    amenities: ['WIFI', 'MASCOTA', 'AC', 'Elevator', 'City View', 'Rooftop Access', 'Gym'],
+    amenities: ['Wifi', 'Mascotas', 'AC', 'Elevator', 'City View', 'Rooftop Access', 'Gym'],
     description: 'Stylish loft in the heart of Manhattan with floor-to-ceiling windows and stunning city skyline views. Walking distance to subway and major attractions.',
     bedrooms: 1,
     bathrooms: 1,
@@ -97,7 +97,7 @@ export const mockProperties = [
       superhost: true,
       joinedYear: 2017
     },
-    amenities: ['WIFI', 'MASCOTA', 'PILETA', 'Beach Access', 'AC', 'Tropical Garden', 'Hammock'],
+    amenities: ['Wifi', 'Mascotas', 'PILETA', 'Beach Access', 'AC', 'Tropical Garden', 'Hammock'],
     description: 'Wake up to the sound of waves in this beautiful beachfront casa. Featuring traditional Mexican architecture with modern amenities and direct beach access.',
     bedrooms: 3,
     bathrooms: 2,
@@ -123,7 +123,7 @@ export const mockProperties = [
       superhost: true,
       joinedYear: 2016
     },
-    amenities: ['WIFI', 'MASCOTA', 'Fireplace', 'Garden', 'Library', 'Historical Features', 'ESTACIONAMIENTO'],
+    amenities: ['Wifi', 'Mascotas', 'Fireplace', 'Garden', 'Library', 'Historical Features', 'Estacionamiento'],
     description: 'Stay in a piece of history in this beautifully restored 16th-century castle. Experience royal treatment with modern comforts in the heart of Scotland.',
     bedrooms: 5,
     bathrooms: 4,
@@ -149,7 +149,7 @@ export const mockProperties = [
       superhost: false,
       joinedYear: 2021
     },
-    amenities: ['WIFI', 'MASCOTA', 'AC', 'Desert View', 'Stargazing Deck', 'Solar Power', 'Hot Tub'],
+    amenities: ['Wifi', 'Mascotas', 'AC', 'Desert View', 'Stargazing Deck', 'Solar Power', 'Hot Tub'],
     description: 'Disconnect from the world in this stunning minimalist retreat surrounded by Joshua Tree National Park. Perfect for stargazing and desert adventures.',
     bedrooms: 2,
     bathrooms: 1,

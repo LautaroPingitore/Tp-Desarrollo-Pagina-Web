@@ -62,12 +62,11 @@ const AlojamientoDetail = () => {
         }
     };
 
-
   const amenityIcons = {
-    'WIFI': <Wifi className="w-5 h-5" />,
-    'MASCOTA': <Dog  className="w-5 h-5" />,
+    'Wifi': <Wifi className="w-5 h-5" />,
+    'Mascotas': <Dog  className="w-5 h-5" />,
     'PILETA': <Waves className="w-5 h-5" />,
-    'ESTACIONAMIENTO': <Car className="w-5 h-5" />,
+    'Estacionamiento': <Car className="w-5 h-5" />,
     'AC': <AirVent className="w-5 h-5" />,
     'Fireplace': <div className="w-5 h-5 bg-orange-500 rounded-full"></div>,
     'Hot Tub': <Waves className="w-5 h-5" />,
@@ -144,7 +143,7 @@ const AlojamientoDetail = () => {
           <div className="lg:col-span-2 space-y-8">
             {/* Host Info */}
             <div className="flex items-center justify-between pb-8 border-b border-gray-800">              <div>
-                <h2 className="text-2xl font-semibold text-white mb-2">
+                <h2 className="text-2xl font-semibold text-white mb-2 text-left">
                   {property.propertyType || "Alojamiento completo"} ofrecido por {hostData.name}
                 </h2>
                 <div className="flex items-center space-x-4 text-gray-300">
@@ -154,16 +153,16 @@ const AlojamientoDetail = () => {
                 </div>
               </div>
             </div>            {/* Description */}
-            <div className="pb-8 border-b border-gray-800">
-              <h3 className="text-xl font-semibold text-white mb-4">Acerca de este lugar</h3>
+            <div className="pb-8 border-b border-gray-800 text-left">
+              <h3 className="text-xl font-bold text-white mb-4">Acerca de este lugar</h3>
               <p className="text-gray-300 leading-relaxed">{property.descripcion}</p>
             </div>
 
             {/* Amenities */}
             <div className="pb-8 border-b border-gray-800">
-              <h3 className="text-xl font-semibold text-white mb-4">Lo que ofrece este lugar</h3>
+              <h3 className="text-xl font-bold text-white text-left mb-4">Lo que ofrece este lugar</h3>
               <div className="grid grid-cols-2 gap-4">
-                {(property.amenities || ['WIFI', 'MASCOTA', 'AC', 'ESTACIONAMIENTO']).map((amenity, index) => (
+                {(property.amenities || ['Wifi', 'Mascotas', 'AC', 'Estacionamiento']).map((amenity, index) => (
                   <div key={index} className="flex items-center space-x-3 text-gray-300">
                     {amenityIcons[amenity] || <div className="w-5 h-5 bg-gray-600 rounded"></div>}
                     <span>{amenity}</span>
@@ -177,49 +176,49 @@ const AlojamientoDetail = () => {
           </div>
 
           {/* Booking Card */}
-          <div className="lg:col-span-1 relative">
-            <div className="sticky top-24 bg-black rounded-xl border border-gray-700 p-6 shadow-xl">              <div className="flex items-baseline space-x-2 mb-6">
-                <span className="text-2xl font-bold text-white">${property.precio}</span>
+          <div className="lg:col-span-1 relative text-center">
+            <div className="top-24 bg-black rounded-xl border border-gray-700 p-6 shadow-xl text-center">              <div className="flex items-baseline space-x-2 mb-6 justify-center">
+                <span className="text-3xl font-bold text-white ">${property.precio}</span>
                 <span className="text-gray-400">noche</span>
               </div>              {/* Date Selection */}
               <div className="space-y-4 mb-6 relative">
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     onClick={() => setMostrarCalendario('calendario')}
-                    className="space-y-1 text-left"
+                    className="space-y-1 text-center"
                   >
-                    <label className="text-xs font-medium text-gray-400 uppercase tracking-wide">
+                    <label className="text-sm text-gray-400 uppercase tracking-wide font-semibold text-center">
                       Entrada
                     </label>                    
-                    <div className={`w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 cursor-pointer ${fechas.checkin ? 'text-black' : 'text-gray-400'}`}>
+                    <div className={`w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 cursor-pointer ${fechas.checkin ? 'text-black' : 'text-black'}`}>
                       {fechas.checkin ? dayjs(fechas.checkin).format('DD/MM/YYYY') : 'Seleccionar fecha'}
                     </div>
                   </button>
                   <button
                     onClick={() => setMostrarCalendario('calendario')}
-                    className="space-y-1 text-left"
+                    className="space-y-1 "
                   >
-                    <label className="text-xs font-medium text-gray-400 uppercase tracking-wide">
+                    <label className="text-sm text-gray-400 uppercase tracking-wide text-center font-semibold">
                       Salida
                     </label>
-                    <div className={`w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 cursor-pointer ${fechas.checkout ? 'text-black' : 'text-gray-400'}`}>
+                    <div className={`w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 cursor-pointer ${fechas.checkout ? 'text-black' : 'text-black'}`}>
                       {fechas.checkout ? dayjs(fechas.checkout).format('DD/MM/YYYY') : 'Seleccionar fecha'}
                     </div>
                   </button>                </div>                {/* CALENDARIO */}
                 {mostrarCalendario && (
-                  <div ref={calendarioRef} className="absolute z-[99999] top-95 -right-2 bg-black rounded-lg shadow-lg border border-gray-600">
+                  <div ref={calendarioRef} className="absolute z-[99999] top-95 -right-2 bg-black rounded-lg !shadow-lg border border-gray-600">
                     <Calendario onChange={handleFechasSeleccionadas} />
                   </div>
                 )}
 
-                <div className="space-y-1">
-                  <label className="text-xs font-medium text-gray-400 uppercase tracking-wide">
+                <div className="space-y-1 !font-xl">
+                  <label className="text-sm text-gray-400 font-semibold uppercase tracking-wide mb-9 py-2">
                     Huéspedes
-                  </label>
+                  </label>                  
                   <select
                     value={guests}
                     onChange={(e) => setGuests(Number(e.target.value))}
-                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-pink-500"
+                    className="!text-sm w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-pink-500 cursor-pointer text-center"
                   >
                     {Array.from({ length: property.guests || 4 }, (_, i) => i + 1).map((num) => (
                       <option key={num} value={num}>
@@ -229,7 +228,7 @@ const AlojamientoDetail = () => {
                   </select>
                 </div>
               </div>{/* Reserve Button */}
-              <button className="w-full cursor-pointer bg-gradient-to-r from-emerald-300 to-emerald-400 hover:from-emerald-400 hover:to-emerald-500 flex items-center justify-center py-4 px-4 font-medium transition duration-200 shadow-lg hover:shadow-xl mb-4 rounded-lg">
+              <button className="w-full cursor-pointer bg-gradient-to-r from-emerald-300 to-emerald-400 hover:from-emerald-400 hover:to-emerald-500 flex items-center justify-center py-4 px-4 font-semibold transition duration-200 shadow-lg hover:shadow-xl mb-4 rounded-lg">
                 Reservar
               </button>
 
