@@ -1,6 +1,6 @@
 const Footer = () => {
     return (
-        <footer className="footer w-full bg-black text-white">
+        <footer className="footer w-full bg-black text-white border-t border-gray-700">
             <div className="w-full container mx-auto px-4 py-6 bg-black">
                 <div className="flex flex-col items-center">
                     <p className="text-gray-400 text-sm mb-2">© 2023 Tu Empresa. Todos los derechos reservados.</p>
