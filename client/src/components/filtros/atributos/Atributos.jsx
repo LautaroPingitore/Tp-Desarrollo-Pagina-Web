@@ -205,7 +205,7 @@ const Atributos = () => {
 
   {/* CALENDARIO */}
   {mostrarCalendario && (
-    <div ref={calendarioRef} className="absolute z-[99999] top-113 left-140 sm:top-16 sm:left-40 transform -translate-x-1/2 bg-black rounded-lg shadow-lg">
+    <div ref={calendarioRef} className="absolute z-[99999] top-190 left-0 sm:top-16 sm:left-40 transform -translate-x-1/2 bg-black rounded-lg shadow-lg">
       <Calendario onChange={handleFechasSeleccionadas} />
     </div>
   )}

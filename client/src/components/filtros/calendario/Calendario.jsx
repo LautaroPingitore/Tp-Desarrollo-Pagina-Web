@@ -32,10 +32,10 @@ const Calendario = ({ onChange }) => {
                 allowClear={false}
                 placeholder={['', '']}
                 open={true}
-                popupClassName="shadow-lg border border-gray-700 rounded-xl bg-neutral-900"
+                popupClassName="shadow-lg border border-gray-700 rounded-xl bg-neutral-900 custom-calendar-popup"
                 style={{
                     opacity: 0,
-                    position: 'absolute',
+                    position: 'relative',
                     pointerEvents: 'none',
                     width: 0,
                     height: 0,
