@@ -1,10 +1,33 @@
-import React, { useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 
 
 const NavBar = () => {
 
     const [menuOpen, setMenuOpen] = useState(false);
     const toggleMenu = () => setMenuOpen(prev => !prev);
+
+    const menuRef = useRef(null);
+
+  // Cierra el menú si se hace clic fuera
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuOpen(false);
+      }
+    };
+
+    if (menuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [menuOpen]);
+
+    
     return (
         <nav className="bg-black text-gray-100 w-full flex relative justify-between items-center mx-auto px-8 h-20 border-b border-gray-700">
             <div className="inline-flex">
@@ -70,7 +93,7 @@ const NavBar = () => {
                                 </svg>
                             </div>
                         </button>                        {menuOpen && (
-                            <div className="absolute right-0 z-[99999] mt-2 w-48 origin-top-right rounded-md bg-black py-1 shadow-lg ring-1 ring-white/20 focus:outline-hidden" role="menu" aria-orientation="vertical">
+                            <div ref={menuRef} className="absolute right-0 z-[99999] mt-2 w-48 origin-top-right rounded-md bg-black py-1 shadow-lg ring-1 ring-white/20 focus:outline-hidden" role="menu" aria-orientation="vertical">
                                 <a href="#" className="block px-4 py-2 text-sm text-gray-300">Your Profile</a>
                                 <a href="#" className="block px-4 py-2 text-sm text-gray-300">Settings</a>
                                 <a href="#" className="block px-4 py-2 text-sm text-gray-300">Sign out</a>

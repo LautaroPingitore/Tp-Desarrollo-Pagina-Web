@@ -67,10 +67,6 @@ const AlojamientoDetail = () => {
     'Mascotas': <Dog  className="w-5 h-5" />,
     'PILETA': <Waves className="w-5 h-5" />,
     'Estacionamiento': <Car className="w-5 h-5" />,
-    'AC': <AirVent className="w-5 h-5" />,
-    'Fireplace': <div className="w-5 h-5 bg-orange-500 rounded-full"></div>,
-    'Hot Tub': <Waves className="w-5 h-5" />,
-    'BBQ Grill': <div className="w-5 h-5 bg-gray-600 rounded"></div>,
   };  const calculateTotal = () => {
     if (!fechas.checkin || !fechas.checkout) return 0;
     const days = Math.ceil((fechas.checkout.toDate().getTime() - fechas.checkin.toDate().getTime()) / (1000 * 60 * 60 * 24));
