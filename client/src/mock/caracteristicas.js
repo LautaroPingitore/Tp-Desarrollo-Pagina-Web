@@ -1,6 +1,6 @@
-export const caracteristicas = [
-    "Pileta",
-    "Wifi",
-    "Mascotas",
-    "Estacionamiento"
+export const caracteristicasGlobales = [
+    "PILETA",
+    "WIFI",
+    "MASCOTAS_PERMITIDAS",
+    "ESTACIONAMIENTO"
 ]

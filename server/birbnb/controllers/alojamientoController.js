@@ -8,16 +8,15 @@ export class AlojamientoController {
     async findAll(req, res, next){
         try {
             const { page = 1, limit = 10} = req.query
+            const paginacion = { page, limit}
+
+            const {ciudad=null, pais=null, cantidadHuespedes=null, precioMin=null, precioMax=null, caracteristicas=[]} = req.query
+            const filtros = {ciudad, pais, cantidadHuespedes, precioMin, precioMax, caracteristicas}
             
-            const hasFilters = req.body && Object.values(req.body).some(value => value !== null && 
-                value !== undefined 
-                && !(Array.isArray(value) 
-                && value.length === 0
-            ))
+            const hasFilters = Object.values(filtros).some(value => value !== null && value !== undefined && value !== '' && (Array.isArray(value) ? value.length > 0 : true));
 
             let alojamientos
             if(hasFilters) {
-                const { ciudad=null, pais=null, cantidadHuespedes=null, precioMin=null, precioMax=null, caracteristicas=[]} = req.body
                 const filtro = new Filtro(ciudad, pais, cantidadHuespedes, precioMin, precioMax, caracteristicas)
                 alojamientos = await this.alojamientoService.findByFilters(filtro, {page, limit});
             } else {

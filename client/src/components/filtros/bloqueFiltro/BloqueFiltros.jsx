@@ -2,14 +2,30 @@ import React from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import Atributos from "../../filtros/atributos/Atributos";
 import Caracteristicas from "../../filtros/caracteristicas/Caracteristicas";
+import { useState } from "react";
 
-const BloqueFiltros = () => {
+const BloqueFiltros = ({filtros, setFiltros}) => {
+    const [atributos, setAtributos] = useState(
+       { 
+        pais: null,
+        fechaEntrada: null,
+        fechaSalida: null,
+        cantidadHuespedes: 1,
+        precioMax: null,
+        caracteristicas: null
+       }
+    )
+
+    const actualizarFiltros = () => {
+        setFiltros(atributos);
+    }
+
     return (
         <div className="w-full flex flex-col items-center gap-4 px-4 py-6 bg-black relative z-50">
             {/* Barra de filtros */}
         <div className="bg-black rounded-full sm:border sm:border-white/20 sm:drop-shadow-[0_0_8px_rgba(255,255,255,0.15)] px-6 py-4 grid sm:flex items-center gap-6 w-full max-w-4xl relative z-50">
-            <Atributos />
-            <button className="p-3 rounded-full text-black cursor-pointer bg-gradient-to-r from-emerald-300 to-emerald-400 hover:from-emerald-400 hover:to-emerald-500 flex items-center justify-center py-4 px-4 font-medium transition">
+            <Atributos atributos={atributos} setAtributos={setAtributos} />
+            <button className="p-3 rounded-full text-black cursor-pointer bg-gradient-to-r from-emerald-300 to-emerald-400 hover:from-emerald-400 hover:to-emerald-500 flex items-center justify-center py-4 px-4 font-medium transition" onClick={actualizarFiltros}>
                 <svg
                 viewBox="0 0 32 32"
                 xmlns="http://www.w3.org/2000/svg"
@@ -33,7 +49,7 @@ const BloqueFiltros = () => {
             </button>
             </div>
 
-            <Caracteristicas />
+            <Caracteristicas atributos={atributos} setAtributos={setAtributos}/>
         </div>
     );
 };
