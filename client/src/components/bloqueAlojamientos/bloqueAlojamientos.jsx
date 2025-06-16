@@ -23,7 +23,7 @@ const BloqueAlojamientos = ({alojamiento}) => {
     <Card onClick={() => onSelect(alojamiento)} className="group cursor-pointer w-full max-w-[15rem] h-[12rem] relative bg-black text-white align-center justify-center shadow-none border-none rounded-lg p-0 z-0">
       <CardHeader floated={false} color="blue-gray" className="w-full p-0 m-0">
         <img
-          src={alojamiento?.images?.[0] || "https://images.unsplash.com/photo-1499696010180-025ef6e1a8f9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"}
+          src={alojamiento?.fotos?.[0] || "https://images.unsplash.com/photo-1499696010180-025ef6e1a8f9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"}
           alt={alojamiento?.nombre || "Alojamiento"}
           className="w-full object-cover rounded-t-lg p-0"
         />
@@ -51,7 +51,7 @@ const BloqueAlojamientos = ({alojamiento}) => {
             </Typography>
         </div>
         <Typography color="gray" className="text-xs text-gray-500 text-left">
-          ${alojamiento?.precio || 0} USD por noche
+          ${alojamiento?.precioPorNoche || 0} USD por noche
         </Typography>
     
       </CardBody>

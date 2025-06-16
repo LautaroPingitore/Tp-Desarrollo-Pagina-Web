@@ -81,8 +81,8 @@ const Atributos = () => {
 <div className="flex flex-col sm:flex-row sm:items-center gap-4 px-4 py-2 bg-black border border-gray-700 rounded-3xl w-full sm:border-0">
 
     {/* LUGAR */}
-    <div className="relative w-full sm:ml-4 sm:flex-1">
-      <label className="text-xs text-gray-100">Lugar</label>
+    <div className="relative w-full sm:ml-4 sm:flex-1 justify-center">
+      <label className="text-xs text-gray-100 text-xs mb-1">Lugar</label>
       <input
         type="text"
         value={busquedaLugar}

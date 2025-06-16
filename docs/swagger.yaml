@@ -553,3 +553,4 @@ paths:
       responses:
         '200':
           description: Lista de reservas del alojamiento
+          

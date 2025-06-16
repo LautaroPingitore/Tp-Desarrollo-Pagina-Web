@@ -1,0 +1,10 @@
+.tamanioLogo {
+  width: 20%;
+}
+
+@media screen and (max-width: 768px) {
+  .tamanioLogo {
+    width: 50%;
+  }
+    
+}

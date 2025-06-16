@@ -4,7 +4,7 @@ import { CiudadController } from "../controllers/ciudadController.js"
 export default function ciudadRoutes(getController) {
     const router = express.Router()
 
-    router.get("/ciudades", (req, res, next) => {
+    router.get("/birbnb/ciudades", (req, res, next) => {
         getController(CiudadController).findAll(req, res, next)
     })
 

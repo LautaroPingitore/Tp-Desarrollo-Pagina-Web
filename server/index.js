@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 dotenv.config(); 
 
 import express from "express";
+import cors from 'cors';
 import { Server } from "./server.js";
 
 import swaggerUi from "swagger-ui-express";
@@ -54,6 +55,9 @@ const huespedController = new HuespedController(huespedService, reservaService);
 const alojamientoController = new AlojamientoController(alojamientoService);
 
 const app = express();
+app.use(cors({
+    origin: "http://localhost:5173"
+}))
 const port = process.env.PORT || 3000;
 const server = new Server(app, port);
 
@@ -72,7 +76,7 @@ routes.forEach(r => {
 })
 server.configureRoutes();
 
-const swaggerDocument = YAML.load("recursos/swagger.yaml")
+const swaggerDocument = YAML.load("../docs/swagger.yaml")
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 app.use(errorHandler)
