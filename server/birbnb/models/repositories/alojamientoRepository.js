@@ -78,6 +78,21 @@ export class AlojamientoRepository {
             query.caracteristicas = { $all: filtro.caracteristicas }
         }
 
+        if (filtro.fechaInicio && filtro.fechaFin) {
+            const fechaInicioDate = parseFechaDDMMYYYY(filtro.fechaInicio);
+            const fechaFinDate = parseFechaDDMMYYYY(filtro.fechaFin);
+
+            query.fechasNoDisponibles = {
+                $not: {
+                    $elemMatch: {
+                        fechaInicio: { $lte: fechaFinDate },
+                        fechaFin: { $gte: fechaInicioDate }
+                    }
+                }
+            };
+        }
+
+
         const resultadosFiltro1 = await this.model.find(query)
             .populate('anfitrion')
             .populate({
@@ -114,4 +129,9 @@ export class AlojamientoRepository {
                 populate: {path: 'pais'}
             })
     }
+}
+
+function parseFechaDDMMYYYY(fechaStr) {
+  const [dia, mes, anio] = fechaStr.split("/");
+  return new Date(`${anio}-${mes}-${dia}T00:00:00`);
 }

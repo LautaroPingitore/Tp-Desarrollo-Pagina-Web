@@ -14,7 +14,8 @@ export class AlojamientoController {
             const filtros = {ciudad, pais, cantidadHuespedes, precioMin, precioMax, fechaInicio, fechaFin, caracteristicas}
             
             const hasFilters = Object.values(filtros).some(value => value !== null && value !== undefined && value !== '' && (Array.isArray(value) ? value.length > 0 : true));
-
+            
+            console.log("Filtros aplicados:", filtros);
             let alojamientos
             if(hasFilters) {
                 const filtro = new Filtro(ciudad, pais, cantidadHuespedes, precioMin, precioMax, fechaInicio, fechaFin, caracteristicas)
@@ -45,8 +46,13 @@ export class AlojamientoController {
         try{
             const { page = 1, limit = 10} = req.query;
             const filtro = req.query;
+
+            debugger
+            console.log("dsadasdasda", filtro);
+
             const alojamientos = await this.alojamientoService.findByFilters(filtro, {page, limit});
 
+           
             res.json(alojamientos);
         } catch (error) {
             next(error)
