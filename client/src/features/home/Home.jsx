@@ -27,8 +27,11 @@ const Home = () => {
             const response = await getAlojamientos(pageNumber, filtros)
             setAlojamientosPagina(response.data)
             setTotalPages(response.totalPages)
-            setPageNumber(response.page)
+            if (response.page !== pageNumber) {
+                setPageNumber(response.page);
+                }
             console.log(response)
+            console.log(filtros)
         } catch(error) {
             return (
                 <div>

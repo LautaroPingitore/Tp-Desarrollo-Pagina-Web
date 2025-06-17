@@ -42,7 +42,7 @@ const Caracteristicas = ({ atributos, setAtributos }) => {
           type="button"
           key={index}
           onClick={() => toggleCaracteristica(index)}
-          className={`px-4 py-2 rounded-full shadow-sm text-sm transition-all cursor-pointer focus:outline-none
+          className={` px-4 py-2 rounded-full shadow-sm text-sm sm:text-xs transition-all cursor-pointer focus:outline-none
         ${seleccionadas.includes(index)
               ? 'border-2 border-emerald-300 bg-black !text-gray-300 hover:bg-gray-700'
               : 'border border-gray-700 bg-black !text-gray-300 hover:bg-gray-700'

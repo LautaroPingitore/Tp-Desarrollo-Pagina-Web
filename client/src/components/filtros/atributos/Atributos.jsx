@@ -2,15 +2,16 @@ import React, { useState, useRef, useEffect } from "react";
 import Calendario from '../calendario/Calendario.jsx';
 import dayjs from 'dayjs';
 import {getAlojamientos} from "../../../api/api.js"
-
+import { getDestinos } from "../../../api/api.js";
 
 const Atributos = ({ atributos, setAtributos }) => {
   const [mostrarCalendario, setMostrarCalendario] = useState(null);
   const calendarioRef = useRef();
   const [fechas, setFechas] = useState({ checkin: null, checkout: null });
-    const [pageNumber, setPageNumber] = useState(1)
-        const [totalPages, setTotalPages] = useState(0)
-    
+  const [pagina, setPagina] = useState(1)
+  const [totalPaginas, setTotalPaginas] = useState(0)
+    const [cargandoDestinos, setCargandoDestinos] = useState(false);
+
   
 
   const [busquedaLugar, setBusquedaLugar] = useState('');
@@ -42,30 +43,31 @@ const Atributos = ({ atributos, setAtributos }) => {
   };
 
   const cargarDestinosSugerencia = async () => {
-          try {
-              console.log(`Cargando destinos de segurencia`)
-              const response = await getAlojamientos(pageNumber)
-              setDestinosSug(response.data)
-              setTotalPages(response.totalPages)
-              setPageNumber(response.page)
-              console.log(response)
-          } catch(error) {
-              return (
-                  <div>
-                      Algo salio mal :/
-                  </div>
-              )
-          }
-      }
+  try {
+    setCargandoDestinos(true); // empieza la carga
+    const response = await getDestinos(pagina);
+    setDestinosSug(response.data.data);
+    setTotalPaginas(response.data.total_pages);
+    setPagina(response.data.page);
+  } catch (error) {
+    console.error("Algo salió mal:", error);
+  } finally {
+    setCargandoDestinos(false); // termina la carga
+  }
+}
 
-  useEffect(() => {
+
+   useEffect(() => {
     cargarDestinosSugerencia();
+  }, []);
+      
+  useEffect(() => {
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [pageNumber]);
+  }, []); 
 
 
   const actualizarViajeros = (operacion) => { // :D
@@ -126,19 +128,25 @@ const Atributos = ({ atributos, setAtributos }) => {
               })
             }}
             onFocus={() => setMostrarDropdownLugar(true)}
+            
             onBlur={() => setTimeout(() => setMostrarDropdownLugar(false), 200)}
             placeholder="Explorar destinos"
             className="w-full mt-1 px-4 py-2 text-sm !text-white rounded-full bg-black border border-gray-700 placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-gray-500 text-center"
           />
+          
           {mostrarDropdownLugar && (
-            <div className="absolute mt-2 w-114 max-w-md rounded-2xl shadow-lg z-[99999] bg-black max-h-96 overflow-y-auto scroll-dark">
+            <div className="absolute mt-2 w-68 max-w-md rounded-2xl shadow-lg z-[99999] bg-black max-h-96 overflow-y-auto scroll-dark">
               <div className="p-3 text-sm text-gray-500 font-semibold">Sugerencias de destinos</div>
-              {destinosSug
-                .filter((d) => d.nombre.toLowerCase().includes(busquedaLugar.toLowerCase()))
+              { cargandoDestinos ? (
+                <div className="flex justify-center py-6">
+                  <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-white"></div>
+                </div>
+              ) : (
+              destinosSug.filter((d) => d.nombre.toLowerCase().includes(busquedaLugar.toLowerCase()))
                 .map((destino, i) => (
                   <div
                     key={i}
-                    className="flex items-start gap-3 px-4 py-3 hover:bg-gray-800 cursor-pointer"
+                    className="text-white flex items-start gap-3 px-4 py-3 hover:bg-gray-800 cursor-pointer"
                     onMouseDown={() => {
                       setBusquedaLugar(destino.nombre);
                       var lugar = destino.nombre
@@ -151,11 +159,11 @@ const Atributos = ({ atributos, setAtributos }) => {
                   >
                     <span className="text-lg pt-1">{destino.icon}</span>
                     <div className="flex flex-col items-start">
-                      <div className="font-semibold text-white leading-tight">{destino.title}</div>
-                      <div className="text-sm text-gray-400">{destino.description}</div>
+                      <div className="font-semibold text-white leading-tight">{destino.nombre}</div>
+                      <div className="text-sm text-gray-400">{destino.pais}</div>
                     </div>
                   </div>
-                ))}
+                )))}
             </div>
           )}
         </div>

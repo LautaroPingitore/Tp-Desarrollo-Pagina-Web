@@ -34,7 +34,9 @@ export class CiudadRepository {
     }
 
     async findByPage(pageNum, limitNum) {
-        return await this.model.findByPage(pageNum, limitNum).populate('pais')
+        const skip = (pageNum - 1) * limitNum
+        let ciuadades = await this.model.find().skip(skip).limit(limitNum).populate('pais')
+        return ciuadades
     }
 
     async countAll() {

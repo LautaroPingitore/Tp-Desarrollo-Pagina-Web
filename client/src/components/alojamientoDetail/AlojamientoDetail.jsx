@@ -167,7 +167,7 @@ const AlojamientoDetail = () => {
                     <label className="text-sm text-gray-400 uppercase tracking-wide font-semibold text-center">
                       Entrada
                     </label>                    
-                    <div className={`w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 cursor-pointer ${fechas.checkin ? 'text-black' : 'text-black'}`}>
+                    <div className={`text-white w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 cursor-pointer ${fechas.checkin ? 'text-black' : 'text-black'}`}>
                       {fechas.checkin ? dayjs(fechas.checkin).format('DD/MM/YYYY') : 'Seleccionar fecha'}
                     </div>
                   </button>
@@ -178,7 +178,7 @@ const AlojamientoDetail = () => {
                     <label className="text-sm text-gray-400 uppercase tracking-wide text-center font-semibold">
                       Salida
                     </label>
-                    <div className={`w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 cursor-pointer ${fechas.checkout ? 'text-black' : 'text-black'}`}>
+                    <div className={`text-white w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 cursor-pointer ${fechas.checkout ? 'text-black' : 'text-black'}`}>
                       {fechas.checkout ? dayjs(fechas.checkout).format('DD/MM/YYYY') : 'Seleccionar fecha'}
                     </div>
                   </button>                </div>                {/* CALENDARIO */}
@@ -196,19 +196,19 @@ const AlojamientoDetail = () => {
                     Huéspedes
                   </label>                  
                   <select
-                    value={property.cantHuespedesMax}
-                    onChange={(e) => setGuests(Number(e.target.value))}
-                    className="!text-sm w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-pink-500 cursor-pointer text-center"
-                  >
-                    {Array.from({ length: property.cantHuespedesMax}, (_, i) => i + 1).map((num) => (
-                      <option key={num} value={num}>
-                        {num} huésped{num > 1 ? 'es' : ''}
-                      </option>
-                    ))}
-                  </select>
+                value={guests}  // Usa la variable de estado
+                onChange={(e) => setGuests(Number(e.target.value))}
+                className="!text-white !text-sm w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-pink-500 cursor-pointer text-center"
+              >
+                {Array.from({ length: property.cantHuespedesMax }, (_, i) => i + 1).map((num) => (
+                  <option key={num} value={num}>
+                    {num} huésped{num > 1 ? 'es' : ''}
+                  </option>
+                ))}
+              </select>
                 </div>
               </div>{/* Reserve Button */}
-              <button className="w-full cursor-pointer bg-gradient-to-r from-emerald-300 to-emerald-400 hover:from-emerald-400 hover:to-emerald-500 flex items-center justify-center py-4 px-4 font-semibold transition duration-200 shadow-lg hover:shadow-xl mb-4 rounded-lg">
+              <button className="!text-black w-full cursor-pointer bg-gradient-to-r from-emerald-300 to-emerald-400 hover:from-emerald-400 hover:to-emerald-500 flex items-center justify-center py-4 px-4 font-semibold transition duration-200 shadow-lg hover:shadow-xl mb-4 rounded-lg ">
                 Reservar
               </button>
 
