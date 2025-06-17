@@ -10,7 +10,7 @@ const Atributos = ({ atributos, setAtributos }) => {
   const [fechas, setFechas] = useState({ checkin: null, checkout: null });
   const [pagina, setPagina] = useState(1)
   const [totalPaginas, setTotalPaginas] = useState(0)
-    const [cargandoDestinos, setCargandoDestinos] = useState(false);
+  const [cargandoDestinos, setCargandoDestinos] = useState(false);
 
   
 
@@ -98,8 +98,8 @@ const Atributos = ({ atributos, setAtributos }) => {
     if (dates && dates.length === 2) {
       setAtributos({
         ...atributos,
-        fechaEntrada: dayjs(dates[0]).format('DD/MM/YYYY'),
-        fechaSalida: dayjs(dates[1]).format('DD/MM/YYYY'),
+        fechaInicio: dayjs(dates[0]).format('DD/MM/YYYY'),
+        fechaFin: dayjs(dates[1]).format('DD/MM/YYYY'),
       })
       setFechas({
         checkin: dates[0],

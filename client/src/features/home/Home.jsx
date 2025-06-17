@@ -2,6 +2,8 @@ import BloqueFiltro from "../../components/filtros/bloqueFiltro/BloqueFiltros"
 import BloqueAlojamiento from "../../components/bloqueAlojamientos/bloqueAlojamientos"
 import { useState, useEffect } from "react"
 import {getAlojamientos} from "../../api/api.js"
+import { IconButton, Typography } from "@material-tailwind/react"
+import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/solid"
 
 const Home = () => {
     const [pageNumber, setPageNumber] = useState(1)
@@ -23,15 +25,12 @@ const Home = () => {
 
     const cargarAlojamientos = async () => {
         try {
-            console.log(`Cargando alojamientos de la página ${pageNumber}`)
             const response = await getAlojamientos(pageNumber, filtros)
             setAlojamientosPagina(response.data)
-            setTotalPages(response.totalPages)
+            setTotalPages(response.total_pages)
             if (response.page !== pageNumber) {
                 setPageNumber(response.page);
-                }
-            console.log(response)
-            console.log(filtros)
+            }
         } catch(error) {
             return (
                 <div>
@@ -40,19 +39,67 @@ const Home = () => {
             )
         }
     }
+
+    const handlePrevious = () => {
+        if(pageNumber > 1) {
+            setPageNumber(pageNumber - 1)
+        }
+    }
+
+    const handleNext = () => {
+        if(pageNumber < totalPages) {
+            setPageNumber(pageNumber + 1)
+        }
+    }
     
     return (
         <>
-            <BloqueFiltro filtros={filtros} setFiltros={setFiltros} />
-            <div className="flex pt-10 justify-center bg-black relative z-10">
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 bg-black max-w-6xl w-full px-4">
-                    {alojamientosPagina.map((alojamientosPagina) => (
-                        <BloqueAlojamiento key={alojamientosPagina.id} alojamiento={alojamientosPagina} />
+            <BloqueFiltro filtros={filtros} setFiltros={setFiltros} pageNumber={pageNumber} setPageNumber={setPageNumber}/>
+            
+            <div className="flex items-center justify-center pt-10 bg-black relative z-10">
+                {/* Contenedor de flecha izquierda (siempre presente) */}
+                <div className="w-12 flex items-center justify-center h-full px-2">
+                    {pageNumber > 1 && (
+                        <IconButton 
+                            size="sm" 
+                            variant="outlined" 
+                            onClick={handlePrevious}
+                            className="rounded-full border-gray-600 text-gray-300 hover:bg-gray-800 mx-2"
+                        >
+                            <ArrowLeftIcon className="h-5 w-5" />
+                        </IconButton>
+                    )}
+                </div>
+
+                {/* Grid de alojamientos */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 bg-black max-w-6xl w-full px-2 flex-1">
+                    {alojamientosPagina.map((alojamiento) => (
+                        <BloqueAlojamiento key={alojamiento.id} alojamiento={alojamiento} />
                     ))}
                 </div>
+
+                {/* Contenedor de flecha derecha (siempre presente) */}
+                <div className="w-12 flex items-center justify-center h-full px-2">
+                    {pageNumber < totalPages && (
+                        <IconButton 
+                            size="sm" 
+                            variant="outlined" 
+                            onClick={handleNext}
+                            className="rounded-full border-gray-600 text-gray-300 hover:bg-gray-800 mx-2"
+                        >
+                            <ArrowRightIcon className="h-5 w-5" />
+                        </IconButton>
+                    )}
+                </div>
+            </div>
+
+            {/* Indicador de página */}
+            <div className="flex justify-center py-4 bg-black">
+                <Typography variant="small" color="white">
+                    Página {pageNumber} de {totalPages}
+                </Typography>
             </div>
         </>
-
     );
 }
 
