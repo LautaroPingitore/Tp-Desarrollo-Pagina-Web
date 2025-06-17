@@ -11,6 +11,7 @@ const Atributos = ({ atributos, setAtributos }) => {
   const [pagina, setPagina] = useState(1)
   const [totalPaginas, setTotalPaginas] = useState(0)
   const [cargandoDestinos, setCargandoDestinos] = useState(false);
+  const [cargandoAlojamientos, setCargandoAlojamientos] = useState(false);
 
   
 
@@ -24,14 +25,6 @@ const Atributos = ({ atributos, setAtributos }) => {
 
   const [precioMax, setPrecioMax] = useState("");
 
-  const destinosSugerencia = [
-    { icon: "📍", title: "En la zona", description: "Descubrí qué hay cerca de vos" },
-    { icon: "🏙️", title: "Buenos Aires, Provincia de Buenos Aires", description: "Obelisco de Buenos Aires" },
-    { icon: "🌊", title: "Mar Azul, Provincia de Buenos Aires", description: "Alojamientos en Mar Azul" },
-    { icon: "🌲", title: "Cariló, Provincia de Buenos Aires", description: "Por su encanto costero" },
-    { icon: "🏖️", title: "Mar del Plata, Provincia de Buenos Aires", description: "Destino de playa popular" },
-    { icon: "🏔️", title: "San Carlos de Bariloche, Provincia de Río Negro", description: "Cerca del Parque Nacional Nahuel Huapi" }
-  ];
 
   const handleClickOutside = (e) => {
     if (calendarioRef.current && !calendarioRef.current.contains(e.target)) {
@@ -59,7 +52,25 @@ const Atributos = ({ atributos, setAtributos }) => {
 
    useEffect(() => {
     cargarDestinosSugerencia();
-  }, []);
+  }, [])
+
+useEffect(() => {
+  setBusquedaLugar(atributos.ciudad || "");
+  setPrecioMax(atributos.precioMax || "");
+  setFechas({
+    checkin: atributos.fechaInicio
+      ? dayjs(atributos.fechaInicio, "DD/MM/YYYY").toDate()
+      : null,
+    checkout: atributos.fechaFin
+      ? dayjs(atributos.fechaFin, "DD/MM/YYYY").toDate()
+      : null
+  });
+  setViajeros(atributos.cantidadHuespedes || 1);
+}, [atributos]);
+
+
+
+
       
   useEffect(() => {
 
