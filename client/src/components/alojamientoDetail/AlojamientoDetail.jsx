@@ -23,11 +23,21 @@ const AlojamientoDetail = () => {
   const [fechas, setFechas] = useState({ checkin: null, checkout: null });
   const [guests, setGuests] = useState(1);
 
+  const [loading, setLoading] = useState(true);
+
   const handleClickOutside = (e) => {
     if (calendarioRef.current && !calendarioRef.current.contains(e.target)) {
             setMostrarCalendario(null);
        }
   };
+
+  useEffect(() => {
+  const timeout = setTimeout(() => {
+    setLoading(false);
+  }, 800); // mínimo visible 800ms
+
+  return () => clearTimeout(timeout);
+}, []);
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
@@ -54,7 +64,18 @@ const AlojamientoDetail = () => {
     if (!fechas.checkin || !fechas.checkout) return 0;
     const days = Math.ceil((fechas.checkout.toDate().getTime() - fechas.checkin.toDate().getTime()) / (1000 * 60 * 60 * 24));
     return days > 0 ? days * property.precioPorNoche : 0;
+
+
   };
+
+  if (loading) {
+  return (
+    <div className="min-h-screen bg-black flex justify-center items-center">
+      <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-emerald-300"></div>
+    </div>
+  );
+}
+
 
   return (
     <div className="min-h-screen bg-black">
