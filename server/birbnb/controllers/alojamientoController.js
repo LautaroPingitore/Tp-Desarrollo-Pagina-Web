@@ -10,14 +10,14 @@ export class AlojamientoController {
             const { page = 1, limit = 10} = req.query
             const paginacion = { page, limit}
 
-            const {ciudad=null, pais=null, cantidadHuespedes=null, precioMin=null, precioMax=null, caracteristicas=[]} = req.query
-            const filtros = {ciudad, pais, cantidadHuespedes, precioMin, precioMax, caracteristicas}
+            const {ciudad=null, pais=null, cantidadHuespedes=null, precioMin=null, precioMax=null, fechaInicio=null, fechaFin=null, caracteristicas=[]} = req.query
+            const filtros = {ciudad, pais, cantidadHuespedes, precioMin, precioMax, fechaInicio, fechaFin, caracteristicas}
             
             const hasFilters = Object.values(filtros).some(value => value !== null && value !== undefined && value !== '' && (Array.isArray(value) ? value.length > 0 : true));
 
             let alojamientos
             if(hasFilters) {
-                const filtro = new Filtro(ciudad, pais, cantidadHuespedes, precioMin, precioMax, caracteristicas)
+                const filtro = new Filtro(ciudad, pais, cantidadHuespedes, precioMin, precioMax, fechaInicio, fechaFin, caracteristicas)
                 alojamientos = await this.alojamientoService.findByFilters(filtro, {page, limit});
             } else {
                 alojamientos = await this.alojamientoService.findAll({ page, limit })
@@ -67,12 +67,34 @@ export class AlojamientoController {
 
     // Endpoint para eliminar un alojamiento
     async delete(req, res, next) {
-    try {
-      await this.alojamientoService.delete(req.params.id);
+        try {
+        await this.alojamientoService.delete(req.params.id);
 
-      return res.status(204).send();
-    } catch (error) {
-      next(error);
+        return res.status(204).send();
+        } catch (error) {
+        next(error);
+        }
     }
-  }
+
+    async importArray(req, res, next) {
+        try {
+            let array = req.body
+            
+            if (!Array.isArray(array)) {
+            if (typeof array === 'object' && array !== null) {
+                array = [array];
+            } else {
+                throw new Error("El cuerpo debe ser un array o un objeto");
+            }
+        }
+
+            for(const a of array) {
+                await this.alojamientoService.create(a)
+            }
+
+            res.status(200).send({message: `Importación completa. ${array.length} documentos insertados.`})
+        } catch (error) {
+            next(error)
+        }
+    }
 }

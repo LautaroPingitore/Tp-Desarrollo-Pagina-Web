@@ -20,5 +20,9 @@ export default function alojamientoRoutes(getController) {
     getController(AlojamientoController).delete(req, res, next)
   })
 
+  router.post("/birbnb/alojamientos/array", (req, res, next) => {
+    getController(AlojamientoController).importArray(req, res, next)
+  })
+
   return router;
 }

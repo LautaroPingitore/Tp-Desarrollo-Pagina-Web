@@ -104,11 +104,14 @@ export class ReservaService {
         if (!alojamientoObject.estasDisponibleEn(reservasDeAlojamiento, objectFechas)) {
             throw new ValidationError("El alojamiento no está disponible en las fechas indicadas")
         }
+
+        alojamientoObject.agregarFechasReserva(objectFechas)
         
         const nuevaReserva = new Reserva(fechaActual, huesped, cantHuespedes, alojamientoObject, objectFechas)
         
         const anfitrionActualizado = nuevaReserva.notificar()
 
+        await this.alojamientoRepository.save(alojamientoObject)
         await this.anfitrionRepository.save(anfitrionActualizado)
         await this.reservaRepository.save(nuevaReserva)
         return this.toDTO(nuevaReserva)
@@ -156,7 +159,13 @@ export class ReservaService {
             if(reserva.rangoFechas.fechaInicio < fechaActual) {
                 throw new ValidationError("No se puede cancelar luego de pasada la fecha inicio")
             }
-            
+
+            const fechasReserva = reserva.rangoFechas
+            const alojamiento = reserva.alojamiento
+
+            alojamiento.eliminarFechasReserva(fechasReserva)
+            await this.alojamientoRepository.save(alojamiento)
+
             const anfitrionActualizado = reserva.notificarCambioEstado(EstadoReserva.CANCELADA, motivo)
             await this.anfitrionRepository.save(anfitrionActualizado)
             await this.reservaRepository.save(reserva)

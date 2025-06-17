@@ -13,10 +13,26 @@ export class Alojamiento {
     this.cantHuespedesMax = cantHuespedesMax;
     this.caracteristicas = caracteristicas;
     this.fotos = fotos;
+    this.fechasNoDisponibles = []
   }
 
-  estasDisponibleEn(reservas, rangoFecha) {
-    return reservas.every(res => res.estado !== EstadoReserva.CONFIRMADA && !res.rangoFechas.seSuperponeCon(rangoFecha));
+  agregarFechasReserva(rangoFecha) {
+    this.fechasNoDisponibles.push(rangoFecha)
+  }
+
+  eliminarFechasReserva(rangoFecha) {
+    const index = this.fechasNoDisponibles.findIndex(r => 
+      r.fechaInicio.getTime() === rangoFecha.fechaInicio.getTime() && 
+      r.fechaFin.getTime() === rangoFecha.fechaFin.getTime()
+    );
+
+    if (index !== -1) {
+      this.fechasNoDisponibles.splice(index, 1);
+    }
+  }
+
+  estasDisponibleEn(rangoFecha) {
+    return this.fechasNoDisponibles.every(f => !f.seSuperponeCon(rangoFecha))
   } 
 
   tuPrecioEstaDentroDe(valorMinimo, valorMaximo) {

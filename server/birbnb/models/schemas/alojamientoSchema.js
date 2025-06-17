@@ -1,4 +1,4 @@
-import mongoose from "mongoose"
+import mongoose, { Schema } from "mongoose"
 import { Alojamiento } from "../entities/Alojamiento.js";
 
 const alojamientoSchema = new mongoose.Schema({
@@ -71,9 +71,14 @@ const alojamientoSchema = new mongoose.Schema({
             maxlength: 100
         },
         altura: {
-            type: Number,
+            type: Schema.Types.Mixed,
             required: true,
-            min: 0
+            validate: {
+                validator: function (v) {
+                return typeof v === 'string' || typeof v === 'number';
+                },
+                message: props => `${props.value} no es ni un string ni un número válido para altura`
+            }
         },
         ciudad: {
             type: mongoose.Schema.Types.ObjectId,
@@ -100,6 +105,18 @@ const alojamientoSchema = new mongoose.Schema({
         trim: true,
         minlength: 1,   
         maxlength: 1000
+    }],
+
+    fechasNoDisponibles: [{
+        fechaInicio: {
+            type: Date,
+            required: true
+        },
+
+        fechaFin: {
+            type: Date,
+            required: true
+        }
     }]
 })
 
