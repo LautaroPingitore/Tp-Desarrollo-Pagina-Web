@@ -26,3 +26,17 @@ export const getAlojamientos = async (pageNumber, filtros) => {
         throw error;
     }
 };
+
+export const getDestinos = async (pageNumber) => {
+    try {
+        
+        const response = await axios.get(`${API_URL}/ciudades`, {
+            params: { page: pageNumber }
+        });
+
+        return response.data;
+    } catch (error) {
+        console.log("Algo salio mal");
+        throw error;
+    }
+};

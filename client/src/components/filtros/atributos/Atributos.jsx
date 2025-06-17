@@ -1,11 +1,17 @@
 import React, { useState, useRef, useEffect } from "react";
 import Calendario from '../calendario/Calendario.jsx';
 import dayjs from 'dayjs';
+import {getAlojamientos} from "../../../api/api.js"
+
 
 const Atributos = ({ atributos, setAtributos }) => {
   const [mostrarCalendario, setMostrarCalendario] = useState(null);
   const calendarioRef = useRef();
   const [fechas, setFechas] = useState({ checkin: null, checkout: null });
+    const [pageNumber, setPageNumber] = useState(1)
+        const [totalPages, setTotalPages] = useState(0)
+    
+  
 
   const [busquedaLugar, setBusquedaLugar] = useState('');
   const [mostrarDropdownLugar, setMostrarDropdownLugar] = useState(false);
@@ -13,6 +19,7 @@ const Atributos = ({ atributos, setAtributos }) => {
   const viajerosRef = useRef();
   const [mostrarViajeros, setMostrarViajeros] = useState(false);
   const [viajeros, setViajeros] = useState(1);
+  const [destinosSug, setDestinosSug] = useState([]);
 
   const [precioMax, setPrecioMax] = useState("");
 
@@ -34,12 +41,31 @@ const Atributos = ({ atributos, setAtributos }) => {
     }
   };
 
+  const cargarDestinosSugerencia = async () => {
+          try {
+              console.log(`Cargando destinos de segurencia`)
+              const response = await getAlojamientos(pageNumber)
+              setDestinosSug(response.data)
+              setTotalPages(response.totalPages)
+              setPageNumber(response.page)
+              console.log(response)
+          } catch(error) {
+              return (
+                  <div>
+                      Algo salio mal :/
+                  </div>
+              )
+          }
+      }
+
   useEffect(() => {
+    cargarDestinosSugerencia();
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [pageNumber]);
 
 
   const actualizarViajeros = (operacion) => { // :D
@@ -70,8 +96,8 @@ const Atributos = ({ atributos, setAtributos }) => {
     if (dates && dates.length === 2) {
       setAtributos({
         ...atributos,
-        fechaEntrada: dates[0],
-        fechaSalida: dates[1],
+        fechaEntrada: dayjs(dates[0]).format('DD/MM/YYYY'),
+        fechaSalida: dayjs(dates[1]).format('DD/MM/YYYY'),
       })
       setFechas({
         checkin: dates[0],
@@ -93,9 +119,10 @@ const Atributos = ({ atributos, setAtributos }) => {
             value={busquedaLugar}
             onChange={(e) => {
               setBusquedaLugar(e.target.value)
+              var lugar = e.target.value
               setAtributos({
                 ...atributos,
-                pais: e.target.value.split(",")[1]
+                ciudad: lugar
               })
             }}
             onFocus={() => setMostrarDropdownLugar(true)}
@@ -106,18 +133,18 @@ const Atributos = ({ atributos, setAtributos }) => {
           {mostrarDropdownLugar && (
             <div className="absolute mt-2 w-114 max-w-md rounded-2xl shadow-lg z-[99999] bg-black max-h-96 overflow-y-auto scroll-dark">
               <div className="p-3 text-sm text-gray-500 font-semibold">Sugerencias de destinos</div>
-              {destinosSugerencia
-                .filter((d) => d.title.toLowerCase().includes(busquedaLugar.toLowerCase()))
+              {destinosSug
+                .filter((d) => d.nombre.toLowerCase().includes(busquedaLugar.toLowerCase()))
                 .map((destino, i) => (
                   <div
                     key={i}
                     className="flex items-start gap-3 px-4 py-3 hover:bg-gray-800 cursor-pointer"
                     onMouseDown={() => {
-                      setBusquedaLugar(destino.title);
-                      var paiss = destino.title.split(",")[1]
+                      setBusquedaLugar(destino.nombre);
+                      var lugar = destino.nombre
                       setAtributos({
                         ...atributos,
-                        pais: paiss
+                        ciudad: lugar
                       })
                       setMostrarDropdownLugar(false);
                     }}

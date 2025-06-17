@@ -7,7 +7,7 @@ import { useState } from "react";
 const BloqueFiltros = ({filtros, setFiltros}) => {
     const [atributos, setAtributos] = useState(
        { 
-        pais: null,
+        ciudad: null,
         fechaEntrada: null,
         fechaSalida: null,
         cantidadHuespedes: 1,

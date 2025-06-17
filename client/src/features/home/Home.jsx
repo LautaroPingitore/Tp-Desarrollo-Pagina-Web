@@ -7,7 +7,7 @@ const Home = () => {
     const [pageNumber, setPageNumber] = useState(1)
     const [totalPages, setTotalPages] = useState(0)
     const [filtros, setFiltros] = useState({ 
-        lugar: null,
+        ciudad: null,
         fechaEntrada: null,
         fechaSalida: null,
         cantidadHuespedes: 1,

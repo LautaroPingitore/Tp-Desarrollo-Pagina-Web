@@ -140,7 +140,7 @@ const AlojamientoDetail = () => {
               <h3 className="text-xl font-bold text-white text-left mb-4">Lo que ofrece este lugar</h3>
               <div className="grid grid-cols-2 gap-4">
                 {(property.caracteristicas || ['Wifi', 'Mascotas', 'AC', 'Estacionamiento']).map((amenity, index) => (
-                  <div key={index} className="flex items-center space-x-3 text-gray-300">
+                  <div key={index} className="flex items-center space-x-3 p-3 bg-gray-800 rounded-lg !text-white">
                     {amenityIcons[amenity] || <div className="w-5 h-5 bg-gray-600 rounded"></div>}
                     <span>{amenity}</span>
                   </div>
