@@ -29,7 +29,7 @@ const BloqueFiltros = ({filtros, setFiltros, pageNumber, setPageNumber}) => {
         if(pageNumber > 1) {
             setPageNumber(1)
         }
-        setFiltros(atributos);
+        setFiltros(filtrosBase);
     }
 
     const actualizarFiltros = () => {
