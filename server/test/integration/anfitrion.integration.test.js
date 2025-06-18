@@ -39,10 +39,10 @@ const anfitrionController = new AnfitrionController(anfitrionService)
 
 server.setController(AnfitrionController, anfitrionController)
 
-describe("GET /anfitriones", () => {
+describe("GET /birbnb/anfitriones", () => {
     
     test("Debe retornar un estado 200 y 2 anfitriones", async () => {
-        const response = await request(server.app).get("/anfitriones")
+        const response = await request(server.app).get("/birbnb/anfitriones")
 
         expect(response.status).toBe(200)
         expect(response.body.page).toBe(1)
@@ -61,7 +61,7 @@ describe("GET /anfitriones", () => {
             },
         ])
 
-        const response = await request(server.app).get("/anfitriones?page=1&limit=1")
+        const response = await request(server.app).get("/birbnb/anfitriones?page=1&limit=1")
 
         expect(response.status).toBe(200)
         expect(response.body.page).toBe(1)
@@ -92,7 +92,7 @@ describe("POST /login/anfitrion", () => {
 
         anfitrionRepository.save = jest.fn().mockResolvedValue(savedAnfitrion)
         
-        const response = await request(server.app).post("/login/anfitrion").send(newAnfitrion)
+        const response = await request(server.app).post("/birbnb/login/anfitrion").send(newAnfitrion)
 
         expect(response.status).toBe(201)
         expect(anfitrionRepository.save).toHaveBeenCalled()
@@ -104,7 +104,7 @@ describe("POST /login/anfitrion", () => {
             nombre: "Pepe"
         }
 
-        const response = await request(server.app).post("/login/anfitrion").send(newAnfitrion)
+        const response = await request(server.app).post("/birbnb/login/anfitrion").send(newAnfitrion)
 
         expect(response.status).toBe(400)
         expect(response.body.message).not.toBeUndefined()

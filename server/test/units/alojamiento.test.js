@@ -4,12 +4,12 @@ import { Reserva } from "../../birbnb/models/entities/Reserva.js";
 
 describe("Tests de Requisitos Reserva", () => {
     const alojamiento = new Alojamiento(null, null, null, 1000, null, null, null, null, 5, null, null)
-    const reserva = new Reserva(null, null, null, alojamiento, new RangoFechas(new Date(2023,10,22), new Date(2023,11,1)), null)
-    alojamiento.reservas.push(reserva)
+    alojamiento.agregarFechasReserva(new RangoFechas(new Date(2025,6,10), new Date(2025,6,20)))
     
+
     test("El alojamiento puede reservarse en x rango de fechas", () => {
-        const rangoFechaTrue = new RangoFechas(new Date(2023, 10, 3), new Date(2023, 10, 21));
-        const rangoFechaFalse = new RangoFechas(new Date(2023, 10, 3), new Date(2023, 10, 27));
+        const rangoFechaTrue = new RangoFechas(new Date(2025, 6, 3), new Date(2025, 6, 9));
+        const rangoFechaFalse = new RangoFechas(new Date(2025, 6, 5), new Date(2025, 6, 22));
 
         expect(alojamiento.estasDisponibleEn(rangoFechaTrue)).toBe(true)
         expect(alojamiento.estasDisponibleEn(rangoFechaFalse)).toBe(false)

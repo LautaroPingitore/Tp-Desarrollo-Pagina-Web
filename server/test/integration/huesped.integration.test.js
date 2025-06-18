@@ -42,10 +42,10 @@ const huespedService = new HuespedService(huespedRepository)
 const huespedController = new HuespedController(huespedService)
 server.setController(HuespedController, huespedController)
 
-describe("GET /huespedes", () => {
+describe("GET /birbnb/huespedes", () => {
 
         test("debería retornar un estado 200 y 2 anfitriones", async () => {
-            const response = await request(server.app).get("/huespedes")
+            const response = await request(server.app).get("/birbnb/huespedes")
     
             expect(response.status).toBe(200)
             expect(response.body.page).toBe(1)
@@ -65,7 +65,7 @@ describe("GET /huespedes", () => {
         }
         ]);
 
-        const response = await request(server.app).get("/huespedes?page=1&limit=1");
+        const response = await request(server.app).get("/birbnb/huespedes?page=1&limit=1");
 
         expect(response.status).toBe(200);
         expect(response.body.page).toBe(1);
@@ -83,7 +83,7 @@ describe("POST /huespedes", () => {
             email: "santino@example.com"
         }
 
-        const response = await request(server.app).post("/login/huesped").send(huesped)
+        const response = await request(server.app).post("/birbnb/login/huesped").send(huesped)
 
         expect(response.status).toBe(201)
         expect(response.body).toEqual({
@@ -100,7 +100,7 @@ describe("POST /huespedes", () => {
         email: "santino@example.com"
     }
 
-    const response = await request(server.app).post("/login/huesped").send(huesped)
+    const response = await request(server.app).post("/birbnb/login/huesped").send(huesped)
 
     expect(response.status).toBe(400)
     expect(response.body).toEqual({

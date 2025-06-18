@@ -19,7 +19,7 @@ export class Filtro {
 
     validarPais(alojamiento, pais) {
         if(pais == null) return true;
-        return alojamiento.direccion.ciudad.pais = pais;
+        return alojamiento.direccion.ciudad.pais === pais;
     }
 
     validarCantidadHuespedes(alojamiento, cantidadHuespedes) {

@@ -119,7 +119,6 @@ export class ReservaService {
 
     async modificarEstado(idUsuario, idReserva, nuevoEstado, motivo=null) {
         nuevoEstado = nuevoEstado.toUpperCase()
-
         const reserva = await this.reservaRepository.findById(idReserva)
         if(!reserva) {
             throw new NotFoundError(`Reserva ${idReserva} inexistente`)

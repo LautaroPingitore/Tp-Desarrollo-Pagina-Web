@@ -72,11 +72,10 @@ async marcarLeidaNotificacion(req, res, next) {
       next(error)
     }
   }
-
  
   async cancelReserva(req, res, next) {
     try {
-      const { id, idNotificacion} = req.params
+      const { id, idReserva} = req.params
 
       const motivo = req.body && req.body.motivo ? req.body.motivo : null;
   

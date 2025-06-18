@@ -6,11 +6,20 @@ import { describe, expect, jest, test } from "@jest/globals"
 import request from "supertest"
 import express from "express"
 import { errorHandler } from "../../birbnb/middlewares/errorHandler.js"
+import { AnfitrionController } from "../../birbnb/controllers/anfitrionController.js"
+import { AnfitrionService } from "../../birbnb/services/anfitrionService.js"
+import { HuespedService } from "../../birbnb/services/huespedService.js"
+import { HuespedController } from "../../birbnb/controllers/huespedController.js"
+import anfitrionRoutes from "../../birbnb/routes/anfitrionRoutes.js"
+import huespedRoutes from "../../birbnb/routes/huespedRoutes.js"
+import { EstadoReserva } from "../../birbnb/models/entities/enums/EstadoReserva.js"
 
 const app = express()
 const server = buildTestServer(app)
 
 server.addRoute(reservaRoutes)
+server.addRoute(anfitrionRoutes)
+server.addRoute(huespedRoutes)
 server.configureRoutes()
 
 app.use(errorHandler)
@@ -22,9 +31,16 @@ const reservaRepository = {
         [
             {
                 id: 0,
-                huespedReservador: "Pepita",
+                huespedReservador: {
+                    nombre: "Pepita"
+                },
                 cantHuespedes: 2,
-                alojamiento: "Casa de playa",
+                alojamiento: {
+                    anfitrion: {
+                        nombre: "AnfitrionX"
+                    },
+                    nombre: "Casa de playa"
+                },
                 rangoFechas: {
                     fechaInicio: new Date("2023/10/01"),
                     fechaFin: new Date("2023/10/05")
@@ -32,7 +48,9 @@ const reservaRepository = {
             },
             {
                 id: 1,
-                huespedReservador: "Juanito",
+                huespedReservador: {
+                    nombre: "Juanito"
+                },
                 cantHuespedes: 4,
                 alojamiento: "Cabaña en la montaña",
                 rangoFechas: {
@@ -42,16 +60,14 @@ const reservaRepository = {
             }
         ]
     ),
-    save: jest.fn().mockImplementation(reserva => Promise.resolve(reserva)),
     findByAlojamiento: jest.fn().mockResolvedValue([]),
-    findById: jest.fn().mockResolvedValue(null)
 }
 
 const alojamientoRepository = {
     findByName: jest.fn().mockResolvedValue({
         nombre: "Casa de playa",
         anfitrion: {
-            nombre: "Anfitrionx",
+            nombre: "AnfitrionX",
             email: "pppp",
             notificaciones: [],
             
@@ -79,11 +95,15 @@ const huespedRepository = {
 }
 
 const anfitrionRepository = {
-    findById: jest.fn().mockResolvedValue({ id: 1, nombre: "AnfitrionX" , email: "pppp"}),
+    findById: jest.fn().mockResolvedValue({ 
+        id: 1,
+        nombre: "AnfitrionX", 
+        email: "pppp"
+    }),
     findByName: jest.fn().mockResolvedValue({
         id: 1,
         nombre: "AnfitrionX",
-        email: "anfitrion@gmail.com"
+        email: "pppp"
     }),
     save: jest.fn()
 }
@@ -98,13 +118,32 @@ const reservaService = new ReservaService(
 const reservaController = new ReservaController(reservaService)
 server.setController(ReservaController, reservaController)
 
+const anfitrionService = new AnfitrionService(anfitrionRepository)
+const anfitrionController = new AnfitrionController(anfitrionService, reservaService)
+server.setController(AnfitrionController, anfitrionController)
+
+const huespedService = new HuespedService(huespedRepository)
+const huespedController = new HuespedController(huespedService, reservaService)
+server.setController(HuespedController, huespedController)
+
 let alojamientoMock
+let huespedMock
 let anfitrionMock
+let reservaMock
 
 beforeEach(() => {
     anfitrionMock = {
-        nombre: "Anfitrionx",
+        nombre: "AnfitrionX",
         email: "pppp",
+        notificaciones: [],
+        recibirNotificacion: jest.fn(function(n) {
+            this.notificaciones.push(n)
+        })
+    }
+
+    huespedMock = {
+        nombre: "Pepita",
+        email: "sss",
         notificaciones: [],
         recibirNotificacion: jest.fn(function(n) {
             this.notificaciones.push(n)
@@ -115,15 +154,43 @@ beforeEach(() => {
         nombre: "Casa de playa",
         anfitrion: anfitrionMock,
         puedenAlojarse: jest.fn().mockReturnValue(true),
-        estasDisponibleEn: jest.fn().mockReturnValue(true)
+        estasDisponibleEn: jest.fn().mockReturnValue(true),
+        agregarFechasReserva: jest.fn().mockReturnValue(),
+        eliminarFechasReserva: jest.fn().mockReturnValue()
     }
 
     alojamientoRepository.findByName = jest.fn().mockResolvedValue(alojamientoMock)
+    alojamientoRepository.save = jest.fn().mockResolvedValue(alojamientoMock)
+
+    reservaMock = {
+        id: 0,
+        estado: EstadoReserva.PENDIENTE,
+        huespedReservador: huespedMock,
+        cantHuespedes: 2,
+        alojamiento: alojamientoMock,
+        rangoFechas: {
+            fechaInicio: new Date("3000/10/01"),
+            fechaFin: new Date("3000/10/05")
+        },
+        notificarCambioEstado: jest.fn(function (estado) {
+            if (estado === EstadoReserva.CONFIRMADA) {
+                huespedMock.recibirNotificacion("CONFIRMADA")
+                return huespedMock
+            } else if (estado === EstadoReserva.CANCELADA) {
+                anfitrionMock.recibirNotificacion("CANCELADA")
+                return anfitrionMock
+            } else {
+                return null
+            }
+        })
+    }
+    reservaRepository.save = jest.fn().mockResolvedValue(reservaMock)
+    reservaRepository.findById = jest.fn().mockResolvedValue(reservaMock)
 })
 
-describe("GET /reservas", () => {
+describe("GET /birbnb/reservas", () => {
     test("Debe retornar un estado 200 y 2 reservas", async () => {
-        const response = await request(server.app).get("/reservas")
+        const response = await request(server.app).get("/birbnb/reservas")
 
         expect(response.status).toBe(200)
         expect(response.body.page).toBe(1)
@@ -147,7 +214,7 @@ describe("GET /reservas", () => {
                 }
             }
         ])
-        const response = await request(server.app).get("/reservas?page=1&limit=1")
+        const response = await request(server.app).get("/birbnb/reservas?page=1&limit=1")
 
         expect(response.status).toBe(200)
         expect(response.body.page).toBe(1)
@@ -158,7 +225,7 @@ describe("GET /reservas", () => {
     })
 })
 
-describe("POST /reservas", () => {
+describe("POST /birbnb/reservas", () => {
     test("Debe retornar un estado 201 y la reserva creada, notificando al anfitrión", async () => {
 
         const nuevaReserva = {
@@ -188,7 +255,7 @@ describe("POST /reservas", () => {
         reservaRepository.save = jest.fn().mockResolvedValue()
 
         const response = await request(server.app)
-            .post("/reservar")
+            .post("/birbnb/reservar")
             .send(nuevaReserva)
         
         expect(response.status).toBe(201)
@@ -207,7 +274,7 @@ describe("POST /reservas", () => {
         }
 
         const response = await request(server.app)
-            .post("/reservar")
+            .post("/birbnb/reservar")
             .send(nuevaReserva)
 
         expect(response.status).toBe(400)
@@ -216,19 +283,22 @@ describe("POST /reservas", () => {
 
 })
 
+// describe("PUT /birbnb/cancelar o confirmar", () => {
+//     test("Luego de aceptar una reserva le llega una notificacion al huesped", async () => {
+//         const response = await request(server.app)
+//             .put("/birbnb/anfitrion/1/confirmar/0")
+    
+//         expect(response.status).toBe(200)
+//         expect(huespedMock.recibirNotificacion).toHaveBeenCalled()
+//         expect(huespedMock.notificaciones.length).toBe(1)
+//     })
 
-// test("Luego de aceptar una reserva le llega una notificacion", async () => {
-//     const response = await request(server.app)
-//         .put("/anfitrion/1/confirmar/1")
-
-//     expect(response.status).toBe(200)
-//     expect(huespedMock.recibirNotificacion).toHaveBeenCalled()
-//     expect(huespedMock.notificaciones.length).toBe(1)
-// }) 
-
-// test("Luego de cancelar una reserva le llega una notificacion al anfitrion", async () => {
-//     const response = await request(server.app)
-//         .put("/huesped/1/cancelar/0")
-
-//     expect(response.status).toBe(200)
+//     test("Luego de cancelar una reserva le llega una notificacion al anfitrion", async () => {
+//         const response = await request(server.app)
+//             .put("/birbnb/huesped/1/cancelar/0")
+    
+//         expect(response.status).toBe(200)
+//         expect(anfitrionMock.recibirNotificacion).toHaveBeenCalled()
+//         expect(anfitrionMock.notificaciones.length).toBe(1)
+//     })
 // })

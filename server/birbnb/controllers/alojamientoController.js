@@ -15,7 +15,6 @@ export class AlojamientoController {
             
             const hasFilters = Object.values(filtros).some(value => value !== null && value !== undefined && value !== '' && (Array.isArray(value) ? value.length > 0 : true));
             
-            console.log("Filtros aplicados:", filtros);
             let alojamientos
             if(hasFilters) {
                 const filtro = new Filtro(ciudad, pais, cantidadHuespedes, precioMin, precioMax, fechaInicio, fechaFin, caracteristicas)
@@ -30,7 +29,7 @@ export class AlojamientoController {
         }
     };
 
-    async findById (req, res) {
+    async findById (req, res, next) {
         try{
             const id = Number(req.params.id);
             const alojamiento = await this.alojamientoService.findById(id);
