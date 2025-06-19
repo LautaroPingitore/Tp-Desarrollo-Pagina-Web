@@ -1,6 +1,6 @@
 export const Caracteristica = {
     WIFI: 'WIFI',
-    PISCINA: 'PISCINA',
+    PILETA: 'PILETA',
     MASCOTAS_PERMITIDAS: 'MASCOTAS_PERMITIDAS',
     ESTACIONAMIENTO: 'ESTACIONAMIENTO'
   };

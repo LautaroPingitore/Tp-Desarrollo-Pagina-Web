@@ -96,7 +96,7 @@ const alojamientoSchema = new mongoose.Schema({
     caracteristicas: [{
         type: String,
         required: true,
-        enum: ["PISCINA", "WIFI", "MASCOTAS_PERMITIDAS", "ESTACIONAMIENTO"]
+        enum: ["PILETA", "WIFI", "MASCOTAS_PERMITIDAS", "ESTACIONAMIENTO"]
     }],
 
     fotos: [{

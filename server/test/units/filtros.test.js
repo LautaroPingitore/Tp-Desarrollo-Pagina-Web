@@ -6,7 +6,7 @@ import { Filtro } from "../../birbnb/models/entities/Filtro.js";
 import { RangoFechas } from "../../birbnb/models/entities/RangoFechas.js";
 
 describe("Tests de Filtros", () => {
-    const aloj = new Alojamiento(null, null, null, 1000, null, null, null, new Direccion(null, null, new Ciudad("CABA", null)), 5, [Caracteristica.WIFI, Caracteristica.PISCINA], null)
+    const aloj = new Alojamiento(null, null, null, 1000, null, null, null, new Direccion(null, null, new Ciudad("CABA", null)), 5, [Caracteristica.WIFI, Caracteristica.PILETA], null)
     aloj.agregarFechasReserva(new RangoFechas(new Date(2025,6,18), new Date(2025,6,24)))
 
     test("Filtro por Ciudad", () => {
@@ -43,9 +43,9 @@ describe("Tests de Filtros", () => {
     })
 
     test("Filtro por Caracteristicas", () => {
-        const filtroCaracteristicas = new Filtro(null, null, null, null, null, null, null, [Caracteristica.WIFI, Caracteristica.PISCINA])
+        const filtroCaracteristicas = new Filtro(null, null, null, null, null, null, null, [Caracteristica.WIFI, Caracteristica.PILETA])
 
-        expect(filtroCaracteristicas.validarCaracteristicas(aloj, [Caracteristica.WIFI, Caracteristica.PISCINA])).toBe(true)
+        expect(filtroCaracteristicas.validarCaracteristicas(aloj, [Caracteristica.WIFI, Caracteristica.PILETA])).toBe(true)
         expect(filtroCaracteristicas.validarCaracteristicas(aloj, null)).toBe(true)
     })
 
@@ -58,7 +58,7 @@ describe("Tests de Filtros", () => {
             1500,
             new Date(2025, 6, 10),
             new Date(2025, 6, 16),
-            [Caracteristica.WIFI, Caracteristica.PISCINA]
+            [Caracteristica.WIFI, Caracteristica.PILETA]
         )
 
         expect(filtro.cumplenCon([aloj])).toEqual([aloj])

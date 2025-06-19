@@ -27,7 +27,7 @@ enum Moneda {
 
 enum Caracteristica {
     WIFI
-    PISCINA
+    PILETA
     MASCOTAS_PERMITIDAS
     ESTACIONAMIENTO
 }
