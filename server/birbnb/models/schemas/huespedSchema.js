@@ -10,6 +10,14 @@ const huespedSchema = new mongoose.Schema({
         maxlength: 100
     },
 
+    apellido: {
+        type: String,
+        required: true,
+        trim: true,
+        minlength: 1,   
+        maxlength: 100
+    },
+
     email: {
         type: String,
         required: true,
@@ -20,6 +28,18 @@ const huespedSchema = new mongoose.Schema({
                 return /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(v); 
             },
             message: props => `${props.value} no es un email valido!`
+        }
+    },
+
+    contrasenia: {
+        type: String,
+        required: true,
+        trim: true,
+        validate: {
+            validator: function (v) {
+                return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(v);
+            },
+            message: props => `La contraseña no es lo suficientemente segura. Debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.`
         }
     },
 
