@@ -1,11 +1,14 @@
-import React, { useRef, useEffect, useState } from "react";
-import './NavBar.css'; // Asegúrate de tener este archivo CSS para los estilos
+import React, { useRef, useEffect, useState, useContext } from "react";
+import './NavBar.css';
 import LoginModal from "../loginModal/loginModal";
+import { AuthContext } from "../../context/authContext"; // Ajustá si tu path cambia
 
 const NavBar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const menuRef = useRef(null);
+
+  const { usuario, logout } = useContext(AuthContext); // Acceder al usuario y logout
 
   const toggleMenu = () => setMenuOpen(prev => !prev);
 
@@ -40,15 +43,13 @@ const NavBar = () => {
         <div className="inline-flex">
           <a className="_o6689fn" href="/">
             <div className="md:block">
-              <img src="./public/image.png" className="tamanioLogo" />
+              <img src="./public/image.png" className="tamanioLogo" alt="Logo" />
             </div>
           </a>
         </div>
 
         <div className="flex-initial">
           <div className="flex justify-end items-center relative">
-            <div className="flex mr-4 items-center"></div>
-
             <div className="block">
               <div className="inline relative">
                 <button
@@ -57,7 +58,8 @@ const NavBar = () => {
                   className="inline-flex items-center relative px-2 border border-gray-700 rounded-full hover:bg-gray-700 hover:shadow-lg"
                 >
                   <div className="pl-1">
-                    <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block', fill: 'none', height: '16px', width: '16px', stroke: 'currentColor' }}>
+                    <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"
+                      style={{ display: 'block', fill: 'none', height: '16px', width: '16px', stroke: 'currentColor' }}>
                       <g fill="none" fillRule="nonzero">
                         <path d="m2 16h28"></path>
                         <path d="m2 24h28"></path>
@@ -66,7 +68,8 @@ const NavBar = () => {
                     </svg>
                   </div>
                   <div className="block flex-grow-0 flex-shrink-0 h-10 w-12 pl-5">
-                    <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block', height: '100%', width: '100%', fill: 'currentColor' }}>
+                    <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"
+                      style={{ display: 'block', height: '100%', width: '100%', fill: 'currentColor' }}>
                       <path d="m16 .7c-8.437 0-15.3 6.863-15.3 15.3s6.863 15.3 15.3 15.3 15.3-6.863 15.3-15.3-6.863-15.3-15.3-15.3zm0 28c-4.021 0-7.605-1.884-9.933-4.81a12.425 12.425 0 0 1 6.451-4.4 6.507 6.507 0 0 1 -3.018-5.49c0-3.584 2.916-6.5 6.5-6.5s6.5 2.916 6.5 6.5a6.513 6.513 0 0 1 -3.019 5.491 12.42 12.42 0 0 1 6.452 4.4c-2.328 2.925-5.912 4.809-9.933 4.809z"></path>
                     </svg>
                   </div>
@@ -79,15 +82,41 @@ const NavBar = () => {
                     role="menu"
                     aria-orientation="vertical"
                   >
-                    <button
-                      onClick={openLoginModal}
-                      className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 rounded"
-                    >
-                      Log In
-                    </button>
-                    <button className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 rounded">
-                      Settings
-                    </button>
+                    {usuario ? (
+                      <>
+                        <button className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 rounded">
+                          Reservas
+                        </button>
+                        <button className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 rounded">
+                          Notificaciones
+                        </button>
+                        <button className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 rounded">
+                          Configuración
+                        </button>
+                        <button
+                          onClick={() => {
+                            logout();
+                            setMenuOpen(false);
+                          }}
+                          className="block w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-gray-700 rounded"
+                        >
+                          Cerrar sesión
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                      <button
+                        onClick={openLoginModal}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 rounded"
+                      >
+                        Log In
+                      </button>
+                      <button className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 rounded">
+                          Configuración
+                      </button>
+                      
+                    </>
+                  )}
                   </div>
                 )}
               </div>

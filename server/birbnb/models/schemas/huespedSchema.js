@@ -49,7 +49,7 @@ const huespedSchema = new mongoose.Schema({
             required: true,
             trim: true,
             minlength: 1,
-            maxlength: 100
+            maxlength: 500
         },
 
         fechaAlta: {

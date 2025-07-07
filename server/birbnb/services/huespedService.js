@@ -26,25 +26,39 @@ export class HuespedService {
         };
     }
 
-    async create(huesped) {
-        const { nombre, email } = huesped
+    async logIn(datos) {
+        const {email, contrasenia} = datos
 
-        if(!nombre || !email) {
+        if(!email || !contrasenia) {
             throw new ValidationError("Faltan datos obligatorios")
         }
 
-        const nombreExistente = await this.huespedRepository.findByName(nombre) 
+        const usuario = await this.huespedRepository.findByEmail(email)
+        if(!usuario) {
+            throw new NotFoundError("Email no registrado")
+        }
+
+        if(usuario.contrasenia != contrasenia) {
+            throw new ValidationError("Contraseña incorrecta")
+        }
+
+        return this.toDTO(usuario)
+    }
+
+    async create(huesped) {
+        const { nombre, apellido, email, contrasenia } = huesped
+
+        if(!nombre || !apellido || !email || !contrasenia) {
+            throw new ValidationError("Faltan datos obligatorios")
+        }
+
         const mailExistente = await this.huespedRepository.findByEmail(email)
 
-        if(nombreExistente) {
-            throw new ConflictError(`Huesped con nombre ${nombre} ya existe`)
-        }
         if(mailExistente) {
             throw new ConflictError(`Huesped con email ${email} ya existe`)
         }
 
-
-        const nuevohuesped = new Huesped(nombre, email)
+        const nuevohuesped = new Huesped(nombre, apellido, email, contrasenia)
 
         await this.huespedRepository.save(nuevohuesped)
 
@@ -66,12 +80,11 @@ export class HuespedService {
         }
 
         if(datos.nombre) {
-            const otroMismoNombre = await this.huespedRepository.findByName(datos.nombre)
-            if(otroMismoNombre && otroMismoNombre.id !== id) {
-                throw new ConflictError(`Huesped con nombre ${datos.nombre} ya existe`)
-            }
-
             huesped.nombre = datos.nombre
+        }
+
+        if(datos.apellido) {
+            huesped.apellido = datos.apellido
         }
 
         if(datos.email) {
@@ -158,6 +171,7 @@ export class HuespedService {
         return {
             id: huesped.id,
             nombre: huesped.nombre,
+            apellido: huesped.apellido,
             email: huesped.email,
             notificaciones: huesped.notificaciones            
         }

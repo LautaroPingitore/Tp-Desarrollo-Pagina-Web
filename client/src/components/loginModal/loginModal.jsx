@@ -1,16 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { X, Eye, EyeOff, Mail, Lock, User, Home } from 'lucide-react';
+import { AuthContext } from '../../context/authContext'; // Ajustá el path si es necesario
+import { loginUsuario, signinUsuario } from '../../api/api'; // Asegúrate de que esta función esté definida en tu API
 
-const loginModal = ({ isOpen, onClose }) => {
+const LoginModal = ({ isOpen, onClose }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
-  const [activeTab, setActiveTab] = useState('guest');
+  const [activeTab, setActiveTab] = useState('huesped');
   const [formData, setFormData] = useState({
     email: '',
     password: '',
     firstName: '',
     lastName: ''
   });
+
+  const { login } = useContext(AuthContext); // 👈 acceder al contexto
 
   const handleInputChange = (e) => {
     setFormData({
@@ -19,12 +23,47 @@ const loginModal = ({ isOpen, onClose }) => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle login/signup logic here
-    console.log('Form submitted:', formData);
-    onClose();
-  };
+    let response;
+    let datos
+
+    if (isLogin) {// 🆕 Inicio sesion
+      try {
+
+        datos = {
+          email: formData.email,
+          contrasenia: formData.password,
+        }
+        response = await loginUsuario(datos, activeTab);
+        
+      } catch (error) {
+        // TODO: HACER ALERT
+        console.error("no se encontro el usuario", error);
+      }
+    
+    } else {// 🆕 Registro
+
+      try {
+        datos = {     
+          nombre: formData.firstName,
+          apellido: formData.lastName,
+          email: formData.email,
+          contrasenia: formData.password
+        };
+        console.log("Datos enviados:", datos);
+
+        response = await signinUsuario(datos, activeTab);
+      
+      }catch (error) {
+        // TODO: HACER ALERT
+        console.error("no se encontro el usuario", error);
+      }
+    }
+
+    login(response);  // 👉 guardar en contexto global
+    onClose();        // 👉 cerrar modal
+  }
 
   if (!isOpen) return null;
 
@@ -37,7 +76,7 @@ const loginModal = ({ isOpen, onClose }) => {
         {/* Header */}
         <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-800 sticky top-0 bg-black z-10">
           <h2 className="text-lg sm:text-xl font-semibold text-white">
-            Iniciar Sesión
+            {isLogin ? 'Iniciar Sesión' : 'Registrarse'}
           </h2>
           <button 
             onClick={onClose}
@@ -50,9 +89,9 @@ const loginModal = ({ isOpen, onClose }) => {
         {/* Tabs */}
         <div className="flex border-b border-gray-800">
           <button
-            onClick={() => setActiveTab('guest')}
+            onClick={() => setActiveTab('huesped')}
             className={`flex-1 flex items-center justify-center space-x-2 py-3 sm:py-4 text-sm font-medium transition-colors ${
-              activeTab === 'guest'
+              activeTab === 'huesped'
                 ? 'text-emerald-300 border-b-2 border-emerald-300'
                 : 'text-gray-400 hover:text-white'
             }`}
@@ -61,9 +100,9 @@ const loginModal = ({ isOpen, onClose }) => {
             <span>Huésped</span>
           </button>
           <button
-            onClick={() => setActiveTab('host')}
+            onClick={() => setActiveTab('anfitrion')}
             className={`flex-1 flex items-center justify-center space-x-2 py-3 sm:py-4 text-sm font-medium transition-colors ${
-              activeTab === 'host'
+              activeTab === 'anfitrion'
                 ? 'text-emerald-300 border-b-2 border-emerald-300'
                 : 'text-gray-400 hover:text-white'
             }`}
@@ -78,83 +117,69 @@ const loginModal = ({ isOpen, onClose }) => {
           <form onSubmit={handleSubmit} className="space-y-4">
             {!isLogin && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <input
-                    type="text"
-                    name="firstName"
-                    placeholder="Nombre"
-                    value={formData.firstName}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-emerald-300 focus:ring-1 focus:ring-emerald-300 transition-colors"
-                    required={!isLogin}
-                  />
-                </div>
-                <div>
-                  <input
-                    type="text"
-                    name="lastName"
-                    placeholder="Apellido"
-                    value={formData.lastName}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-emerald-300 focus:ring-1 focus:ring-emerald-300 transition-colors"
-                    required={!isLogin}
-                  />
-                </div>
+                <input
+                  type="text"
+                  name="firstName"
+                  placeholder="Nombre"
+                  value={formData.firstName}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-emerald-300 focus:ring-1 focus:ring-emerald-300 transition-colors"
+                  required
+                />
+                <input
+                  type="text"
+                  name="lastName"
+                  placeholder="Apellido"
+                  value={formData.lastName}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-emerald-300 focus:ring-1 focus:ring-emerald-300 transition-colors"
+                  required
+                />
               </div>
             )}
 
-            <div>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Correo Electrónico"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className="w-full pl-12 pr-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-emerald-300 focus:ring-1 focus:ring-emerald-300 transition-colors"
-                  required
-                />
-              </div>
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <input
+                type="email"
+                name="email"
+                placeholder="Correo Electrónico"
+                value={formData.email}
+                onChange={handleInputChange}
+                className="w-full pl-12 pr-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-emerald-300 focus:ring-1 focus:ring-emerald-300 transition-colors"
+                required
+              />
             </div>
 
-            <div>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  name="password"
-                  placeholder="Contraseña"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  className="w-full pl-12 pr-12 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-emerald-300 focus:ring-1 focus:ring-emerald-300 transition-colors"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-5 w-5" />
-                  ) : (
-                    <Eye className="h-5 w-5" />
-                  )}
-                </button>
-              </div>
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <input
+                type={showPassword ? 'text' : 'password'}
+                name="password"
+                placeholder="Contraseña"
+                value={formData.password}
+                onChange={handleInputChange}
+                className="w-full pl-12 pr-12 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-emerald-300 focus:ring-1 focus:ring-emerald-300 transition-colors"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+              >
+                {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+              </button>
             </div>
 
             <button
               type="submit"
-              className="w-full !text-black bg-gradient-to-r from-emerald-300 to-emerald-400 hover:from-emerald-400 hover:to-emerald-500 cursor-pointer font-semibold py-3 rounded-lg hover:bg-emerald-400 transition-colors text-sm sm:text-base"
+              className="w-full !text-black bg-gradient-to-r from-emerald-300 to-emerald-400 hover:from-emerald-400 hover:to-emerald-500 cursor-pointer font-semibold py-3 rounded-lg transition-colors text-sm sm:text-base"
             >
-              {isLogin 
-                ? `Iniciar Sesión` 
-                : `Registrarse`
-              }
+              {isLogin ? 'Iniciar Sesión' : 'Registrarse'}
             </button>
           </form>
 
+          {/* Divider */}
           <div className="mt-6 text-center">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
@@ -166,14 +191,15 @@ const loginModal = ({ isOpen, onClose }) => {
             </div>
           </div>
 
+          {/* Toggle login/register */}
           <div className="mt-6 text-center">
             <p className="text-gray-400 text-sm sm:text-base">
-              {isLogin ? "¿No tienes una cuenta? " : "¿Ya tienes una cuenta? "}
+              {isLogin ? '¿No tienes una cuenta? ' : '¿Ya tienes una cuenta? '}
               <button
                 onClick={() => setIsLogin(!isLogin)}
                 className="!text-white cursor-pointer hover:text-emerald-400 font-medium transition-colors"
               >
-                {isLogin ? 'Sign in' : 'Log in'}
+                {isLogin ? 'Registrarse' : 'Iniciar sesión'}
               </button>
             </p>
           </div>
@@ -183,4 +209,4 @@ const loginModal = ({ isOpen, onClose }) => {
   );
 };
 
-export default loginModal;
+export default LoginModal;

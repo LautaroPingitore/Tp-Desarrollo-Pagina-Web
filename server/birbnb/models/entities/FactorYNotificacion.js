@@ -4,7 +4,7 @@ export class FactoryNotificacion {
   static crearSegunReserva(reserva) {
     const alojamiento = reserva.alojamiento;
     const huesped = reserva.huespedReservador;
-    const mensaje = `Reserva realizada por ${huesped.nombre} del ${reserva.rangoFechas.fechaInicio.toDateString()} al ${reserva.rangoFechas.fechaFin.toDateString()} en ${alojamiento.nombre}`;
+    const mensaje = `Reserva realizada por ${huesped.nombre} ${huesped.apellido} del ${reserva.rangoFechas.fechaInicio.toDateString()} al ${reserva.rangoFechas.fechaFin.toDateString()} en ${alojamiento.nombre}`;
     return new Notificacion(mensaje);
   }
 
@@ -17,7 +17,7 @@ export class FactoryNotificacion {
     if(motivo == null) {
       motivo = "Sin Especificar";
     }
-    const mensaje = `El huésped ${reserva.huespedReservador.nombre} canceló su reserva en ${reserva.alojamiento.nombre}. Motivo: ${motivo}`;
+    const mensaje = `El huésped ${reserva.huespedReservador.nombre} ${reserva.huespedReservador.apellido} canceló su reserva en ${reserva.alojamiento.nombre}. Motivo: ${motivo}`;
     return new Notificacion(mensaje);
   }
 
