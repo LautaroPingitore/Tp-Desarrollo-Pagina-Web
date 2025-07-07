@@ -1,22 +1,23 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Heart, Share, Star, MapPin, Users, Bed, Bath, Wifi, Car, AirVent, Waves, Calendar, User, Dog } from 'lucide-react';
 import Calendario from '../filtros/calendario/Calendario.jsx';
 import dayjs from 'dayjs';
+import { AuthContext } from '../../context/authContext';
+import { reservarAlojamiento } from "../../api/api.js";
+ // Ajustá el path si es necesario
 
 const AlojamientoDetail = () => {
   const { id } = useParams();
+  const { usuario } = useContext(AuthContext);
+
   const location = useLocation();
   const navigate = useNavigate();
   const alojamiento = location.state?.alojamiento;
 
   // Si no hay alojamiento en el state, usar datos por defecto
   const property = alojamiento ;  // Datos del host (mock)
-  const hostData = {
-    name: "María",
-    avatar: "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=100",
-    superhost: true
-  };  const [_selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [_selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [_isLiked, _setIsLiked] = useState(false);
   const [mostrarCalendario, setMostrarCalendario] = useState(null);
   const calendarioRef = useRef();
@@ -60,21 +61,44 @@ const AlojamientoDetail = () => {
     'MASCOTAS': <Dog  className="w-5 h-5" />,
     'PILETA': <Waves className="w-5 h-5" />,
     'ESTACIONAMIENTO': <Car className="w-5 h-5" />,
-  };  const calculateTotal = () => {
+  };  
+  const calculateTotal = () => {
     if (!fechas.checkin || !fechas.checkout) return 0;
     const days = Math.ceil((fechas.checkout.toDate().getTime() - fechas.checkin.toDate().getTime()) / (1000 * 60 * 60 * 24));
     return days > 0 ? days * property.precioPorNoche : 0;
-
-
   };
 
   if (loading) {
-  return (
-    <div className="min-h-screen bg-black flex justify-center items-center">
-      <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-emerald-300"></div>
-    </div>
-  );
-}
+    return (
+      <div className="min-h-screen bg-black flex justify-center items-center">
+        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-emerald-300"></div>
+      </div>
+    );
+  }
+
+
+  const reservar = async () => {
+    let datos = {
+      reservador: usuario.data.email,
+      cantHuespedes: guests,  
+      alojamiento: property.nombre, 
+      rangoFechas: {
+        fechaInicio: fechas.checkin ? dayjs(fechas.checkin).format('DD/MM/YYYY'): null,
+        fechaFin: fechas.checkout ? dayjs(fechas.checkout).format('DD/MM/YYYY') : null,
+      }
+    };
+    console.log("Datos de reserva:", datos);
+
+    try {
+      let response = await reservarAlojamiento(datos)
+      console.log(response)
+
+    } catch(error) {
+      console.error("Error al reservar alojamiento:", error);
+      // Aquí podrías mostrar un mensaje de error al usuario
+    }
+
+  }
 
 
   return (
@@ -229,7 +253,9 @@ const AlojamientoDetail = () => {
               </select>
                 </div>
               </div>{/* Reserve Button */}
-              <button className="!text-black w-full cursor-pointer bg-gradient-to-r from-emerald-300 to-emerald-400 hover:from-emerald-400 hover:to-emerald-500 flex items-center justify-center py-4 px-4 font-semibold transition duration-200 shadow-lg hover:shadow-xl mb-4 rounded-lg ">
+              <button 
+              onClick={() => reservar()}
+              className="!text-black w-full cursor-pointer bg-gradient-to-r from-emerald-300 to-emerald-400 hover:from-emerald-400 hover:to-emerald-500 flex items-center justify-center py-4 px-4 font-semibold transition duration-200 shadow-lg hover:shadow-xl mb-4 rounded-lg ">
                 Reservar
               </button>
 

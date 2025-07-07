@@ -25,24 +25,39 @@ export class AnfitrionService {
         };
     }
 
-    async create(anfitrion) {
-        const { nombre, email } = anfitrion
+    async logIn(datos) {
+        const {email, contrasenia} = datos
 
-        if(!nombre || !email) {
+        if(!email || !contrasenia) {
             throw new ValidationError("Faltan datos obligatorios")
         }
 
-        const nombreExistente = await this.anfitrionRepository.findByName(nombre) 
+        const usuario = await this.huespedRepository.findByEmail(email)
+        if(!usuario) {
+            throw new NotFoundError("Email no registrado")
+        }
+
+        if(usuario.contrasenia != contrasenia) {
+            throw new ValidationError("Contraseña incorrecta")
+        }
+
+        return this.toDTO(usuario)
+    }
+
+    async create(anfitrion) {
+        const { nombre, apellido, email, contrasenia } = anfitrion
+
+        if(!nombre || !apellido || !email || !contrasenia) {
+            throw new ValidationError("Faltan datos obligatorios")
+        }
+
         const mailExistente = await this.anfitrionRepository.findByEmail(email)
 
-        if(nombreExistente) {
-            throw new ConflictError(`Anfitrion con nombre ${nombre} ya existe`)
-        }
         if(mailExistente) {
             throw new ConflictError(`Anfitrion con email ${email} ya existe`)
         }
 
-        const nuevoAnfitrion = new Anfitrion(nombre, email)
+        const nuevoAnfitrion = new Anfitrion(nombre, apellido, email, contrasenia)
         const anfitrionDB = await this.anfitrionRepository.save(nuevoAnfitrion)
         return this.toDTO(anfitrionDB)
     }
@@ -62,12 +77,11 @@ export class AnfitrionService {
         }
 
         if(datos.nombre) {
-            const otroMismoNombre = await this.anfitrionRepository.findByName(datos.nombre)
-            if(otroMismoNombre && otroMismoNombre.id !== id) {
-                throw new ConflictError(`Anfitrion con nombre ${datos.nombre} ya existe`)
-            }
-
             anfitrion.nombre = datos.nombre
+        }
+
+        if(datos.apellido) {
+            anfitrion.apellido = datos.apellido
         }
 
         if(datos.email) {
@@ -155,6 +169,7 @@ export class AnfitrionService {
         return {
             id: anfitrion.id.toString(),
             nombre: anfitrion.nombre,
+            apellido: anfitrion.apellido,
             email: anfitrion.email,
             notificaciones: (anfitrion.notificaciones || []).map(n => this.notificacionToDTO(n))
         }

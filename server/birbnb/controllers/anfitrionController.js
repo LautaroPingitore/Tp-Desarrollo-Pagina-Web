@@ -15,6 +15,17 @@ export class AnfitrionController {
     }
   }
 
+  async logIn(req, res, next) {
+    try {
+      const datos = req.body
+      const usuario = await this.anfitrionService.logIn(datos)
+
+      res.json(usuario)
+    } catch (error) {
+      next(error)
+    }
+  }
+
   async create(req, res, next) {
     try {
       const anfitrion = req.body;

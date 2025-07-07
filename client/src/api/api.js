@@ -29,11 +29,55 @@ export const getAlojamientos = async (pageNumber, filtros) => {
 
 export const getDestinos = async (pageNumber) => {
     try {
-        
+
         const response = await axios.get(`${API_URL}/ciudades`);
         return response;
     } catch (error) {
         console.log("Algo salio mal");
+        throw error;
+
+    }
+};
+
+export const loginUsuario = async (datos, tipo) => {
+    try {
+        const response = await axios.post(`${API_URL}/login/${tipo}`, {
+            "email": datos.email,
+            "contrasenia": datos.contrasenia,
+        });
+        return response;
+    } catch (error) {
+        console.error("Error al obtener el usuario:", error);
+        throw error;
+    }
+};
+
+export const signinUsuario = async (datos, tipo) => {
+    try {
+        const response = await axios.post(`${API_URL}/signin/${tipo}`, {
+            "nombre": datos.nombre,
+            "apellido": datos.apellido,
+            "email": datos.email,
+            "contrasenia": datos.contrasenia,
+        });
+        return response;
+    } catch (error) {
+        console.error("Error al obtener el usuario:", error);
+        throw error;
+    }
+};
+
+export const reservarAlojamiento = async (datos) => {
+    try {
+        const response = await axios.post(`${API_URL}/reservar`, {
+            "reservador": datos.reservador,
+            "cantHuespedes": datos.cantHuespedes,
+            "alojamiento": datos.alojamiento,
+            "rangoFechas": datos.rangoFechas,
+        });
+        return response;
+    } catch (error) {
+        console.error("Error al crear la reserva:", error);
         throw error;
     }
 };

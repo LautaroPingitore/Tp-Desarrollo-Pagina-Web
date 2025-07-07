@@ -15,6 +15,17 @@ export class HuespedController {
     }
   }
 
+  async logIn(req, res, next) {
+    try {
+      const datos = req.body
+      const usuario = await this.huespedService.logIn(datos)
+
+      res.json(usuario)
+    } catch (error) {
+      next(error)
+    }
+  }
+
   async create(req, res, next) {
     try {
       const huesped = req.body;

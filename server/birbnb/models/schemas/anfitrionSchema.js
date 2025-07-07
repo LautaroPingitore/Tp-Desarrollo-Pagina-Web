@@ -10,6 +10,14 @@ const anfitrionSchema = new mongoose.Schema({
         maxlength: 100
     },
 
+    apellido: {
+        type: String,
+        required: true,
+        trim: true,
+        minlength: 1,   
+        maxlength: 100
+    },
+
     email: {
         type: String,
         required: true,
@@ -23,13 +31,25 @@ const anfitrionSchema = new mongoose.Schema({
         }
     },
 
+    contrasenia: {
+        type: String,
+        required: true,
+        trim: true,
+        validate: {
+            validator: function (v) {
+                return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(v);
+            },
+            message: props => `La contraseña no es lo suficientemente segura. Debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.`
+        }
+    },
+
     notificaciones: [{
         mensaje: {
             type: String, 
             required: true,
             trim: true,
             minlength: 1,
-            maxlength: 100
+            maxlength: 500
         },
 
         fechaAlta: {

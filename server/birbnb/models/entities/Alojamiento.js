@@ -1,4 +1,5 @@
 import { EstadoReserva } from './enums/EstadoReserva.js';
+import { RangoFechas } from './RangoFechas.js';
 
 export class Alojamiento {
   constructor(anfitrion, nombre, descripcion, precioPorNoche, moneda, horarioCheckIn, horarioCheckOut, direccion, cantHuespedesMax, caracteristicas, fotos) {
@@ -17,6 +18,9 @@ export class Alojamiento {
   }
 
   agregarFechasReserva(rangoFecha) {
+    if (!(rangoFecha instanceof RangoFechas)) {
+      throw new Error("Se esperaba una instancia de RangoFechas");
+    }
     this.fechasNoDisponibles.push(rangoFecha)
   }
 
@@ -32,7 +36,11 @@ export class Alojamiento {
   }
 
   estasDisponibleEn(rangoFecha) {
-    return this.fechasNoDisponibles.every(f => !f.seSuperponeCon(rangoFecha))
+    return this.fechasNoDisponibles.every(f => {
+      let fecha = new RangoFechas(f.fechaInicio, f.fechaFin)
+      return !(rangoFecha.fechaInicio <= fecha.fechaFin && 
+               rangoFecha.fechaFin >= fecha.fechaInicio);
+    })
   } 
 
   tuPrecioEstaDentroDe(valorMinimo, valorMaximo) {

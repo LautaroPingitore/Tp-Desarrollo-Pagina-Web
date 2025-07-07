@@ -71,7 +71,7 @@ export class ReservaService {
             throw new ValidationError("Faltan datos obligatorios")
         }
 
-        const huesped = await this.huespedRepository.findByName(reservador)
+        const huesped = await this.huespedRepository.findByEmail(reservador)
         if(!huesped) {
             throw new NotFoundError("Huesped no existente")
         }
@@ -100,8 +100,7 @@ export class ReservaService {
             throw new ValidationError("Cantidad de huéspedes supera la capacidad")
         }
 
-        const reservasDeAlojamiento = await this.reservaRepository.findByAlojamiento(alojamientoObject.id)
-        if (!alojamientoObject.estasDisponibleEn(reservasDeAlojamiento, objectFechas)) {
+        if (!alojamientoObject.estasDisponibleEn(objectFechas)) {
             throw new ValidationError("El alojamiento no está disponible en las fechas indicadas")
         }
 

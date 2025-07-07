@@ -8,7 +8,11 @@ export default function huespedRoutes(getController) {
         getController(HuespedController).findAll(req, res, next)
     })
 
-    router.post("/birbnb/login/huesped", (req, res, next) =>
+    router.post("/birbnb/login/huesped", (req, res, next) => {
+        getController(HuespedController).logIn(req, res, next)
+    })
+
+    router.post("/birbnb/signin/huesped", (req, res, next) =>
         getController(HuespedController).create(req, res, next)
     )
 

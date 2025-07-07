@@ -7,368 +7,6 @@ servers:
   - url: http://localhost:3000
 
 paths:
-  /reservar:
-    post:
-      summary: Crear reserva
-      tags: [Reservas]
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - reservador
-                - cantHuespedes
-                - alojamiento
-                - rangoFechas
-              properties:
-                reservador:
-                  type: string
-                  example: Santino
-                cantHuespedes:
-                  type: integer
-                  example: 2
-                alojamiento:
-                  type: string
-                  example: La casa de Pepita
-                rangoFechas:
-                  type: object
-                  required:
-                    - fechaInicio
-                    - fechaFin
-                  properties:
-                    fechaInicio:
-                      type: string
-                      example: "22/10/2024"
-                    fechaFin:
-                      type: string
-                      example: "26/10/2024"
-    responses:
-      '201':
-        description: Reserva creada correctamente
-
-  /reserva/update:
-    put:
-      summary: Actualizar una reserva
-      tags: [Reservas]
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-      responses:
-        '200':
-          description: Reserva actualizada
-        '400':
-          description: Error en la solicitud
-
-  /reservas:
-    get:
-      summary: Obtener todas las reservas
-      tags: [Reservas]
-      responses:
-        '200':
-          description: Lista de reservas
-
-  /reservas/{id}:
-    get:
-      summary: Obtener reservas por usuario
-      tags: [Reservas]
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Reservas del usuario
-
-  /huespedes:
-    get:
-      summary: Obtener todos los huéspedes
-      tags: [Huespedes]
-      responses:
-        '200':
-          description: Lista de huéspedes
-
-  /login/huesped:
-    post:
-      summary: Crear huésped (login o registro)
-      tags: [Huespedes]
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - nombre
-                - email
-              properties:
-                nombre:
-                  type: string
-                  example: Santino
-                email:
-                  type: string
-                  format: email
-                  example: santinoBouvet@example.com
-      responses:
-        '201':
-          description: Huésped creado
-
-  /huesped/{id}:
-    delete:
-      summary: Eliminar huésped
-      tags: [Huespedes]
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Huésped eliminado
-
-    put:
-      summary: Actualizar datos del huésped
-      tags: [Huespedes]
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                nombre:
-                  type: string
-                  example: Luka
-                email:
-                  type: string
-                  format: email
-                  example: luka@example.com
-      responses:
-        '200':
-          description: Huésped actualizado
-
-  /huesped/{id}/reserva:
-    put:
-      summary: Actualizar reserva del huésped
-      tags: [Huespedes]
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                idReserva:
-                  type: string
-                  example: 123abc
-                nuevasFechas:
-                  type: object
-                  required:
-                    - fechaInicio
-                    - fechaFin
-                  properties:
-                    fechaInicio:
-                      type: string
-                      example: "24/12/2024"
-                    fechaFin:
-                      type: string
-                      example: "28/12/2024"
-      responses:
-        '200':
-          description: Reserva actualizada para el huésped
-
-  /huesped/{id}/cancelar/{idReserva}:
-    put:
-      summary: Cancelar reserva del huésped
-      tags: [Huespedes]
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-        - in: path
-          name: idReserva
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Reserva cancelada exitosamente
-    
-  /huesped/{id}/notificaciones/{idNotificacion}:
-    put:
-      summary: Marcar como leida la notificacion
-      tags: [Huespedes, Notificaciones]
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-        - in: path
-          name: idNotificacion
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          descripcion: Notificacion Leida
-
-  /huesped/{id}/notificaciones/{leida}:
-    get:
-      summary: Obtener las notificaciones leidas o no
-      tags: [Huespedes, Notificaciones]
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-        - in: path
-          name: leida
-          required: true
-          schema:
-            type: bool
-
-  /anfitriones:
-    get:
-      summary: Obtener todos los anfitriones
-      tags: [Anfitriones]
-      responses:
-        '200':
-          description: Lista de anfitriones
-
-  /login/anfitrion:
-    post:
-      summary: Crear anfitrión (login o registro)
-      tags: [Anfitriones]
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - nombre
-                - email
-              properties:
-                nombre:
-                  type: string
-                  example: Lautaro
-                email:
-                  type: string
-                  format: email
-                  example: Lautaro@example.com
-      responses:
-        '201':
-          description: Anfitrión creado
-
-  /anfitrion/{id}:
-    delete:
-      summary: Eliminar anfitrión
-      tags: [Anfitriones]
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Anfitrión eliminado
-
-    put:
-      summary: Actualizar datos del anfitrión
-      tags: [Anfitriones]
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                nombre:
-                  type: string
-                  example: Lautaro
-                email:
-                  type: string
-                  format: email
-                  example: Lautaro@example.com
-      responses:
-        '200':
-          description: Anfitrión actualizado
-
-  /anfitrion/{id}/confirmar/{idReserva}:
-    put:
-      summary: Aceptar la reserva del huésped
-      tags: [Anfitriones]
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-        - in: path
-          name: idReserva
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Reserva aceptada exitosamente
-    
-  /anfitrion/{id}/confirmar/{idReserva}:
-    put:
-      summary: Marcar como leida la notificacion
-      tags: [Anfitriones, Notificaciones]
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          descripcion: Notificacion Leida
-
-  /anfitrion/{id}/notificaciones/{leida}:
-    get:
-      summary: Obtener las notificaciones leidas o no
-      tags: [Anfitriones, Notificaciones]
-      parameters:
-        - in: path
-          name: leida
-          required: true
-          schema:
-            type: bool
-
   /alojamientos:
     get:
       summary: Obtener todos los alojamientos (con filtros opcionales)
@@ -419,6 +57,19 @@ paths:
         '200':
           description: Lista de alojamientos encontrados
 
+  /alojamientos/{id}:
+    get:
+      summary: Obtener alojamiento por ID
+      tags: [Alojamientos]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Alojamiento encontrado
 
   /alojamientos:    
     post:
@@ -512,21 +163,6 @@ paths:
         '201':
           description: Alojamiento creado correctamente
 
-
-  /alojamientos/{id}:
-    get:
-      summary: Obtener alojamiento por ID
-      tags: [Alojamientos]
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Alojamiento encontrado
-
     delete:
       summary: Eliminar alojamiento
       tags: [Alojamientos]
@@ -540,9 +176,74 @@ paths:
         '200':
           description: Alojamiento eliminado
 
-  /alojamientos/{id}/reservas:
+  /reservar:
+    post:
+      summary: Crear reserva
+      tags: [Reservas]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - reservador
+                - cantHuespedes
+                - alojamiento
+                - rangoFechas
+              properties:
+                reservador:
+                  type: string
+                  example: Santino
+                cantHuespedes:
+                  type: integer
+                  example: 2
+                alojamiento:
+                  type: string
+                  example: La casa de Pepita
+                rangoFechas:
+                  type: object
+                  required:
+                    - fechaInicio
+                    - fechaFin
+                  properties:
+                    fechaInicio:
+                      type: string
+                      example: "22/10/2024"
+                    fechaFin:
+                      type: string
+                      example: "26/10/2024"
+    responses:
+      '201':
+        description: Reserva creada correctamente
+
+  /reserva/update:
+    put:
+      summary: Actualizar una reserva
+      tags: [Reservas]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Reserva actualizada
+        '400':
+          description: Error en la solicitud
+
+  /reservas:
     get:
-      summary: Obtener reservas por alojamiento
+      summary: Obtener todas las reservas
+      tags: [Reservas]
+      responses:
+        '200':
+          description: Lista de reservas
+
+  /reservas/{id}:
+    get:
+      summary: Obtener reservas por usuario
       tags: [Reservas]
       parameters:
         - in: path
@@ -552,5 +253,344 @@ paths:
             type: string
       responses:
         '200':
-          description: Lista de reservas del alojamiento
+          description: Reservas del usuario
+
+  /login/huesped:
+    post:
+      summary: Loguear un huesped
+      tags: [Huespedes]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - contrasenia
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: santinoBouvet@example.com
+                contrasenia:
+                  type: string
+                  example: Contrasenia_123
+      responses:
+        '201': 
+          descripcion: Contraseña incorrecta
+
+  /signin/huesped:
+    post:
+      summary: Crear huésped
+      tags: [Huespedes]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - nombre
+                - apellido
+                - email
+                - contrasenia
+              properties:
+                nombre:
+                  type: string
+                  example: Santino
+                apellido:
+                  type: string
+                  example: Bouvet
+                email:
+                  type: string
+                  format: email
+                  example: santinoBouvet@example.com
+                contrasenia:
+                  type: string
+                  example: Contrasenia_123
+      responses:
+        '201':
+          description: Huésped creado
+
+  /huesped/{id}:
+    delete:
+      summary: Eliminar huésped
+      tags: [Huespedes]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Huésped eliminado
+
+    put:
+      summary: Actualizar datos del huésped
+      tags: [Huespedes]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                  example: Santino
+                apellido:
+                  type: string
+                  example: Bouvet
+                email:
+                  type: string
+                  format: email
+                  example: santino@example.com
+      responses:
+        '200':
+          description: Huésped actualizado
+
+  /huesped/{id}/reserva:
+    put:
+      summary: Actualizar reserva del huésped
+      tags: [Huespedes]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                idReserva:
+                  type: string
+                  example: 123abc
+                nuevasFechas:
+                  type: object
+                  required:
+                    - fechaInicio
+                    - fechaFin
+                  properties:
+                    fechaInicio:
+                      type: string
+                      example: "24/12/2024"
+                    fechaFin:
+                      type: string
+                      example: "28/12/2024"
+      responses:
+        '200':
+          description: Reserva actualizada para el huésped
+
+  /huesped/{id}/cancelar/{idReserva}:
+    put:
+      summary: Cancelar reserva del huésped
+      tags: [Huespedes]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: idReserva
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Reserva cancelada exitosamente
+
+  /login/anfitrion:
+    post:
+      summary: Loguear un anfitrion
+      tags: [Anfitriones]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - contrasenia
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: santinoBouvet@example.com
+                contrasenia:
+                  type: string
+                  example: Contrasenia_123
+      responses:
+        '201': 
+          descripcion: Contraseña incorrecta
+
+  /signin/anfitrion:
+    post:
+      summary: Crear Anfitrion
+      tags: [Anfitriones]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - nombre
+                - apellido
+                - email
+                - contrasenia
+              properties:
+                nombre:
+                  type: string
+                  example: Santino
+                apellido:
+                  type: string
+                  example: Bouvet
+                email:
+                  type: string
+                  format: email
+                  example: santinoBouvet@example.com
+                contrasenia:
+                  type: string
+                  example: Contrasenia_123
+      responses:
+        '201':
+          description: Anfitrion creado
+
+  /anfitrion/{id}:
+    delete:
+      summary: Eliminar anfitrión
+      tags: [Anfitriones]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Anfitrión eliminado
+
+    put:
+      summary: Actualizar datos del anfitrión
+      tags: [Anfitriones]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                  example: Lautaro
+                apellido:
+                  type: string
+                  example: Pingitore
+                email:
+                  type: string
+                  format: email
+                  example: Lautaro@example.com
+      responses:
+        '200':
+          description: Anfitrión actualizado
+
+  /anfitrion/{id}/confirmar/{idReserva}:
+    put:
+      summary: Aceptar la reserva del huésped
+      tags: [Anfitriones]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: idReserva
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Reserva aceptada exitosamente
+
+  /huesped/{id}/notificaciones/{idNotificacion}:
+    put:
+      summary: Marcar como leida la notificacion
+      tags: [Notificaciones]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: idNotificacion
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          descripcion: Notificacion Leida
+
+  /huesped/{id}/notificaciones/{leida}:
+    get:
+      summary: Obtener las notificaciones leidas o no
+      tags: [Notificaciones]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: leida
+          required: true
+          schema:
+            type: bool
+    
+  /anfitrion/{id}/confirmar/{idReserva}:
+    put:
+      summary: Marcar como leida la notificacion
+      tags: [Notificaciones]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          descripcion: Notificacion Leida
+
+  /anfitrion/{id}/notificaciones/{leida}:
+    get:
+      summary: Obtener las notificaciones leidas o no
+      tags: [Notificaciones]
+      parameters:
+        - in: path
+          name: leida
+          required: true
+          schema:
+            type: bool
           
