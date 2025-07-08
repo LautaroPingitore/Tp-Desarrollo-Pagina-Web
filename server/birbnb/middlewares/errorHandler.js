@@ -7,7 +7,8 @@ export const errorHandler = (err, req, res, next) => {
 
   // 🛠️ Detectar errores de Mongoose y convertirlos en errores operacionales
   if (err instanceof mongoose.Error.ValidationError) {
-    err = new CustomValidationError(err.message);
+    const mensajes = Object.values(err.errors).map(e => e.message);
+    err = new CustomValidationError(mensajes.join(' | '));
   }
 
   if (process.env.NODE_ENV === 'development') {

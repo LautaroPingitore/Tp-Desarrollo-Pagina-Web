@@ -39,7 +39,7 @@ const huespedSchema = new mongoose.Schema({
             validator: function (v) {
                 return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(v);
             },
-            message: props => `La contraseña no es lo suficientemente segura. Debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.`
+            message: props => `La contraseña debe ser segura (8 caracteres, letras, número y símbolo)`
         }
     },
 

@@ -14,13 +14,26 @@ const LoginModal = ({ isOpen, onClose }) => {
     lastName: ''
   });
 
+  const [errorMessage, setErrorMessage] = useState(''); // Para manejar errores
+
   const { login , cambiarTipoUsuario } = useContext(AuthContext); // 👈 acceder al contexto
+
+  const clearForm = () => {
+    setFormData({
+      email: '',
+      password: '',
+      firstName: '',
+      lastName: ''
+    });
+    setErrorMessage('');
+  };
 
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
+    setErrorMessage(''); // Limpiar mensaje de error al cambiar el input
   };
 
   const handleSubmit = async (e) => {
@@ -39,8 +52,9 @@ const LoginModal = ({ isOpen, onClose }) => {
         response = await loginUsuario(datos, activeTab);
         
       } catch (error) {
-        // TODO: HACER ALERT
-        console.error("no se encontro el usuario", error);
+        const ms = error?.response?.data?.message || 'Email o contraseña incorrectos';
+        setErrorMessage(ms); // 👉 guardar el mensaje de error
+        return
       }
     
     } else {// 🆕 Registro
@@ -58,8 +72,9 @@ const LoginModal = ({ isOpen, onClose }) => {
         cambiarTipoUsuario(activeTab); // 👉 guardar el tipo de usuario en contexto global
       
       }catch (error) {
-        // TODO: HACER ALERT
-        console.error("no se encontro el usuario", error);
+        const ms = error?.response?.data?.message || 'Error al registrarse';
+        setErrorMessage(ms); // 👉 guardar el mensaje de error
+        return 
       }
     }
 
@@ -173,6 +188,13 @@ const LoginModal = ({ isOpen, onClose }) => {
               </button>
             </div>
 
+            {/* 🔴 ACA SE MUESTRA EL ERROR */}
+            {errorMessage && (
+              <div className="text-red-400 bg-red-900 border border-red-700 px-4 py-2 rounded-md text-sm">
+                {errorMessage}
+              </div>
+            )}
+
             <button
               type="submit"
               className="w-full !text-black bg-gradient-to-r from-emerald-300 to-emerald-400 hover:from-emerald-400 hover:to-emerald-500 cursor-pointer font-semibold py-3 rounded-lg transition-colors text-sm sm:text-base"
@@ -198,7 +220,10 @@ const LoginModal = ({ isOpen, onClose }) => {
             <p className="text-gray-400 text-sm sm:text-base">
               {isLogin ? '¿No tienes una cuenta? ' : '¿Ya tienes una cuenta? '}
               <button
-                onClick={() => setIsLogin(!isLogin)}
+                onClick={() => {
+                  setIsLogin(!isLogin)
+                  clearForm()
+                }}
                 className="!text-white cursor-pointer hover:text-emerald-400 font-medium transition-colors"
               >
                 {isLogin ? 'Registrarse' : 'Iniciar sesión'}

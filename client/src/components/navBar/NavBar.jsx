@@ -42,10 +42,6 @@ const NavBar = () => {
     setMenuOpen(false);
   };
 
-  
-
-  
-
   const closeLoginModal = () => setLoginModalOpen(false);
 
   useEffect(() => {

@@ -11,6 +11,9 @@ const AlojamientoDetail = () => {
   const { id } = useParams();
   const { usuario } = useContext(AuthContext);
 
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState(''); // Para manejar errores
+
   const location = useLocation();
   const navigate = useNavigate();
   const alojamiento = location.state?.alojamiento;
@@ -54,6 +57,8 @@ const AlojamientoDetail = () => {
                 checkout: dates[1]
             });
             setMostrarCalendario(null);
+            setErrorMessage('');
+            setSuccessMessage('');
         }
     };
   const amenityIcons = {
@@ -78,6 +83,9 @@ const AlojamientoDetail = () => {
 
 
   const reservar = async () => {
+    setErrorMessage('');
+    setSuccessMessage('');
+
     let datos = {
       reservador: usuario.data.email,
       cantHuespedes: guests,  
@@ -87,19 +95,16 @@ const AlojamientoDetail = () => {
         fechaFin: fechas.checkout ? dayjs(fechas.checkout).format('DD/MM/YYYY') : null,
       }
     };
-    console.log("Datos de reserva:", datos);
 
     try {
-      let response = await reservarAlojamiento(datos)
-      console.log(response)
+      const response = await reservarAlojamiento(datos)
 
+      setSuccessMessage('Reserva realizada con éxito!')
     } catch(error) {
-      console.error("Error al reservar alojamiento:", error);
-      // Aquí podrías mostrar un mensaje de error al usuario
+      const mesaje = error?.response?.data?.message || 'Error al reservar alojamiento';
+      setErrorMessage(mesaje);
     }
-
   }
-
 
   return (
     <div className="min-h-screen bg-black">
@@ -242,10 +247,14 @@ const AlojamientoDetail = () => {
                     Huéspedes
                   </label>                  
                   <select
-                value={guests}  // Usa la variable de estado
-                onChange={(e) => setGuests(Number(e.target.value))}
-                className="!text-white !text-sm w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-pink-500 cursor-pointer text-center"
-              >
+                    value={guests}  // Usa la variable de estado
+                    onChange={(e) => {
+                      setGuests(Number(e.target.value))
+                      setErrorMessage('');
+                      setSuccessMessage('');
+                    }}
+                    className="!text-white !text-sm w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-pink-500 cursor-pointer text-center"
+                  >
                 {Array.from({ length: property.cantHuespedesMax }, (_, i) => i + 1).map((num) => (
                   <option key={num} value={num}>
                     {num} huésped{num > 1 ? 'es' : ''}
@@ -259,6 +268,18 @@ const AlojamientoDetail = () => {
               className="!text-black w-full cursor-pointer bg-gradient-to-r from-emerald-300 to-emerald-400 hover:from-emerald-400 hover:to-emerald-500 flex items-center justify-center py-4 px-4 font-semibold transition duration-200 shadow-lg hover:shadow-xl mb-4 rounded-lg ">
                 Reservar
               </button>
+
+              {errorMessage && (
+                <div className="mt-4 text-sm text-red-400 bg-red-900 border border-red-700 p-3 rounded-md">
+                  {errorMessage}
+                </div>
+              )}
+
+              {successMessage && (
+                <div className="mt-4 text-sm text-green-300 bg-green-900 border border-green-700 p-3 rounded-md">
+                  {successMessage}
+                </div>
+              )}
 
               <p className="text-center text-gray-400 text-sm mb-4">
                 Aún no se te cobrará

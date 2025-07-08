@@ -34,11 +34,11 @@ export class AnfitrionService {
 
         const usuario = await this.anfitrionRepository.findByEmail(email)
         if(!usuario) {
-            throw new NotFoundError("Email no registrado")
+            throw new NotFoundError("Email o Contraseña incorrectas")
         }
 
         if(usuario.contrasenia != contrasenia) {
-            throw new ValidationError("Contraseña incorrecta")
+            throw new ValidationError("Email o Contraseña incorrectas")
         }
 
         return this.toDTO(usuario)
@@ -54,7 +54,7 @@ export class AnfitrionService {
         const mailExistente = await this.anfitrionRepository.findByEmail(email)
 
         if(mailExistente) {
-            throw new ConflictError(`Anfitrion con email ${email} ya existe`)
+            throw new ConflictError(`Email ya registrado`)
         }
 
         const nuevoAnfitrion = new Anfitrion(nombre, apellido, email, contrasenia)
