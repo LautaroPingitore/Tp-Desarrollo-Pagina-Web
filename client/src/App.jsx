@@ -5,6 +5,9 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Layout from './features/layout/Layout';
 import Home from './features/home/Home';
 import AlojamientoDetail from './components/alojamientoDetail/AlojamientoDetail';
+import MisAlojamientos from './components/misAlojamientos/misAlojamientos';
+import Reservas from './components/reservas/reservas';
+import Notificaciones from './components/misNotificaciones/misNotificaciones';
 import { AuthProvider } from './context/authContext';
 
 const theme = createTheme({
@@ -24,6 +27,9 @@ function App() {
             <Route path="/" element={<Layout />}>
               <Route index element={<Home />} />
               <Route path="/alojamientos/:id" element={<AlojamientoDetail />} />
+              <Route path="/misAlojamientos/:id" element={<MisAlojamientos />} />
+              <Route path="/misReservas/:id" element={<Reservas />} />
+              <Route path="/misNotificaciones/:id" element={<Notificaciones />} />
             </Route>
           </Routes>
         </BrowserRouter>

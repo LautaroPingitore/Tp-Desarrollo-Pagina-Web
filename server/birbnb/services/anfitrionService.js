@@ -32,7 +32,7 @@ export class AnfitrionService {
             throw new ValidationError("Faltan datos obligatorios")
         }
 
-        const usuario = await this.huespedRepository.findByEmail(email)
+        const usuario = await this.anfitrionRepository.findByEmail(email)
         if(!usuario) {
             throw new NotFoundError("Email no registrado")
         }

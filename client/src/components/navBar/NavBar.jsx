@@ -1,14 +1,39 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
 import './NavBar.css';
+import { Search, Menu, User, Globe, Bell, Home, Plus, Calendar, Settings } from 'lucide-react';
+
 import LoginModal from "../loginModal/loginModal";
 import { AuthContext } from "../../context/authContext"; // Ajustá si tu path cambia
+import { useNavigate } from 'react-router-dom';
 
 const NavBar = () => {
+    const navigate = useNavigate();
+
+    const onSelect = (alojamiento) => {
+        navigate(`/misAlojamientos/${usuario.data.id}`, { 
+            state: { alojamiento } 
+        });
+    }
+
+
+    const onMisReservas = (idUsuario) => {
+        navigate(`/misReservas/${usuario.data.id}`, { 
+            state: { idUsuario } 
+        });
+    }
+
+    const onMisNotificaciones = (idUsuario) => {
+        navigate(`/misNotificaciones/${usuario.data.id}`, { 
+            state: { idUsuario } 
+        });
+    }
+
   const [menuOpen, setMenuOpen] = useState(false);
+
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const menuRef = useRef(null);
 
-  const { usuario, logout } = useContext(AuthContext); // Acceder al usuario y logout
+  const { usuario, logout , tipoUsuario} = useContext(AuthContext); // Acceder al usuario y logout
 
   const toggleMenu = () => setMenuOpen(prev => !prev);
 
@@ -16,6 +41,10 @@ const NavBar = () => {
     setLoginModalOpen(true);
     setMenuOpen(false);
   };
+
+  
+
+  
 
   const closeLoginModal = () => setLoginModalOpen(false);
 
@@ -35,9 +64,10 @@ const NavBar = () => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [menuOpen]);
+  }, [menuOpen, tipoUsuario]);
 
   return (
+    console.log(usuario),
     <>
       <nav className="bg-black text-gray-100 w-full flex relative justify-between items-center mx-auto px-8 h-20 border-b border-gray-700">
         <div className="inline-flex">
@@ -76,48 +106,92 @@ const NavBar = () => {
                 </button>
 
                 {menuOpen && (
+                  <>
                   <div
                     ref={menuRef}
                     className="absolute right-0 z-[99999] mt-2 w-48 origin-top-right rounded-md bg-black py-1 shadow-lg ring-1 ring-white/20 focus:outline-hidden"
-                    role="menu"
-                    aria-orientation="vertical"
                   >
-                    {usuario ? (
+                     <div className="py-2">
+                     
+                    {!usuario ? (
                       <>
-                        <button className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 rounded">
-                          Reservas
-                        </button>
-                        <button className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 rounded">
-                          Notificaciones
-                        </button>
-                        <button className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 rounded">
-                          Configuración
-                        </button>
-                        <button
-                          onClick={() => {
-                            logout();
-                            setMenuOpen(false);
-                          }}
-                          className="block w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-gray-700 rounded"
-                        >
-                          Cerrar sesión
-                        </button>
+                      <button
+                            onClick={openLoginModal}
+                            className="w-full text-left px-4 py-3 text-white hover:bg-gray-900 transition-colors font-medium"
+                          >
+                            Log in
+                          </button>
+                          <button
+                            onClick={openLoginModal}
+                            className="w-full text-left px-4 py-3 text-white hover:bg-gray-900 transition-colors"
+                          >
+                            Sign up
+                          </button>
+                      
+                        
                       </>
                     ) : (
                       <>
-                      <button
-                        onClick={openLoginModal}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 rounded"
-                      >
-                        Log In
-                      </button>
-                      <button className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 rounded">
-                          Configuración
-                      </button>
-                      
+                       <div className="text-left px-4 py-1 border-b border-gray-800">
+                            <p className="text-white font-medium leading-none mb-[30px]">{usuario.data.nombre}</p>
+                            <p className="text-gray-400 text-sm capitalize leading-none">{tipoUsuario}</p>
+                        </div>
+                          
+                          <button
+                            onClick={() => onMisNotificaciones(usuario.data.id)}
+                            className="w-full text-left px-4 py-3 text-white hover:bg-gray-900 transition-colors flex items-center space-x-3"
+                          >
+                            <Bell className="h-4 w-4" />
+                            <span>Notificaciones</span>
+                          </button>
+
+                          {tipoUsuario === 'anfitrion' && (
+                            <>
+                              <button
+                              onClick={() => onSelect(usuario.data.id)}
+                                className="w-full text-left px-4 py-3 text-white hover:bg-gray-900 transition-colors flex items-center space-x-3"
+                              >
+                                <Home className="h-4 w-4" />
+                                <span>Mis alojamientos</span>
+                              </button>
+                              <button
+                                className="w-full text-left px-4 py-3 text-white hover:bg-gray-900 transition-colors flex items-center space-x-3"
+                              >
+                                <Plus className="h-4 w-4" />
+                                <span>Crear alojamiento</span>
+                              </button>
+                            </>
+                          )}
+                        <button
+                            onClick={() => onMisReservas(usuario.data.id)}
+                            className="w-full text-left px-4 py-3 text-white hover:bg-gray-900 transition-colors flex items-center space-x-3"
+                          >
+                            <Calendar className="h-4 w-4" />
+                            <span>Mis reservas</span>
+                          </button>
+
+                          <button
+                            className="w-full text-left px-4 py-3 text-white hover:bg-gray-900 transition-colors flex items-center space-x-3"
+                          >
+                            <Settings className="h-4 w-4" />
+                            <span>Configuración</span>
+                          </button>
+                          <div className="border-t border-gray-800 my-2"></div>
+                        <button
+                                onClick={() => {
+                                  logout();
+                                  navigate('/');
+                                  setMenuOpen(false);
+                                }}
+                                className="w-full text-left px-4 py-3 text-white hover:bg-gray-900 transition-colors"
+                              >
+                                Cerrar sesión
+                          </button>
                     </>
                   )}
                   </div>
+                  </div>
+                  </>
                 )}
               </div>
             </div>

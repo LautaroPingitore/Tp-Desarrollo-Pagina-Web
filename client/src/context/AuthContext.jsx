@@ -4,16 +4,25 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [usuario, setUsuario] = useState(null);
+  const [tipoUsuario, setTipoUsuario] = useState(null);
 
   useEffect(() => {
   const usuarioGuardado = localStorage.getItem('usuario');
+  const tipoGuardado = localStorage.getItem('tipoUsuario');
 
   if (usuarioGuardado && usuarioGuardado !== 'undefined') {
     try {
-      setUsuario(JSON.parse(usuarioGuardado));
+      const userParsed = JSON.parse(usuarioGuardado);
+      setUsuario(userParsed);
+      if (tipoGuardado) {
+        setTipoUsuario(tipoGuardado); // cargar tipo si existe
+      } else if (userParsed?.tipo) {
+        setTipoUsuario(userParsed.tipo); // usar tipo dentro del objeto usuario si existe
+      }
     } catch (error) {
       console.error('Error al parsear usuario:', error);
-      localStorage.removeItem('usuario'); // limpiar si está corrupto
+      localStorage.removeItem('usuario');
+      localStorage.removeItem('tipoUsuario');
     }
   }
 }, []);
@@ -25,11 +34,19 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     setUsuario(null);
+    setTipoUsuario(null);
+    localStorage.removeItem('tipoUsuario');
     localStorage.removeItem('usuario');
   };
 
+  const cambiarTipoUsuario = (tipo) => {
+    setTipoUsuario(tipo);
+    localStorage.setItem('tipoUsuario', tipo);
+  };
+
+
   return (
-    <AuthContext.Provider value={{ usuario, login, logout }}>
+    <AuthContext.Provider value={{ usuario, login, logout, cambiarTipoUsuario, tipoUsuario }}>
       {children}
     </AuthContext.Provider>
   );

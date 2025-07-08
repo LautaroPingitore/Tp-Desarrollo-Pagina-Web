@@ -106,7 +106,8 @@ const AlojamientoDetail = () => {
       {/* Header */}
       <div className="top-0 z-10 bg-black backdrop-blur-xl border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 text-white">            <button
+          <div className="flex items-center justify-between h-16 text-white">            
+            <button
               onClick={() => navigate(-1)}
               className="cursor-pointer flex items-center space-x-2 text-white hover:text-pink-500 transition-colors"
             >

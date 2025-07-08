@@ -14,7 +14,7 @@ const LoginModal = ({ isOpen, onClose }) => {
     lastName: ''
   });
 
-  const { login } = useContext(AuthContext); // 👈 acceder al contexto
+  const { login , cambiarTipoUsuario } = useContext(AuthContext); // 👈 acceder al contexto
 
   const handleInputChange = (e) => {
     setFormData({
@@ -35,6 +35,7 @@ const LoginModal = ({ isOpen, onClose }) => {
           email: formData.email,
           contrasenia: formData.password,
         }
+        cambiarTipoUsuario(activeTab); // 👉 guardar el tipo de usuario en contexto global
         response = await loginUsuario(datos, activeTab);
         
       } catch (error) {
@@ -54,6 +55,7 @@ const LoginModal = ({ isOpen, onClose }) => {
         console.log("Datos enviados:", datos);
 
         response = await signinUsuario(datos, activeTab);
+        cambiarTipoUsuario(activeTab); // 👉 guardar el tipo de usuario en contexto global
       
       }catch (error) {
         // TODO: HACER ALERT
