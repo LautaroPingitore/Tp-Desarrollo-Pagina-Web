@@ -58,7 +58,7 @@ export class ReservaService {
         return {
             page: pageNum,
             per_page: limitNum,
-            total: total,
+            total: data.length,
             total_pages: total_pages,
             data: data
         }

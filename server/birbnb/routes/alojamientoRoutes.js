@@ -24,7 +24,7 @@ export default function alojamientoRoutes(getController) {
     getController(AlojamientoController).importArray(req, res, next)
   })
 
-  router.put("/birbnb/alojamientos/anfitrion", (req, res, next) => {
+  router.get("/birbnb/alojamientos/anfitrion/:id", (req, res, next) => {
     getController(AlojamientoController).getByAnfitrion(req, res, next)
   })
 

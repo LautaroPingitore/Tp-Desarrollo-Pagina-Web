@@ -1,98 +1,63 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 
 import { ArrowLeft, Calendar, MapPin, User, Star, MessageCircle, Phone, Mail } from 'lucide-react';
 import { AuthContext } from '../../context/authContext';
+import { getReservasAnfitrion, getReservasHuesped } from '../../api/api';
 
 
 const Reservas = () => {
 
 const [activeTab, setActiveTab] = useState('upcoming');
 
-
   const { id } = useParams();
-const { tipoUsuario} = useContext(AuthContext);
+  // FIXME: Te retorna null esto
+  const { tipoUsuario} = useContext(AuthContext);
   
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  // Mock reservations data - different for guest vs host
-  const guestReservations = [
-    {
-      id: 1,
-      property: {
-        title: "Modern Beachfront Villa",
-        location: "Malibu, California",
-        image: "https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=800",
-        host: "Ana García"
-      },
-      checkIn: "2024-12-15",
-      checkOut: "2024-12-20",
-      guests: 4,
-      total: 2100,
-      status: 'confirmed',
-      bookingCode: 'BK123456'
-    },
-    {
-      id: 2,
-      property: {
-        title: "Mountain Retreat Cabin",
-        location: "Aspen, Colorado",
-        image: "https://images.pexels.com/photos/338504/pexels-photo-338504.jpeg?auto=compress&cs=tinysrgb&w=800",
-        host: "Miguel Rodríguez"
-      },
-      checkIn: "2024-11-10",
-      checkOut: "2024-11-15",
-      guests: 2,
-      total: 1400,
-      status: 'completed',
-      bookingCode: 'BK123457',
-      rating: 5
-    }
-  ];
+  const [guestReservations, setGuestReservations] = useState([])
+  const [hostReservations, setHostReservations] = useState([]);
 
-  const hostReservations = [
-    {
-      id: 1,
-      property: {
-        title: "Modern Beachfront Villa",
-        location: "Malibu, California",
-        image: "https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=800"
-      },
-      guest: {
-        name: "Carlos López",
-        avatar: "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=100",
-        phone: "+1 (555) 123-4567",
-        email: "carlos@email.com"
-      },
-      checkIn: "2024-12-15",
-      checkOut: "2024-12-20",
-      guests: 4,
-      total: 2100,
-      status: 'confirmed',
-      bookingCode: 'BK123456'
-    },
-    {
-      id: 2,
-      property: {
-        title: "Ocean View Apartment",
-        location: "Santa Monica, CA",
-        image: "https://images.pexels.com/photos/1642125/pexels-photo-1642125.jpeg?auto=compress&cs=tinysrgb&w=800"
-      },
-      guest: {
-        name: "María González",
-        avatar: "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=100",
-        phone: "+1 (555) 987-6543",
-        email: "maria@email.com"
-      },
-      checkIn: "2024-11-08",
-      checkOut: "2024-11-12",
-      guests: 2,
-      total: 1280,
-      status: 'completed',
-      bookingCode: 'BK123458',
-      rating: 5
+  const [pageNumber, setPageNumber] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    cargarReservas();
+  }, [pageNumber])
+
+  const cargarReservas = async () => {
+    try {
+      setLoading(true)
+
+      let response
+      if(tipoUsuario === 'Huesped') {
+        response = await getReservasHuesped(id, { page: pageNumber });
+
+        setGuestReservations(response.data.data || []);
+        setTotalPages(response.data.total_pages);
+        if (response.data.page !== pageNumber) {
+          setPageNumber(response.data.page);
+        }
+
+        setLoading(false);
+      } else if(tipoUsuario === 'Anfitrion') {
+        response = await getReservasAnfitrion(id, { page: pageNumber });
+
+        setHostReservations(response.data.data || []);
+        setTotalPages(response.data.total_pages);
+        if (response.data.page !== pageNumber) {
+          setPageNumber(response.data.page);
+        }
+
+        setLoading(false);
+      }
+
+    } catch(error) {
+      setLoading(false)
     }
-  ];
+  }
 
   const reservations = tipoUsuario === 'Huesped' ? guestReservations : hostReservations;
 

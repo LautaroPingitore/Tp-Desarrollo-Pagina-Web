@@ -81,3 +81,53 @@ export const reservarAlojamiento = async (datos) => {
         throw error;
     }
 };
+
+export const getReservasHuesped = async (usuarioId, page) => {
+    try {
+        const response = await axios.get(`${API_URL}/reservas/${usuarioId}`, {
+            params: { 
+                "page": page,
+                "limit": 3
+            }
+        })
+
+        console.log("Datos reserva", response.data)
+        return response
+    } catch (error) {
+        console.error("Error al obtener las reservas del huesped:", error);
+        throw error;
+    }
+}
+
+export const getAlojamientosAnfitrion = async (id, page=1) => {
+    try {
+        const response = await axios.get(`${API_URL}/alojamientos/anfitrion/${id}`, {
+            params: { 
+                "page": page,
+                "limit": 3
+            }
+        })
+
+        console.log(response.data)
+        return response
+    } catch (error) {
+        console.error("Error al obtener los alojamientos del anfitrión:", error);
+        throw error;
+    }
+}
+
+export const getReservasAnfitrion = async (anfitrionId, page) => {
+    try {
+        const response = await axios.get(`${API_URL}/reservas/anfitrion/${anfitrionId}`, {
+            params: { 
+                "page": page,
+                "limit": 3
+            }
+        })
+
+        return response
+    } catch (error) {
+        console.error("Error al obtener las reservas del huesped:", error);
+        throw error;
+    }
+}

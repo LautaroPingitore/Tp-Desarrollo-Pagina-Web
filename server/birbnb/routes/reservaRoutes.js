@@ -20,7 +20,7 @@ export default function reservaRoutes(getController) {
     getController(ReservaController).findByUsuario(req, res, next)
   })
 
-  router.get("/birbnb/reservas/anfitrion", (req, res, next) => {
+  router.get("/birbnb/reservas/anfitrion/:id", (req, res, next) => {
     getController(ReservaController).findByAnfitrion(req, res, next)
   })
 

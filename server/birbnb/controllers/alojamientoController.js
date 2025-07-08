@@ -1,4 +1,5 @@
 import { Filtro } from "../models/entities/Filtro.js";
+import { ObjectId } from "mongodb";
 
 export class AlojamientoController {
     constructor(alojamientoService) {
@@ -31,7 +32,7 @@ export class AlojamientoController {
 
     async findById (req, res, next) {
         try{
-            const id = Number(req.params.id);
+            const id = req.params.id;
             const alojamiento = await this.alojamientoService.findById(id);
 
             res.json(alojamiento);
@@ -46,11 +47,7 @@ export class AlojamientoController {
             const { page = 1, limit = 10} = req.query;
             const filtro = req.query;
 
-            debugger
-            console.log("dsadasdasda", filtro);
-
             const alojamientos = await this.alojamientoService.findByFilters(filtro, {page, limit});
-
            
             res.json(alojamientos);
         } catch (error) {
@@ -60,7 +57,9 @@ export class AlojamientoController {
 
     async getByAnfitrion(req, res, next) {
         try {
-            const { id, page = 1, limit = 10 } = req.query;
+            const id = req.params.id
+            const { page, limit } = req.query;
+
             const alojamientos = await this.alojamientoService.findByAnfitrion(id, { page, limit });
             res.json(alojamientos);
         } catch (error) {

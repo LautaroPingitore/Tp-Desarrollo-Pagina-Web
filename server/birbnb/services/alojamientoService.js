@@ -3,6 +3,7 @@ import { Direccion } from "../models/entities/Direccion.js";
 import { Pais } from "../models/entities/Pais.js";
 import { Ciudad } from "../models/entities/Ciudad.js";
 import { ConflictError, NotFoundError, ValidationError } from "../errors/AppError.js";
+import mongoose from "mongoose";
 
 export class AlojamientoService {
     constructor(alojamientoRepository, anfitrionRepository, ciudadRepository, paisRepository) {
@@ -61,18 +62,19 @@ export class AlojamientoService {
         return this.toDTO(alojamiento)
     }
 
-    async findByAnfitrion(email, {page = 1, limit = 10}) {
+    async findByAnfitrion(id, {page = 1, limit = 10}) {
         const pageNum = Math.max(Number(page), 1)
         const limitNum = Math.min(Math.max(Number(limit), 1), 100)
 
-        const anfitrion = await this.anfitrionRepository.findByEmail(email);
+        const anfitrion = await this.anfitrionRepository.findById(id);
         if(!anfitrion) {
-            throw new NotFoundError(`Anfitrion con email ${email} no encontrado`);
+            throw new NotFoundError(`Anfitrion no encontrado`);
         }
         
-        let alojamientos = await this.alojamientoRepository.findByAnfitrion(anfitrion.id);
+        let alojamientos = await this.alojamientoRepository.findByAnfitrion(id);
 
         alojamientos = alojamientos.map(a => this.toDTO(a));
+
         const total = alojamientos.length;
         const startIndex = (pageNum - 1) * limitNum;
         const endIndex = startIndex + limitNum;
