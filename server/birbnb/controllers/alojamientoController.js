@@ -58,6 +58,16 @@ export class AlojamientoController {
         }
     };
 
+    async getByAnfitrion(req, res, next) {
+        try {
+            const { id, page = 1, limit = 10 } = req.query;
+            const alojamientos = await this.alojamientoService.findByAnfitrion(id, { page, limit });
+            res.json(alojamientos);
+        } catch (error) {
+            next(error);
+        }
+    }
+
     // Endpoint para crear un nuevo alojamiento
     async create (req, res,next) {
         try {

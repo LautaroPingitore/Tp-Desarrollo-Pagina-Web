@@ -64,6 +64,30 @@ export class ReservaService {
         }
     }
 
+    async findByAnfitrion(id, {page = 1, limit = 10}) {
+        const pageNum = Math.max(Number(page), 1)
+        const limitNum = Math.min(Math.max(Number(limit), 1), 100)
+
+        const anfitrion = await this.anfitrionRepository.findById(id)
+        if(!anfitrion) {
+            throw new NotFoundError("Anfitrion no existente")
+        }
+
+        const reservas = await this.reservaRepository.findByAnfitrion(pageNum, limit, id)
+        
+        const total = await this.reservaRepository.countAll()
+        const total_pages = Math.ceil(total / limitNum);
+        const data = reservas.map(r => this.toDTO(r))
+
+        return {
+            page: pageNum,
+            per_page: limitNum,
+            total: total,
+            total_pages: total_pages,
+            data: data
+        }
+    }
+
     async create(reserva) {
         const { reservador, cantHuespedes, alojamiento, rangoFechas } = reserva
 

@@ -61,6 +61,34 @@ export class AlojamientoService {
         return this.toDTO(alojamiento)
     }
 
+    async findByAnfitrion(email, {page = 1, limit = 10}) {
+        const pageNum = Math.max(Number(page), 1)
+        const limitNum = Math.min(Math.max(Number(limit), 1), 100)
+
+        const anfitrion = await this.anfitrionRepository.findByEmail(email);
+        if(!anfitrion) {
+            throw new NotFoundError(`Anfitrion con email ${email} no encontrado`);
+        }
+        
+        let alojamientos = await this.alojamientoRepository.findByAnfitrion(anfitrion.id);
+
+        alojamientos = alojamientos.map(a => this.toDTO(a));
+        const total = alojamientos.length;
+        const startIndex = (pageNum - 1) * limitNum;
+        const endIndex = startIndex + limitNum;
+        const total_pages = Math.ceil(total / limitNum);
+
+        const data = alojamientos.slice(startIndex, endIndex);
+
+        return {
+            page: pageNum,
+            per_page: limitNum,
+            total: total,
+            total_pages: total_pages,
+            data: data
+        };
+    }
+
     async create(alojamiento) {
         const { anfitrion, nombre, descripcion, precioPorNoche, moneda, horarioCheckIn, horarioCheckOut, direccion, cantHuespedesMax, caracteristicas, fotos} = alojamiento;
         
@@ -73,9 +101,9 @@ export class AlojamientoService {
             throw new ConflictError(`Alojamiento con nombre ${nombre} ya existe`)
         };
         
-        const anfitrionExistente = await this.anfitrionRepository.findByName(anfitrion);
+        const anfitrionExistente = await this.anfitrionRepository.findByEmail(anfitrion);
         if(!anfitrionExistente) {
-            throw new NotFoundError(`Anfitrion con nombre ${anfitrion} no encontrado`)
+            throw new NotFoundError(`Anfitrion con email ${anfitrion} no encontrado`)
         };
 
         let paisExistente = await this.paisRepository.findByName(direccion.ciudad.pais.nombre)

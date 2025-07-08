@@ -136,4 +136,22 @@ export class ReservaRepository {
             })
     }
 
+    async findByAnfitrion(pageNum, limitNum, anfitrion) {
+        const skip = (pageNum - 1) * limitNum
+        return await this.model.find({ 'alojamiento.anfitrion': anfitrion })
+            .skip(skip)
+            .limit(limitNum)
+            .populate('huespedReservador')
+            .populate({
+                path: 'alojamiento',
+                populate: [
+                    { path: 'anfitrion' },
+                    {
+                        path: 'direccion.ciudad',
+                        populate: { path: 'pais' }
+                    }
+                ]
+            })
+    }
+    
 }

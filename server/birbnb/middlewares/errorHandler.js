@@ -1,6 +1,14 @@
+import mongoose from "mongoose";
+import { ValidationError as CustomValidationError } from "../errors/AppError.js";
+
 export const errorHandler = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
   err.status = err.status || 'error';
+
+  // 🛠️ Detectar errores de Mongoose y convertirlos en errores operacionales
+  if (err instanceof mongoose.Error.ValidationError) {
+    err = new CustomValidationError(err.message);
+  }
 
   if (process.env.NODE_ENV === 'development') {
     res.status(err.statusCode).json({

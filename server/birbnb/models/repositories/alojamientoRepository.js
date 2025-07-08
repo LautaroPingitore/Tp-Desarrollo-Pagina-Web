@@ -121,6 +121,15 @@ export class AlojamientoRepository {
             })
     }
 
+    async findByAnfitrion(anfitrionId) {
+        return await this.model.find({ anfitrion: anfitrionId })
+            .populate('anfitrion')
+            .populate({
+                path: 'direccion.ciudad',
+                populate: {path: 'pais'}
+            })
+    }
+
     async findByName(nombre) {
         return await this.model.findOne({nombre})
             .populate('anfitrion')

@@ -36,5 +36,16 @@ export class ReservaController {
             next(error)
         }
     }
+
+    async findByAnfitrion(req, res, next) {
+        try {
+            const { id, page, limit } = req.query
+            const reservas = await this.reservaService.findByAnfitrion(id, {page, limit})
+            
+            res.json(reservas)
+        } catch(error) {
+            next(error)
+        }
+    }
 }
 
