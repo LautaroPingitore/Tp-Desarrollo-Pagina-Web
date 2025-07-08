@@ -78,7 +78,7 @@ const LoginModal = ({ isOpen, onClose }) => {
       }
     }
 
-    login(response);  // 👉 guardar en contexto global
+    login(response, activeTab);  // 👉 guardar en contexto global
     onClose();        // 👉 cerrar modal
   }
 

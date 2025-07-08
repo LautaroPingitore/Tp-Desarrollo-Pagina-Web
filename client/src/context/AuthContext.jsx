@@ -7,29 +7,31 @@ export const AuthProvider = ({ children }) => {
   const [tipoUsuario, setTipoUsuario] = useState(null);
 
   useEffect(() => {
-  const usuarioGuardado = localStorage.getItem('usuario');
-  const tipoGuardado = localStorage.getItem('tipoUsuario');
+    const usuarioGuardado = localStorage.getItem('usuario');
+    const tipoGuardado = localStorage.getItem('tipoUsuario');
 
-  if (usuarioGuardado && usuarioGuardado !== 'undefined') {
-    try {
-      const userParsed = JSON.parse(usuarioGuardado);
-      setUsuario(userParsed);
-      if (tipoGuardado) {
-        setTipoUsuario(tipoGuardado); // cargar tipo si existe
-      } else if (userParsed?.tipo) {
-        setTipoUsuario(userParsed.tipo); // usar tipo dentro del objeto usuario si existe
+    if (usuarioGuardado && usuarioGuardado !== 'undefined') {
+      try {
+        const userParsed = JSON.parse(usuarioGuardado);
+        setUsuario(userParsed);
+        if (tipoGuardado) {
+          setTipoUsuario(tipoGuardado); // cargar tipo si existe
+        } else if (userParsed?.tipo) {
+          setTipoUsuario(userParsed.tipo); // usar tipo dentro del objeto usuario si existe
+        }
+      } catch (error) {
+        console.error('Error al parsear usuario:', error);
+        localStorage.removeItem('usuario');
+        localStorage.removeItem('tipoUsuario');
       }
-    } catch (error) {
-      console.error('Error al parsear usuario:', error);
-      localStorage.removeItem('usuario');
-      localStorage.removeItem('tipoUsuario');
     }
-  }
-}, []);
+  }, []);
 
-  const login = (usuarioData) => {
+  const login = (usuarioData, tipo) => {
     setUsuario(usuarioData);
-    localStorage.setItem('usuario', JSON.stringify(usuarioData));
+    setTipoUsuario(tipo)
+    localStorage.setItem('usuario', JSON.stringify(usuarioData))
+    localStorgae.setItem('tipoUsuario', tipo)
   };
 
   const logout = () => {

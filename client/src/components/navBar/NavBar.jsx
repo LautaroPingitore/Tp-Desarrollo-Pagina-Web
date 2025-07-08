@@ -63,7 +63,6 @@ const NavBar = () => {
   }, [menuOpen, tipoUsuario]);
 
   return (
-    console.log(usuario),
     <>
       <nav className="bg-black text-gray-100 w-full flex relative justify-between items-center mx-auto px-8 h-20 border-b border-gray-700">
         <div className="inline-flex">

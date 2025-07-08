@@ -1,57 +1,58 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { useParams, useLocation, useNavigate } from 'react-router-dom';
-
-import { ArrowLeft, Calendar, MapPin, User, Star, MessageCircle, Phone, Mail } from 'lucide-react';
-import { AuthContext } from '../../context/authContext';
-import { getReservasAnfitrion, getReservasHuesped } from '../../api/api';
+import React, { useState, useContext, useEffect } from 'react'
+import { useParams, useLocation, useNavigate } from 'react-router-dom'
+import { ArrowLeft, Calendar, MapPin, User, Star, MessageCircle, Phone, Mail } from 'lucide-react'
+import { AuthContext } from '../../context/authContext'
+import { getReservasAnfitrion, getReservasHuesped } from '../../api/api'
 
 
 const Reservas = () => {
 
-const [activeTab, setActiveTab] = useState('upcoming');
+const [activeTab, setActiveTab] = useState('upcoming')
 
-  const { id } = useParams();
+  const { id } = useParams()
   // FIXME: Te retorna null esto
-  const { tipoUsuario} = useContext(AuthContext);
+  const { tipoUsuario } = useContext(AuthContext)
   
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const [guestReservations, setGuestReservations] = useState([])
-  const [hostReservations, setHostReservations] = useState([]);
+  const [hostReservations, setHostReservations] = useState([])
 
-  const [pageNumber, setPageNumber] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [pageNumber, setPageNumber] = useState(1)
+  const [totalPages, setTotalPages] = useState(0)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    cargarReservas();
+    cargarReservas()
   }, [pageNumber])
 
   const cargarReservas = async () => {
     try {
       setLoading(true)
+      console.log(id)
+      console.log(tipoUsuario)
 
       let response
-      if(tipoUsuario === 'Huesped') {
-        response = await getReservasHuesped(id, { page: pageNumber });
+      if(tipoUsuario === 'huesped') {
+        response = await getReservasHuesped(id, { page: pageNumber })
 
-        setGuestReservations(response.data.data || []);
-        setTotalPages(response.data.total_pages);
+        setGuestReservations(response.data.data || [])
+        setTotalPages(response.data.total_pages)
         if (response.data.page !== pageNumber) {
-          setPageNumber(response.data.page);
+          setPageNumber(response.data.page)
         }
 
-        setLoading(false);
-      } else if(tipoUsuario === 'Anfitrion') {
-        response = await getReservasAnfitrion(id, { page: pageNumber });
+        setLoading(false)
+      } else if(tipoUsuario === 'anfitrion') {
+        response = await getReservasAnfitrion(id, { page: pageNumber })
 
-        setHostReservations(response.data.data || []);
-        setTotalPages(response.data.total_pages);
+        setHostReservations(response.data.data || [])
+        setTotalPages(response.data.total_pages)
         if (response.data.page !== pageNumber) {
-          setPageNumber(response.data.page);
+          setPageNumber(response.data.page)
         }
 
-        setLoading(false);
+        setLoading(false)
       }
 
     } catch(error) {
@@ -59,38 +60,38 @@ const [activeTab, setActiveTab] = useState('upcoming');
     }
   }
 
-  const reservations = tipoUsuario === 'Huesped' ? guestReservations : hostReservations;
+  const reservations = tipoUsuario === 'Huesped' ? guestReservations : hostReservations
 
   const filteredReservations = reservations.filter(reservation => {
-    const today = new Date();
-    const checkIn = new Date(reservation.checkIn);
-    const checkOut = new Date(reservation.checkOut);
+    const today = new Date()
+    const checkIn = new Date(reservation.checkIn)
+    const checkOut = new Date(reservation.checkOut)
     
     if (activeTab === 'upcoming') {
-      return checkIn > today || (checkIn <= today && checkOut >= today);
+      return checkIn > today || (checkIn <= today && checkOut >= today)
     } else if (activeTab === 'past') {
-      return checkOut < today;
+      return checkOut < today
     }
-    return true;
-  });
+    return true
+  })
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'confirmed': return 'bg-emerald-900 text-emerald-300';
-      case 'completed': return 'bg-gray-700 text-gray-300';
-      case 'cancelled': return 'bg-red-900 text-red-300';
-      default: return 'bg-gray-700 text-gray-300';
+      case 'confirmed': return 'bg-emerald-900 text-emerald-300'
+      case 'completed': return 'bg-gray-700 text-gray-300'
+      case 'cancelled': return 'bg-red-900 text-red-300'
+      default: return 'bg-gray-700 text-gray-300'
     }
-  };
+  }
 
   const getStatusText = (status) => {
     switch (status) {
-      case 'confirmed': return 'Confirmada';
-      case 'completed': return 'Completada';
-      case 'cancelled': return 'Cancelada';
-      default: return status;
+      case 'confirmed': return 'Confirmada'
+      case 'completed': return 'Completada'
+      case 'cancelled': return 'Cancelada'
+      default: return status
     }
-  };
+  }
 
   return (
     <div className="min-h-screen bg-black">
@@ -259,7 +260,7 @@ const [activeTab, setActiveTab] = useState('upcoming');
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Reservas;
+export default Reservas
