@@ -3,7 +3,7 @@ import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Heart, Share, Star, MapPin, Users, Bed, Bath, Wifi, Car, AirVent, Waves, Calendar, User, Dog } from 'lucide-react';
 import Calendario from '../filtros/calendario/Calendario.jsx';
 import dayjs from 'dayjs';
-import { AuthContext } from '../../context/authContext';
+import { AuthContext } from '../../context/authContext.jsx';
 import { reservarAlojamiento } from "../../api/api.js";
  // Ajustá el path si es necesario
 
