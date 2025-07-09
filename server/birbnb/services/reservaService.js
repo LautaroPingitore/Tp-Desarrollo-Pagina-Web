@@ -49,16 +49,17 @@ export class ReservaService {
             throw new NotFoundError("Huesped no existente")
         }
 
-        const reservas = await this.reservaRepository.findByUsuario(pageNum, limit, id)
+        const reservas = await this.reservaRepository.findByUsuario(id)
 
-        const total = await this.reservaRepository.countAll()
+        const total = reservas.length;
         const total_pages = Math.ceil(total / limitNum);
-        const data = reservas.map(r => this.toDTO(r))
+
+        const data = reservas.slice((pageNum - 1) * limitNum, pageNum * limitNum).map(r => this.toDTO(r))
 
         return {
             page: pageNum,
             per_page: limitNum,
-            total: data.length,
+            total: total,
             total_pages: total_pages,
             data: data
         }
@@ -73,11 +74,11 @@ export class ReservaService {
             throw new NotFoundError("Anfitrion no existente")
         }
 
-        const reservas = await this.reservaRepository.findByAnfitrion(pageNum, limit, id)
+        const reservas = await this.reservaRepository.findByAnfitrion(id)
         
-        const total = await this.reservaRepository.countAll()
+        const total = reservas.length
         const total_pages = Math.ceil(total / limitNum);
-        const data = reservas.map(r => this.toDTO(r))
+        const data = reservas.slice((pageNum - 1) * limitNum, pageNum * limitNum).map(r => this.toDTO(r))
 
         return {
             page: pageNum,
@@ -261,7 +262,7 @@ export class ReservaService {
                 email: reserva.huespedReservador.email
             },
             cantHuespedes: reserva.cantHuespedes,
-            alojamiento: reserva.alojamiento.nombre,
+            alojamiento: reserva.alojamiento,
             rangoFechas: {
                 fechaInicio: fechaInicio,
                 fechaFin: fechaFin

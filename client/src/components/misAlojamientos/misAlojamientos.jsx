@@ -15,6 +15,7 @@ const AccommodationsView = () => {
   const navigate = useNavigate();
 
   const [accommodations, setAccommodations] = useState([])
+  
   const [pageNumber, setPageNumber] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);

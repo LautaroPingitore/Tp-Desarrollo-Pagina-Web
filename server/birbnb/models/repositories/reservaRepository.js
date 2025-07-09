@@ -118,11 +118,8 @@ export class ReservaRepository {
             })
     }
 
-    async findByUsuario(pageNum, limitNum, huespedReservador ) {
-        const skip = (pageNum - 1) * limitNum
+    async findByUsuario(huespedReservador ) {
         return await this.model.find({ huespedReservador })
-            .skip(skip)
-            .limit(limitNum)
             .populate('huespedReservador')
             .populate({
                 path: 'alojamiento',
@@ -136,11 +133,8 @@ export class ReservaRepository {
             })
     }
 
-    async findByAnfitrion(pageNum, limitNum, anfitrion) {
-        const skip = (pageNum - 1) * limitNum
+    async findByAnfitrion(anfitrion) {
         return await this.model.find({ 'alojamiento.anfitrion': anfitrion })
-            .skip(skip)
-            .limit(limitNum)
             .populate('huespedReservador')
             .populate({
                 path: 'alojamiento',

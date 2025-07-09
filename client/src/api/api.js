@@ -87,11 +87,11 @@ export const getReservasHuesped = async (usuarioId, page) => {
         const response = await axios.get(`${API_URL}/reservas/${usuarioId}`, {
             params: { 
                 "page": page,
-                "limit": 3
+                "limit": 2
             }
         })
 
-        console.log("Datos reserva", response.data)
+        console.log(response)
         return response
     } catch (error) {
         console.error("Error al obtener las reservas del huesped:", error);
@@ -121,7 +121,7 @@ export const getReservasAnfitrion = async (anfitrionId, page) => {
         const response = await axios.get(`${API_URL}/reservas/anfitrion/${anfitrionId}`, {
             params: { 
                 "page": page,
-                "limit": 3
+                "limit": 2
             }
         })
 
