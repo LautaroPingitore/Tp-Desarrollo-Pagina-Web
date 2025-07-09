@@ -3,7 +3,11 @@ import mongoose from "mongoose";
 export class MongoDBClient {
     static async connect() {
         try {
-            const conn = await mongoose.connect('mongodb://localhost:27017/birbnb');
+            const connectionString = process.env.MONGODB_URI || 'mongodb://localhost:27017/birbnb';
+            const conn = await mongoose.connect(connectionString, {
+                useNewUrlParser: true,
+                useUnifiedTopology: true
+            });
             console.log(`MongoDB is connected: ${conn.connection.host}`);
         } catch (error) {
             console.error(`Error: ${error.message}`);
