@@ -9,7 +9,7 @@ import MisAlojamientos from './components/misAlojamientos/misAlojamientos';
 import Reservas from './components/reservas/reservas';
 import Notificaciones from './components/misNotificaciones/misNotificaciones';
 import CrearAlojamiento from './components/crearAlojamiento/crearAlojamiento';
-import AuthProvider from './context/authContext.jsx'
+import { AuthProvider } from './context/authContext'
 
 const theme = createTheme({
   palette: {
