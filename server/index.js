@@ -56,7 +56,7 @@ const alojamientoController = new AlojamientoController(alojamientoService);
 
 const app = express();
 app.use(cors({
-    origin: "https://birbnb.vercel.app/"
+    origin: "https://birbnb.vercel.app"
 }))
 const port = process.env.PORT || 3000;
 const server = new Server(app, port);
