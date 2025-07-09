@@ -3,12 +3,12 @@ import { MapPin, DollarSign, Clock } from 'lucide-react';
 
 const LocationPricingStep = ({ formData, updateFormData }) => {
   const currencies = [
-    { code: 'USD', symbol: '$', name: 'US Dollar' },
+    { code: 'DOLAR_USA', symbol: '$', name: 'US Dollar' },
     { code: 'EUR', symbol: '€', name: 'Euro' },
     { code: 'GBP', symbol: '£', name: 'British Pound' },
     { code: 'CAD', symbol: 'C$', name: 'Canadian Dollar' },
     { code: 'AUD', symbol: 'A$', name: 'Australian Dollar' },
-    { code: 'MXN', symbol: '$', name: 'Mexican Peso' }
+    { code: 'PESO_ARG', symbol: '$', name: 'Argentine Peso' }
   ];
 
   const handleInputChange = (e) => {

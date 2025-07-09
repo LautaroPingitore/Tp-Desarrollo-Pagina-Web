@@ -195,3 +195,26 @@ export const marcarLeidaAnfitrion = async (usuarioId, notificacionId) => {
         throw error;
     }
 }
+
+export const crearAlojamiento = async (data) => {
+    try {
+        const response = await axios.post(`${API_URL}/alojamientos`, { 
+            "anfitrion": data.anfitrion,
+            "nombre": data.nombre,
+            "descripcion": data.descripcion,
+            "precioPorNoche": data.precioPorNoche,
+            "moneda": data.moneda,
+            "horarioCheckIn": data.horarioCheckIn,
+            "horarioCheckOut": data.horarioCheckOut,
+            "direccion": data.direccion,
+            "cantHuespedesMax": data.cantHuespedesMax,
+            "caracteristicas": data.caracteristicas,
+            "fotos": data.fotos
+        }) 
+
+        return response.data
+    } catch(error) {
+        console.error("Error al crear el alojamiento:", error);
+        throw error;
+    }
+}

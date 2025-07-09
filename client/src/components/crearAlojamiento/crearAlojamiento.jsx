@@ -7,6 +7,7 @@ import UbicacionAndPrecio from './ubicacionAndPrecios';
 import CaracteristicasAndFotos from './caracteristicasAndFotos';
 import VistaDePasos from './vistaDePasos';
 import { AuthContext } from '../../context/authContext';
+import { crearAlojamiento } from '../../api/api';
 
 const CreateAccommodationView = () => {
     const { id } = useParams();
@@ -93,9 +94,17 @@ const CreateAccommodationView = () => {
         }
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         console.log('Accommodation created:', formData);
         // Here you would typically send the data to your backend
+
+        try {
+            const response = await crearAlojamiento(formData)
+
+            console.log('Alojamiento creado exitosamente:', response);
+        } catch(error) {
+            return
+        }
 
         // Clean up image URLs to prevent memory leaks
         formData.fotos.forEach(image => {
