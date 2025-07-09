@@ -1,7 +1,8 @@
 import axios from "axios";
 import qs from "qs";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const VITE_API = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const API_URL = `${VITE_API}/birbnb`;
 
 export const getAlojamientos = async (pageNumber, filtros) => {
     try {
