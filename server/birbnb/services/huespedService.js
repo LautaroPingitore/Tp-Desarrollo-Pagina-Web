@@ -129,7 +129,7 @@ export class HuespedService {
       }
 
 
-    async getNotificaciones(id, leida) {
+    async getNotificaciones(id, leida, page, limit) {
         const huesped = await this.huespedRepository.findById(id)
         if(!huesped) {
             throw new NotFoundError(`Huesped con id ${id} no encontrado`)
@@ -137,12 +137,28 @@ export class HuespedService {
 
         leida = leida.toLowerCase()
         const notificaciones = huesped.notificaciones;
+
+        let data
         if(leida == "true") {
-            return notificaciones.filter(n => n.leida).map(n => this.notificacionToDTO(n))
+            data = notificaciones.filter(n => n.leida).map(n => this.notificacionToDTO(n))
         } else if(leida == "false") {
-            return notificaciones.filter(n => !n.leida).map(n => this.notificacionToDTO(n))
+            data = notificaciones.filter(n => !n.leida).map(n => this.notificacionToDTO(n))
         } else {
             throw new ValidationError(`${leida} no corresponde a true o false`)
+        }
+
+        const total = data.length
+        const total_pages = Math.ceil(total / limit)
+        const startIndex = (page - 1) * limit;
+        const endIndex = startIndex + limit;
+        const dataNew = data.slice(startIndex, endIndex)
+
+        return {
+            page: page,
+            per_page: limit,
+            total: total,
+            total_pages: total_pages,
+            data: dataNew
         }
     }
 

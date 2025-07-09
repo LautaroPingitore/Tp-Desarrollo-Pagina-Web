@@ -8,7 +8,7 @@ import { IconButton } from '@material-tailwind/react'
 
 const Reservas = () => {
 
-const [activeTab, setActiveTab] = useState('upcoming')
+  const [activeTab, setActiveTab] = useState('upcoming')
 
   const { id } = useParams()
   const { tipoUsuario } = useContext(AuthContext)
@@ -129,7 +129,7 @@ const [activeTab, setActiveTab] = useState('upcoming')
 
     {/* Contenedor principal con flechas laterales */}
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="flex items-start gap-4">
+      <div className="flex items-center gap-4">
         {/* Flecha izquierda */}
         <div className="flex items-center h-full sticky top-32">
           {pageNumber > 1 && (
@@ -234,7 +234,8 @@ const [activeTab, setActiveTab] = useState('upcoming')
                       </div>
                       <div>
                         <p className="text-gray-400 text-sm">Huéspedes</p>
-                        <p className="text-white font-medium">{reservation.huespedReservador.nombre} {reservation.huespedReservador.nombre}</p>
+                         {/* TODO: no lee el apellido */}
+                        <p className="text-white font-medium">{reservation.huespedReservador.nombre} {reservation.huespedReservador.apellido}</p>
                       </div>
                     </div>
                   </div>

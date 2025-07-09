@@ -32,7 +32,7 @@ export default function anfitrionRoutes(getController) {
         getController(AnfitrionController).marcarLeidaNotificacion(req, res, next)
     )
 
-    router.get("/birbnb/anfitrion/:id/notificaciones/:tipoleida", (req, res, next) =>
+    router.get("/birbnb/anfitrion/:id/notificaciones/:tipoLeida", (req, res, next) =>
             getController(AnfitrionController).getNotificaciones(req, res, next)
     )
     

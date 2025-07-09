@@ -259,6 +259,7 @@ export class ReservaService {
             fechaAlta: reserva.fechaAlta,
             huespedReservador: {
                 nombre: reserva.huespedReservador.nombre,
+                apellido: reserva.huespedReservador.apellido,
                 email: reserva.huespedReservador.email
             },
             cantHuespedes: reserva.cantHuespedes,

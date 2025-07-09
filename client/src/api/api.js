@@ -131,3 +131,51 @@ export const getReservasAnfitrion = async (anfitrionId, page) => {
         throw error;
     }
 }
+
+export const getNotificacionesHuesped = async (usuarioId, leida, pageNumber) => {
+    try {
+        const response = await axios.get(`${API_URL}/huesped/${usuarioId}/notificaciones/${leida}`, {
+            params: {
+                "page": pageNumber,
+                "limit": 4
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error al obtener las notificaciones:", error);
+        throw error;
+    }
+};
+
+export const getNotificacionesAnfitrion = async (usuarioId, leida, pageNumber) => {
+    try {
+        const response = await axios.get(`${API_URL}/anfitrion/${usuarioId}/notificaciones/${leida}`, {
+            params: {
+                "page": pageNumber,
+                "limit": 4
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error al obtener las notificaciones:", error);
+        throw error;
+    }
+};
+
+export const marcarLeidaHuesped = async (usuarioId, notificacionId) => {
+    try {
+        await axios.put(`${API_URL}/huesped/${usuarioId}/notificaciones/${notificacionId}`)
+    } catch(error) {
+        console.error("Error al marcar la notificación como leída");
+        throw error;
+    }
+}
+
+export const marcarLeidaAnfitrion = async (usuarioId, notificacionId) => {
+    try {
+        await axios.put(`${API_URL}/anfitrion/${usuarioId}/notificaciones/${notificacionId}`);
+    } catch (error) {
+        console.error("Error al marcar la notificación como leída");
+        throw error;
+    }
+}

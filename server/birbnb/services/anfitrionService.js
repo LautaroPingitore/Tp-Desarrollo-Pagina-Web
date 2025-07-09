@@ -127,40 +127,55 @@ export class AnfitrionService {
         return this.toDTO(actualizado)
     }
 
-    async getNotificaciones(id, leida) {
-        const huesped = await this.huespedRepository.findById(id)
-        if(!huesped) {
-            throw new NotFoundError(`Huesped con id ${id} no encontrado`)
+    async getNotificaciones(id, leida, page, limit) {
+        const anfitrion = await this.anfitrionRepository.findById(id)
+        if(!anfitrion) {
+            throw new NotFoundError(`Anfitrion con id ${id} no encontrado`)
         }
 
         leida = leida.toLowerCase()
-        const notificaciones = huesped.notificaciones;
-        if(leida == "true") {
-            return notificaciones.filter(n => n.leida).map(n => this.notificacionToDTO(n))
-        } else if(leida == "false") {
-            return notificaciones.filter(n => !n.leida).map(n => this.notificacionToDTO(n))
+        const notificaciones = anfitrion.notificaciones;
+        let data
+        if(leida === "true") {
+            data = notificaciones.filter(n => n.leida).map(n => this.notificacionToDTO(n))
+        } else if(leida === "false") {
+            data = notificaciones.filter(n => !n.leida).map(n => this.notificacionToDTO(n))
         } else {
             throw new ValidationError(`${leida} no corresponde a true o false`)
+        }
+
+        const total = data.length
+        const total_pages = Math.ceil(total / limit)
+        const startIndex = (page - 1) * limit;
+        const endIndex = startIndex + limit;
+        const dataNew = data.slice(startIndex, endIndex)
+
+        return {
+            page: page,
+            per_page: limit,
+            total: total,
+            total_pages: total_pages,
+            data: dataNew
         }
     }
 
     async leerNotificacion(idUsuario, idNotificacion) {
-        const huesped = await this.huespedRepository.findById(idUsuario)
-        if(!huesped) {
-            throw new NotFoundError(`Huesped con id ${id} no encontrado`)
+        const anfitrion = await this.anfitrionRepository.findById(idUsuario)
+        if(!anfitrion) {
+            throw new NotFoundError(`Anfitrion con id ${id} no encontrado`)
         }
 
-        const index = huesped.notificaciones.findIndex(n => n.id == idNotificacion)
+        const index = anfitrion.notificaciones.findIndex(n => n.id == idNotificacion)
         if(index == -1) {
             throw new NotFoundError(`Notificacion con ${idNotificacion} no encontrada`)
         }
         
-        const notificacion = huesped.notificaciones[index]
+        const notificacion = anfitrion.notificaciones[index]
         notificacion.leida = true
         notificacion.fechaLeida = new Date()
-        huesped.notificaciones[index] = notificacion
+        anfitrion.notificaciones[index] = notificacion
 
-        await this.huespedRepository.save(huesped)
+        await this.anfitrionRepository.save(anfitrion)
 
         return this.notificacionToDTO(notificacion)
     }

@@ -36,7 +36,7 @@ export default function huespedRoutes(getController) {
             getController(AnfitrionController).marcarLeidaNotificacion(req, res, next)
     )
 
-    router.get("/birbnb/huesped/:id/notificaciones/:tipoleida", (req, res, next) =>
+    router.get("/birbnb/huesped/:id/notificaciones/:tipoLeida", (req, res, next) =>
         getController(HuespedController).getNotificaciones(req, res, next)
     )
 

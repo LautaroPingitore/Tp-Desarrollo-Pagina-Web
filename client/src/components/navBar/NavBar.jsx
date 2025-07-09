@@ -29,15 +29,16 @@ const NavBar = () => {
     }
 
   const [menuOpen, setMenuOpen] = useState(false);
-
   const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const [modoApertura, setModoApertura] = useState(false)
   const menuRef = useRef(null);
 
   const { usuario, logout , tipoUsuario} = useContext(AuthContext); // Acceder al usuario y logout
 
   const toggleMenu = () => setMenuOpen(prev => !prev);
 
-  const openLoginModal = () => {
+  const openLoginModal = (isLogin) => {
+    setModoApertura(isLogin)
     setLoginModalOpen(true);
     setMenuOpen(false);
   };
@@ -111,13 +112,13 @@ const NavBar = () => {
                     {!usuario ? (
                       <>
                       <button
-                            onClick={openLoginModal}
+                            onClick={() => openLoginModal(true)}
                             className="w-full text-left px-4 py-3 text-white hover:bg-gray-900 transition-colors font-medium"
                           >
                             Log in
                           </button>
                           <button
-                            onClick={openLoginModal}
+                            onClick={() => openLoginModal(false)}
                             className="w-full text-left px-4 py-3 text-white hover:bg-gray-900 transition-colors"
                           >
                             Sign up
@@ -194,7 +195,7 @@ const NavBar = () => {
         </div>
       </nav>
 
-      <LoginModal isOpen={loginModalOpen} onClose={closeLoginModal} />
+      <LoginModal isOpen={loginModalOpen} onClose={closeLoginModal} modoApertura={modoApertura}/>
     </>
   );
 };

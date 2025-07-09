@@ -1,10 +1,18 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { X, Eye, EyeOff, Mail, Lock, User, Home } from 'lucide-react';
 import { AuthContext } from '../../context/authContext'; // Ajustá el path si es necesario
 import { loginUsuario, signinUsuario } from '../../api/api'; // Asegúrate de que esta función esté definida en tu API
 
-const LoginModal = ({ isOpen, onClose }) => {
-  const [isLogin, setIsLogin] = useState(true);
+const LoginModal = ({ isOpen, onClose, modoApertura }) => {
+  
+  const [isLogin, setIsLogin] = useState(true) 
+
+  useEffect(() => {
+    if(isOpen) {
+      setIsLogin(modoApertura === true)
+    }
+  }, [isOpen, modoApertura])
+
   const [showPassword, setShowPassword] = useState(false);
   const [activeTab, setActiveTab] = useState('huesped');
   const [formData, setFormData] = useState({
@@ -198,6 +206,7 @@ const LoginModal = ({ isOpen, onClose }) => {
             <button
               type="submit"
               className="w-full !text-black bg-gradient-to-r from-emerald-300 to-emerald-400 hover:from-emerald-400 hover:to-emerald-500 cursor-pointer font-semibold py-3 rounded-lg transition-colors text-sm sm:text-base"
+              
             >
               {isLogin ? 'Iniciar Sesión' : 'Registrarse'}
             </button>

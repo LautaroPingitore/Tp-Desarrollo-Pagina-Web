@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }) => {
     setUsuario(usuarioData);
     setTipoUsuario(tipo)
     localStorage.setItem('usuario', JSON.stringify(usuarioData))
-    localStorgae.setItem('tipoUsuario', tipo)
+    localStorage.setItem('tipoUsuario', tipo)
   };
 
   const logout = () => {
