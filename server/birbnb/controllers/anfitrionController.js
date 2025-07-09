@@ -78,7 +78,7 @@ export class AnfitrionController {
   
       await this.reservaService.modificarEstado(id, idReserva, "CONFIRMADA")
 
-      res.status(200)
+      res.status(200).send()
     } catch(error) {
       next(error)
     }
@@ -90,7 +90,7 @@ export class AnfitrionController {
   
       await this.reservaService.modificarEstado(id, idReserva, "RECHAZADA")
 
-      res.status(200)
+      res.status(200).send()
     } catch(error) {
       next(error)
     }
