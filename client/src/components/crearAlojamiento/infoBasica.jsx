@@ -1,11 +1,11 @@
 import React from 'react';
-import { Users, Wifi, Waves, Heart, Car } from 'lucide-react';
+import { Users, Wifi, Waves, Dog, Car } from 'lucide-react';
 
 const BasicInfoStep = ({ formData, updateFormData }) => {
   const caracteristicas = [
     { id: 'WIFI', name: 'WiFi', icon: Wifi },
     { id: 'PILETA', name: 'Pileta', icon: Waves },
-    { id: 'MASCOTAS_PERMITIDAS', name: 'Mascotas Permitidas', icon: Heart },
+    { id: 'MASCOTAS_PERMITIDAS', name: 'Mascotas Permitidas', icon: Dog },
     { id: 'ESTACIONAMIENTO', name: 'Estacionamiento', icon: Car }
   ];
 
@@ -96,11 +96,11 @@ const BasicInfoStep = ({ formData, updateFormData }) => {
           <label className="block text-sm font-medium text-gray-300 mb-2">
             Huéspedes máximos *
           </label>
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center !justify-center space-x-3">
             <button
               type="button"
               onClick={() => handleGuestChange(false)}
-              className="p-2 border border-gray-700 rounded-lg hover:border-gray-600 transition-colors"
+              className="p-2 border border-gray-700  rounded-lg hover:border-gray-600 transition-colors"
             >
               <span className="text-white">-</span>
             </button>

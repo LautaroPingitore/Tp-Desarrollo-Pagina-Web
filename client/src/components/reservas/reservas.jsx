@@ -91,10 +91,11 @@ const Reservas = () => {
 
   const getStatusColor = (estado) => {
     switch (estado) {
-      case 'CONFIRMADA': return 'bg-emerald-900 text-emerald-300'
-      case 'COMPLETADA': return 'bg-gray-700 text-gray-300'
-      case 'CANCELADA': return 'bg-red-900 text-red-300'
-      default: return 'bg-gray-700 text-gray-300'
+      case 'CONFIRMADA': return 'bg-emerald-500 text-white shadow-lg'
+      case 'COMPLETADA': return 'bg-blue-500 text-white shadow-lg'
+      case 'CANCELADA': return 'bg-red-500 text-white shadow-lg'
+      case 'PENDIENTE': return 'bg-yellow-500 text-black shadow-lg'
+      default: return 'bg-gray-600 text-white shadow-lg'
     }
   }
 
@@ -124,18 +125,20 @@ const Reservas = () => {
             </button>
             <div className="flex items-center space-x-2">
               <Calendar className="h-5 w-5 text-emerald-300" />
-              <h1 className="text-xl font-semibold text-white pt-3">Mis Reservas</h1>
+              <h1 className="text-xl font-semibold text-white">Mis Reservas</h1>
             </div>
             <div className="w-20"></div>
           </div>
         </div>
       </div>
 
-      {/* Contenedor principal con flechas laterales */}
+      {/* Contenedor principal responsivo */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex items-center gap-4">
-          {/* Flecha izquierda */}
-          <div className="flex items-center h-full sticky top-32">
+
+        
+        <div className="flex items-center justify-center bg-black relative">
+          {/* Flechas en desktop - solo visible en pantallas medianas y grandes */}
+          <div className="hidden md:flex w-20 items-center justify-center h-full px-2">
             {pageNumber > 1 && (
               <button
                 onClick={handlePrevious}
@@ -147,7 +150,7 @@ const Reservas = () => {
           </div>
 
           {/* Contenido central */}
-          <div className="flex-1">
+          <div className="space-y-6 max-w-4xl w-full px-2 flex-1 min-h-[200px]">
             {/* Tabs (descomenta si lo necesitas) */}
             {/* <div className="flex space-x-1 mb-8 bg-gray-900 p-1 rounded-lg w-fit">
               {[
@@ -169,17 +172,28 @@ const Reservas = () => {
             </div> */}
 
             {/* Lista de reservas */}
-            <div className="space-y-6">
+            {loading ? (
+              <div className="flex justify-center items-center py-12">
+                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-emerald-300"></div>
+              </div>
+            ) : (
+              <div className="space-y-6">
               {reservas.map((reservation) => (
                 <div key={reservation.id} className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden hover:border-gray-700 transition-colors">
                   <div className="md:flex">
                     {/* Imagen */}
-                    <div className="md:w-48 md:flex-shrink-0">
+                    <div className="md:w-48 md:flex-shrink-0 relative">
                       <img
                         src={reservation.alojamiento.fotos[0]}
                         alt={reservation.alojamiento.nombre}
                         className="w-full h-48 md:h-full object-cover"
                       />
+                      {/* Estado en móvil - superpuesto sobre la imagen */}
+                      <div className="md:hidden absolute top-2 right-2">
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(reservation.estado)}`}>
+                          {getStatusText(reservation.estado)}
+                        </span>
+                      </div>
                     </div>
 
                     {/* Contenido */}
@@ -199,7 +213,8 @@ const Reservas = () => {
                             </p>
                           )}
                         </div>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(reservation.estado)}`}>
+                        {/* Estado en desktop - a la derecha del contenido */}
+                        <span className={`hidden md:block px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(reservation.estado)}`}>
                           {getStatusText(reservation.estado)}
                         </span>
                       </div>
@@ -216,15 +231,11 @@ const Reservas = () => {
                               <span>{reservation.huespedReservador.email}</span>
                             </div>
                           </div>
-
-                          <button className="p-2 text-gray-400 hover:text-white transition-colors">
-                            <MessageCircle className="h-5 w-5" />
-                          </button>
                         </div>
                       )}
 
                       {/* Detalles de la reserva */}
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-4">
                         <div>
                           <p className="text-gray-400 text-sm">Check-in</p>
                           <p className="text-white font-medium">
@@ -237,8 +248,8 @@ const Reservas = () => {
                             {reservation.rangoFechas.fechaFin}
                           </p>
                         </div>
-                        <div>
-                          <p className="text-gray-400 text-sm">Huéspedes</p>
+                        <div className="col-span-2 sm:col-span-1">
+                          <p className="text-gray-400 text-sm">Huésped</p>
                           <p className="text-white font-medium">{reservation.huespedReservador.nombre} {reservation.huespedReservador.apellido}</p>
                         </div>
                       </div>
@@ -269,9 +280,10 @@ const Reservas = () => {
                 </div>
               ))}
             </div>
+            )}
 
             {/* Estado vacío */}
-            {reservas.length === 0 && (
+            {reservas.length === 0 && !loading && (
               <div className="text-center py-12">
                 <Calendar className="h-16 w-16 text-gray-600 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-gray-400 mb-2">
@@ -287,8 +299,8 @@ const Reservas = () => {
             )}
           </div>
 
-          {/* Flecha derecha */}
-          <div className="flex items-center h-full sticky top-32">
+          {/* Flechas en desktop - solo visible en pantallas medianas y grandes */}
+          <div className="hidden md:flex w-20 items-center justify-center h-full px-2">
             {pageNumber < totalPages && (
               <button
                 onClick={handleNext}
@@ -298,6 +310,31 @@ const Reservas = () => {
               </button>
             )}
           </div>
+        </div>
+
+        {/* Flechas en móvil - solo visible en pantallas pequeñas */}
+        <div className="flex md:hidden justify-center items-center gap-4 py-4 bg-black">
+          {pageNumber > 1 && (
+            <button
+              onClick={handlePrevious}
+              className="rounded-full border border-gray-600 text-gray-300 hover:bg-gray-800 p-2"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </button>
+          )}
+          
+          <span className="text-white text-sm mx-4">
+            Página {pageNumber} de {totalPages}
+          </span>
+
+          {pageNumber < totalPages && (
+            <button
+              onClick={handleNext}
+              className="rounded-full border border-gray-600 text-gray-300 hover:bg-gray-800 p-2"
+            >
+              <ArrowRight className="h-5 w-5" />
+            </button>
+          )}
         </div>
       </div>
     </div>

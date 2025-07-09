@@ -1,10 +1,21 @@
 .tamanioLogo {
-  width: 20%;
+  height: 80px;
+  width: auto;
+  max-width: 250px;
+  min-width: 150px;
+  object-fit: contain;
+  display: block;
+  transition: opacity 0.3s ease;
+}
+
+.tamanioLogo:hover {
+  opacity: 0.9;
 }
 
 @media screen and (max-width: 768px) {
   .tamanioLogo {
-    width: 50%;
+    height: 70px;
+    max-width: 200px;
+    min-width: 120px;
   }
-    
 }

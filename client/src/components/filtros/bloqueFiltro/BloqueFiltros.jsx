@@ -45,7 +45,7 @@ const BloqueFiltros = ({filtros, setFiltros, pageNumber, setPageNumber}) => {
             <div className="bg-black rounded-full sm:border sm:border-white/20 sm:drop-shadow-[0_0_8px_rgba(255,255,255,0.15)] px-6 py-4 grid sm:flex items-center gap-6 w-full max-w-4xl relative z-50">
                 <Atributos atributos={atributos} setAtributos={setAtributos} />
                 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center justify-center gap-2 w-full sm:w-auto">
                     {/* Botón de reset */}
                     <button 
                         onClick={resetearFiltros}

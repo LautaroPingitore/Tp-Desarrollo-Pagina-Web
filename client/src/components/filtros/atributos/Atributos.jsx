@@ -25,6 +25,15 @@ const Atributos = ({ atributos, setAtributos }) => {
 
   const [precioMax, setPrecioMax] = useState("");
 
+  // Función para formatear fechas consistentemente
+  const formatDate = (date) => {
+    if (!date || !(date instanceof Date) || isNaN(date)) return null;
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
 
   const handleClickOutside = (e) => {
     if (calendarioRef.current && !calendarioRef.current.contains(e.target)) {
@@ -57,16 +66,34 @@ const Atributos = ({ atributos, setAtributos }) => {
 useEffect(() => {
   setBusquedaLugar(atributos.ciudad || "");
   setPrecioMax(atributos.precioMax || "");
-  setFechas({
-    checkin: atributos.fechaInicio
-      ? dayjs(atributos.fechaInicio, "DD/MM/YYYY").toDate()
-      : null,
-    checkout: atributos.fechaFin
-      ? dayjs(atributos.fechaFin, "DD/MM/YYYY").toDate()
-      : null
-  });
   setViajeros(atributos.cantidadHuespedes || 1);
-}, [atributos]);
+  
+  // NO actualizar fechas aquí si vienen del calendario
+  // Solo actualizar si vienen de una fuente externa (como resetear filtros)
+  if ((atributos.fechaInicio || atributos.fechaFin) && (!fechas.checkin && !fechas.checkout)) {
+    let checkinDate = null;
+    let checkoutDate = null;
+    
+    if (atributos.fechaInicio) {
+      const parsedCheckin = dayjs(atributos.fechaInicio, "DD/MM/YYYY", true);
+      if (parsedCheckin.isValid()) {
+        checkinDate = parsedCheckin.toDate();
+      }
+    }
+    
+    if (atributos.fechaFin) {
+      const parsedCheckout = dayjs(atributos.fechaFin, "DD/MM/YYYY", true);
+      if (parsedCheckout.isValid()) {
+        checkoutDate = parsedCheckout.toDate();
+      }
+    }
+    
+    setFechas({
+      checkin: checkinDate,
+      checkout: checkoutDate
+    });
+  }
+}, [atributos.ciudad, atributos.precioMax, atributos.cantidadHuespedes]);
 
 
 
@@ -106,17 +133,28 @@ useEffect(() => {
   };
 
   const handleFechasSeleccionadas = (dates) => {
-    if (dates && dates.length === 2) {
-      setAtributos({
-        ...atributos,
-        fechaInicio: dayjs(dates[0]).format('DD/MM/YYYY'),
-        fechaFin: dayjs(dates[1]).format('DD/MM/YYYY'),
-      })
-      setFechas({
-        checkin: dates[0],
-        checkout: dates[1]
-      });
-      setMostrarCalendario(null);
+    if (dates && dates.length === 2 && dates[0] && dates[1]) {
+      if (dates[0] instanceof Date && !isNaN(dates[0]) && 
+          dates[1] instanceof Date && !isNaN(dates[1])) {
+        
+        const newFechas = {
+          checkin: dates[0],
+          checkout: dates[1]
+        };
+        
+        setFechas(newFechas);
+        
+        const fechaInicioFormatted = formatDate(dates[0]);
+        const fechaFinFormatted = formatDate(dates[1]);
+        
+        setAtributos(prevAtributos => ({
+          ...prevAtributos,
+          fechaInicio: fechaInicioFormatted,
+          fechaFin: fechaFinFormatted,
+        }));
+        
+        setMostrarCalendario(null);
+      }
     }
   };
 
@@ -181,17 +219,17 @@ useEffect(() => {
 
         {/* FECHAS */}
         <div className="flex sm:flex-col sm:ml-12 sm:flex-row gap-2 sm:gap-6 sm:flex-1">
-          <button onClick={() => setMostrarCalendario('calendario')} className="flex flex-col text-center text-sm w-full">
+          <button onClick={() => setMostrarCalendario('calendario')} className="flex flex-col text-center text-sm w-full hover:bg-gray-800 rounded-lg p-2 transition-colors">
             <span className="text-gray-100 text-xs">Check-in</span>
             <span className="text-gray-300 font-medium">
-              {fechas.checkin ? dayjs(fechas.checkin).format('DD/MM/YYYY') : '¿Cuándo?'}
+              {formatDate(fechas.checkin) || '¿Cuándo?'}
             </span>
           </button>
 
-          <button onClick={() => setMostrarCalendario('calendario')} className="flex flex-col text-center text-sm w-full">
+          <button onClick={() => setMostrarCalendario('calendario')} className="flex flex-col text-center text-sm w-full hover:bg-gray-800 rounded-lg p-2 transition-colors">
             <span className="text-gray-100 text-xs">Check-out</span>
             <span className="text-gray-300 font-medium">
-              {fechas.checkout ? dayjs(fechas.checkout).format('DD/MM/YYYY') : '¿Cuándo?'}
+              {formatDate(fechas.checkout) || '¿Cuándo?'}
             </span>
           </button>
         </div>
@@ -263,8 +301,11 @@ useEffect(() => {
 
       {/* CALENDARIO */}
       {mostrarCalendario && (
-        <div ref={calendarioRef} className="absolute z-[99999] top-190 left-0 sm:top-16 sm:left-40 transform -translate-x-1/2 bg-black rounded-lg shadow-lg">
-          <Calendario onChange={handleFechasSeleccionadas} />
+        <div ref={calendarioRef} className="absolute z-[99999] top-full left-1/2 transform -translate-x-1/2 mt-2 bg-black rounded-lg shadow-lg max-w-[95vw] sm:max-w-sm min-w-[320px] overflow-hidden">
+          <Calendario 
+            onChange={handleFechasSeleccionadas}
+            initialRange={[fechas.checkin, fechas.checkout]}
+          />
         </div>
       )}
     </div>

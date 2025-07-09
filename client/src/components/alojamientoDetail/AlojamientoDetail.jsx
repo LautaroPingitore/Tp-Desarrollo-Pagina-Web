@@ -5,7 +5,7 @@ import Calendario from '../filtros/calendario/Calendario.jsx';
 import dayjs from 'dayjs';
 import { AuthContext } from '../../context/authContext.jsx';
 import { reservarAlojamiento } from "../../api/api.js";
- // Ajustá el path si es necesario
+// Ajustá el path si es necesario
 
 const AlojamientoDetail = () => {
   const { id } = useParams();
@@ -19,7 +19,7 @@ const AlojamientoDetail = () => {
   const alojamiento = location.state?.alojamiento;
 
   // Si no hay alojamiento en el state, usar datos por defecto
-  const property = alojamiento ;  // Datos del host (mock)
+  const property = alojamiento;  // Datos del host (mock)
   const [_selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [_isLiked, _setIsLiked] = useState(false);
   const [mostrarCalendario, setMostrarCalendario] = useState(null);
@@ -29,19 +29,28 @@ const AlojamientoDetail = () => {
 
   const [loading, setLoading] = useState(true);
 
+  // Función para formatear fechas consistentemente
+  const formatDate = (date) => {
+    if (!date || !(date instanceof Date) || isNaN(date)) return null;
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
   const handleClickOutside = (e) => {
     if (calendarioRef.current && !calendarioRef.current.contains(e.target)) {
-            setMostrarCalendario(null);
-       }
+      setMostrarCalendario(null);
+    }
   };
 
   useEffect(() => {
-  const timeout = setTimeout(() => {
-    setLoading(false);
-  }, 800); // mínimo visible 800ms
+    const timeout = setTimeout(() => {
+      setLoading(false);
+    }, 800); // mínimo visible 800ms
 
-  return () => clearTimeout(timeout);
-}, []);
+    return () => clearTimeout(timeout);
+  }, []);
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
@@ -50,26 +59,44 @@ const AlojamientoDetail = () => {
     };
   }, []);
 
- const handleFechasSeleccionadas = (dates) => {
-        if (dates && dates.length === 2) {
-            setFechas({
-                checkin: dates[0],
-                checkout: dates[1]
-            });
-            setMostrarCalendario(null);
-            setErrorMessage('');
-            setSuccessMessage('');
-        }
+  const handleFechasSeleccionadas = (dates) => {
+    if (dates && dates.length === 2 && dates[0] && dates[1]) {
+      if (dates[0] instanceof Date && !isNaN(dates[0]) && 
+          dates[1] instanceof Date && !isNaN(dates[1])) {
+        
+        const newFechas = {
+          checkin: dates[0],
+          checkout: dates[1]
+        };
+        
+        setFechas(newFechas);
+        setMostrarCalendario(null);
+        setErrorMessage('');
+        setSuccessMessage('');
+      }
+    }
+  };
+
+  // Función para mostrar nombres más amigables de características
+  const getNombreAmigable = (caracteristica) => {
+    const mapeoNombres = {
+      'MASCOTAS_PERMITIDAS': 'MASCOTAS',
+      'ESTACIONAMIENTO': 'ESTACIONAMIENTO',
+      'WIFI': 'WIFI',
+      'PILETA': 'PILETA'
     };
+    return mapeoNombres[caracteristica] || caracteristica;
+  };
+
   const amenityIcons = {
     'WIFI': <Wifi className="w-5 h-5" />,
-    'MASCOTAS': <Dog  className="w-5 h-5" />,
+    'MASCOTAS_PERMITIDAS': <Dog className="w-5 h-5" />,
     'PILETA': <Waves className="w-5 h-5" />,
     'ESTACIONAMIENTO': <Car className="w-5 h-5" />,
-  };  
+  };
   const calculateTotal = () => {
     if (!fechas.checkin || !fechas.checkout) return 0;
-    const days = Math.ceil((fechas.checkout.toDate().getTime() - fechas.checkin.toDate().getTime()) / (1000 * 60 * 60 * 24));
+    const days = Math.ceil((fechas.checkout.getTime() - fechas.checkin.getTime()) / (1000 * 60 * 60 * 24));
     return days > 0 ? days * property.precioPorNoche : 0;
   };
 
@@ -88,11 +115,11 @@ const AlojamientoDetail = () => {
 
     let datos = {
       reservador: usuario.data.email,
-      cantHuespedes: guests,  
-      alojamiento: property.nombre, 
+      cantHuespedes: guests,
+      alojamiento: property.nombre,
       rangoFechas: {
-        fechaInicio: fechas.checkin ? dayjs(fechas.checkin).format('DD/MM/YYYY'): null,
-        fechaFin: fechas.checkout ? dayjs(fechas.checkout).format('DD/MM/YYYY') : null,
+        fechaInicio: formatDate(fechas.checkin),
+        fechaFin: formatDate(fechas.checkout),
       }
     };
 
@@ -100,7 +127,7 @@ const AlojamientoDetail = () => {
       const response = await reservarAlojamiento(datos)
 
       setSuccessMessage('Reserva realizada con éxito!')
-    } catch(error) {
+    } catch (error) {
       const mesaje = error?.response?.data?.message || 'Error al reservar alojamiento';
       setErrorMessage(mesaje);
     }
@@ -111,7 +138,7 @@ const AlojamientoDetail = () => {
       {/* Header */}
       <div className="top-0 z-10 bg-black backdrop-blur-xl border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 text-white">            
+          <div className="flex items-center justify-between h-16 text-white">
             <button
               onClick={() => navigate(-1)}
               className="cursor-pointer flex items-center space-x-2 text-white hover:text-pink-500 transition-colors"
@@ -119,7 +146,7 @@ const AlojamientoDetail = () => {
               <ArrowLeft className="w-5 h-5" />
               <span>Volver</span>
             </button>
-            
+
           </div>
         </div>
       </div>
@@ -142,21 +169,20 @@ const AlojamientoDetail = () => {
 
         {/* Image Gallery */}
         <div className="grid grid-cols-4 grid-rows-2 gap-2 mb-8 h-96">          <div className="col-span-2 row-span-2">
-            <img
-              src={property.fotos?.[0] || "https://images.unsplash.com/photo-1499696010180-025ef6e1a8f9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"}
-              alt={property.nombre}
-              className="w-full h-full object-cover rounded-l-xl cursor-pointer"
-              onClick={() => setSelectedImageIndex(0)}
-            />
-          </div>
+          <img
+            src={property.fotos?.[0] || "https://images.unsplash.com/photo-1499696010180-025ef6e1a8f9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"}
+            alt={property.nombre}
+            className="w-full h-full object-cover rounded-l-xl cursor-pointer"
+            onClick={() => setSelectedImageIndex(0)}
+          />
+        </div>
           {property.fotos?.slice(1, 5).map((image, index) => (
             <div key={index} className="relative">
               <img
                 src={image}
                 alt={`${property.nombre} ${index + 2}`}
-                className={`w-full h-full object-cover cursor-pointer ${
-                  index === 1 ? 'rounded-tr-xl' : index === 3 ? 'rounded-br-xl' : ''
-                }`}
+                className={`w-full h-full object-cover cursor-pointer ${index === 1 ? 'rounded-tr-xl' : index === 3 ? 'rounded-br-xl' : ''
+                  }`}
                 onClick={() => setSelectedImageIndex(index + 1)}
               />
               {index === 3 && property.fotos?.length > 5 && (
@@ -173,13 +199,13 @@ const AlojamientoDetail = () => {
           <div className="lg:col-span-2 space-y-8">
             {/* Host Info */}
             <div className="flex items-center justify-between pb-8 border-b border-gray-800">              <div>
-                <h2 className="text-2xl font-semibold text-white mb-2 text-left">
-                  {property.propertyType || "Alojamiento completo"} ofrecido por {property.anfitrion.nombre}
-                </h2>
-                <div className="flex items-center space-x-4 text-gray-300">
-                  <span>{property.cantHuespedesMax} huéspedes</span>
-                </div>
+              <h2 className="text-2xl font-semibold text-white mb-2 text-left">
+                {property.propertyType || "Alojamiento completo"} ofrecido por {property.anfitrion.nombre}
+              </h2>
+              <div className="flex items-center space-x-4 text-gray-300">
+                <span>{property.cantHuespedesMax} huéspedes</span>
               </div>
+            </div>
             </div>            {/* Description */}
             <div className="pb-8 border-b border-gray-800 text-left">
               <h3 className="text-xl font-bold text-white mb-4">Acerca de este lugar</h3>
@@ -193,22 +219,22 @@ const AlojamientoDetail = () => {
                 {(property.caracteristicas || ['Wifi', 'Mascotas', 'AC', 'Estacionamiento']).map((amenity, index) => (
                   <div key={index} className="flex items-center space-x-3 p-3 bg-gray-800 rounded-lg !text-white">
                     {amenityIcons[amenity] || <div className="w-5 h-5 bg-gray-600 rounded"></div>}
-                    <span>{amenity}</span>
+                    <span>{getNombreAmigable(amenity)}</span>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Reviews Section */}
-            
+
           </div>
 
           {/* Booking Card */}
           <div className="lg:col-span-1 relative text-center">
             <div className="top-24 bg-black rounded-xl border border-gray-700 p-6 shadow-xl text-center">              <div className="flex items-baseline space-x-2 mb-6 justify-center">
-                <span className="text-3xl font-bold text-white ">${property.precioPorNoche}</span>
-                <span className="text-gray-400">noche</span>
-              </div>              {/* Date Selection */}
+              <span className="text-3xl font-bold text-white ">${property.precioPorNoche}</span>
+              <span className="text-gray-400">noche</span>
+            </div>              {/* Date Selection */}
               <div className="space-y-4 mb-6 relative">
                 <div className="grid grid-cols-2 gap-2">
                   <button
@@ -217,9 +243,9 @@ const AlojamientoDetail = () => {
                   >
                     <label className="text-sm text-gray-400 uppercase tracking-wide font-semibold text-center">
                       Entrada
-                    </label>                    
+                    </label>
                     <div className={`text-white w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 cursor-pointer ${fechas.checkin ? 'text-black' : 'text-black'}`}>
-                      {fechas.checkin ? dayjs(fechas.checkin).format('DD/MM/YYYY') : 'Seleccionar fecha'}
+                      {formatDate(fechas.checkin) || 'Seleccionar fecha'}
                     </div>
                   </button>
                   <button
@@ -230,22 +256,25 @@ const AlojamientoDetail = () => {
                       Salida
                     </label>
                     <div className={`text-white w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 cursor-pointer ${fechas.checkout ? 'text-black' : 'text-black'}`}>
-                      {fechas.checkout ? dayjs(fechas.checkout).format('DD/MM/YYYY') : 'Seleccionar fecha'}
+                      {formatDate(fechas.checkout) || 'Seleccionar fecha'}
                     </div>
-                  </button>                </div>                {/* CALENDARIO */}
-                {mostrarCalendario && (
-                  <div
-                  ref={calendarioRef}
-                  className="relative z-[99999] top-78 -right-43 bg-black rounded-lg !shadow-lg border border-gray-600"
-                >
-                  <Calendario onChange={handleFechasSeleccionadas} />
+                  </button>                
                 </div>
+
+                {/* CALENDARIO */}
+                {mostrarCalendario && (
+                  <div ref={calendarioRef} className="absolute z-[99999] bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-black rounded-lg shadow-lg max-w-[95vw] sm:max-w-sm min-w-[320px] overflow-hidden">
+                    <Calendario
+                      onChange={handleFechasSeleccionadas}
+                      initialRange={[fechas.checkin, fechas.checkout]}
+                    />
+                  </div>
                 )}
 
                 <div className="space-y-1 !font-xl">
                   <label className="text-sm text-gray-400 font-semibold uppercase tracking-wide mb-9 py-2">
                     Huéspedes
-                  </label>                  
+                  </label>
                   <select
                     value={guests}  // Usa la variable de estado
                     onChange={(e) => {
@@ -255,17 +284,17 @@ const AlojamientoDetail = () => {
                     }}
                     className="!text-white !text-sm w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-pink-500 cursor-pointer text-center"
                   >
-                {Array.from({ length: property.cantHuespedesMax }, (_, i) => i + 1).map((num) => (
-                  <option key={num} value={num}>
-                    {num} huésped{num > 1 ? 'es' : ''}
-                  </option>
-                ))}
-              </select>
+                    {Array.from({ length: property.cantHuespedesMax }, (_, i) => i + 1).map((num) => (
+                      <option key={num} value={num}>
+                        {num} huésped{num > 1 ? 'es' : ''}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>{/* Reserve Button */}
-              <button 
-              onClick={() => reservar()}
-              className="!text-black w-full cursor-pointer bg-gradient-to-r from-emerald-300 to-emerald-400 hover:from-emerald-400 hover:to-emerald-500 flex items-center justify-center py-4 px-4 font-semibold transition duration-200 shadow-lg hover:shadow-xl mb-4 rounded-lg ">
+              <button
+                onClick={() => reservar()}
+                className="!text-black w-full cursor-pointer bg-gradient-to-r from-emerald-300 to-emerald-400 hover:from-emerald-400 hover:to-emerald-500 flex items-center justify-center py-4 px-4 font-semibold transition duration-200 shadow-lg hover:shadow-xl mb-4 rounded-lg ">
                 Reservar
               </button>
 
@@ -287,7 +316,7 @@ const AlojamientoDetail = () => {
               {fechas.checkin && fechas.checkout && (
                 <div className="space-y-2 pt-4 border-t border-gray-700">
                   <div className="flex justify-between text-gray-300">
-                    <span>${property.precioPorNoche} x {Math.ceil((fechas.checkout.toDate().getTime() - fechas.checkin.toDate().getTime()) / (1000 * 60 * 60 * 24))} noches</span>
+                    <span>${property.precioPorNoche} x {Math.ceil((fechas.checkout.getTime() - fechas.checkin.getTime()) / (1000 * 60 * 60 * 24))} noches</span>
                     <span>${calculateTotal()}</span>
                   </div>
                   <div className="flex justify-between text-gray-300">

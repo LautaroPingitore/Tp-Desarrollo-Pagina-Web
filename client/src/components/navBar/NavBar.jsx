@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 const NavBar = () => {
     const navigate = useNavigate();
+    const [logoError, setLogoError] = useState(false);
 
     const onSelect = (alojamiento) => {
         navigate(`/misAlojamientos/${usuario.data.id}`, { 
@@ -72,10 +73,22 @@ const NavBar = () => {
   return (
     <>
       <nav className="bg-black text-gray-100 w-full flex relative justify-between items-center mx-auto px-8 h-20 border-b border-gray-700">
-        <div className="inline-flex">
+        <div className="inline-flex items-center">
           <a className="_o6689fn" href="/">
-            <div className="md:block">
-              <img src="./public/image.png" className="tamanioLogo" alt="Logo" />
+            <div className="md:block flex items-center">
+              {!logoError ? (
+                <img 
+                  src="/image.png?v=1" 
+                  className="tamanioLogo" 
+                  alt="Birbnb Logo"
+                  onError={() => setLogoError(true)}
+                  onLoad={() => setLogoError(false)}
+                />
+              ) : (
+                <span className="text-emerald-300 font-bold text-xl">
+                  Birbnb
+                </span>
+              )}
             </div>
           </a>
         </div>

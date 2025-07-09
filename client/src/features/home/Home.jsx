@@ -68,7 +68,8 @@ const Home = () => {
       />
 
       <div className="flex items-center justify-center pt-10 bg-black relative z-10">
-        <div className="w-12 flex items-center justify-center h-full px-2">
+        {/* Flechas en desktop - solo visible en pantallas medianas y grandes */}
+        <div className="hidden md:flex w-20 items-center justify-center h-full px-2">
           {pageNumber > 1 && (
             <IconButton
               size="sm"
@@ -96,7 +97,8 @@ const Home = () => {
           )}
         </div>
 
-        <div className="w-12 flex items-center justify-center h-full px-2">
+        {/* Flechas en desktop - solo visible en pantallas medianas y grandes */}
+        <div className="hidden md:flex w-20 items-center justify-center h-full px-2">
           {pageNumber < totalPages && (
             <IconButton
               size="sm"
@@ -110,7 +112,37 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="flex justify-center py-4 bg-black">
+      {/* Flechas en móvil - solo visible en pantallas pequeñas */}
+      <div className="flex md:hidden justify-center items-center gap-4 py-4 bg-black">
+        {pageNumber > 1 && (
+          <IconButton
+            size="sm"
+            variant="outlined"
+            onClick={handlePrevious}
+            className="rounded-full border-gray-600 text-gray-300 hover:bg-gray-800"
+          >
+            <ArrowLeftIcon className="h-5 w-5" />
+          </IconButton>
+        )}
+        
+        <Typography variant="small" color="white" className="mx-4">
+          Página {pageNumber} de {totalPages}
+        </Typography>
+
+        {pageNumber < totalPages && (
+          <IconButton
+            size="sm"
+            variant="outlined"
+            onClick={handleNext}
+            className="rounded-full border-gray-600 text-gray-300 hover:bg-gray-800"
+          >
+            <ArrowRightIcon className="h-5 w-5" />
+          </IconButton>
+        )}
+      </div>
+
+      {/* Información de página en desktop */}
+      <div className="hidden md:flex justify-center py-4 bg-black">
         <Typography variant="small" color="white">
           Página {pageNumber} de {totalPages}
         </Typography>

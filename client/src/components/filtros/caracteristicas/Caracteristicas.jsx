@@ -4,6 +4,17 @@ import { caracteristicasGlobales } from "../../../mock/caracteristicas.js";
 const Caracteristicas = ({ atributos, setAtributos }) => {
   const [seleccionadas, setSeleccionadas] = useState([]);
 
+  // Función para mostrar nombres más amigables
+  const getNombreAmigable = (caracteristica) => {
+    const mapeoNombres = {
+      'MASCOTAS_PERMITIDAS': 'MASCOTAS',
+      'ESTACIONAMIENTO': 'ESTACIONAMIENTO',
+      'WIFI': 'WIFI',
+      'PILETA': 'PILETA'
+    };
+    return mapeoNombres[caracteristica] || caracteristica;
+  };
+
   useEffect(() => {
     // si no hay características seleccionadas en atributos, limpiamos el estado local
     if (!Array.isArray(atributos.caracteristicas) || atributos.caracteristicas.length === 0) {
@@ -60,7 +71,7 @@ const Caracteristicas = ({ atributos, setAtributos }) => {
             : 'border border-gray-700 bg-black !text-gray-300 hover:bg-gray-700'
           }`}
         >
-          {c}
+          {getNombreAmigable(c)}
         </button>
       ))}
     </div>

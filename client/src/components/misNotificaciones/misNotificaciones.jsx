@@ -37,7 +37,7 @@ const NotificationsView = () => {
     try {
       if (tipoUsuario === 'huesped') {
         setLoading(true);
-        
+
         const response = await getNotificacionesHuesped(id, mostrarLeidas, pageNumber);
         setNotifications(response.data);
         setTotalPages(response.total_pages);
@@ -46,7 +46,7 @@ const NotificationsView = () => {
         console.log(response.data)
       } else if (tipoUsuario === 'anfitrion') {
         setLoading(true);
-        
+
         const response = await getNotificacionesAnfitrion(id, mostrarLeidas, pageNumber);
         setNotifications(response.data);
         setTotalPages(response.total_pages);
@@ -61,7 +61,7 @@ const NotificationsView = () => {
   const marcarLeida = async (idNotificacion) => {
     try {
       if (tipoUsuario === 'huesped') {
-        await marcarLeidaHuesped(id ,idNotificacion)
+        await marcarLeidaHuesped(id, idNotificacion)
 
         await cargarNotificaciones()
       } else if (tipoUsuario === 'anfitrion') {
@@ -70,7 +70,7 @@ const NotificationsView = () => {
 
         await cargarNotificaciones()
       }
-    } catch(error) {
+    } catch (error) {
       setLoading(false)
     }
   }
@@ -90,7 +90,7 @@ const NotificationsView = () => {
             </button>
             <div className="flex items-center space-x-2">
               <Bell className="h-5 w-5 text-emerald-300" />
-              <h1 className="text-xl font-semibold text-white pt-3">Notificaciones</h1>
+              <h1 className="text-xl font-semibold text-white">Notificaciones</h1>
               {unreadCount > 0 && (
                 <span className="bg-emerald-300 text-black text-xs font-bold px-2 py-1 rounded-full">
                   {unreadCount}
@@ -103,29 +103,28 @@ const NotificationsView = () => {
       </div>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        
+
         {/* Filtro: Leídas / No Leídas */}
         <div className="flex justify-center mb-6">
           <button
             onClick={() => { setMostrarLeidas(false); setPageNumber(1); }}
-            className={`px-4 py-2 rounded-l-lg border border-gray-700 ${
-              !mostrarLeidas ? 'bg-emerald-300 text-black' : 'bg-black text-gray-300 hover:bg-gray-800'
-            }`}
+            className={`px-4 py-2 rounded-l-lg border border-gray-700 ${!mostrarLeidas ? 'bg-emerald-300 text-black' : 'bg-black text-gray-300 hover:bg-gray-800'
+              }`}
           >
             No leídas
           </button>
           <button
             onClick={() => { setMostrarLeidas(true); setPageNumber(1); }}
-            className={`px-4 py-2 rounded-r-lg border border-gray-700 ${
-              mostrarLeidas ? 'bg-emerald-300 text-black' : 'bg-black text-gray-300 hover:bg-gray-800'
-            }`}
+            className={`px-4 py-2 rounded-r-lg border border-gray-700 ${mostrarLeidas ? 'bg-emerald-300 text-black' : 'bg-black text-gray-300 hover:bg-gray-800'
+              }`}
           >
             Leídas
           </button>
         </div>
-        <div className="flex justify-end items-center mt-8 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 
-          <div>
+        <div className="flex items-center justify-center bg-black relative z-10">
+          {/* Flechas en desktop - solo visible en pantallas medianas y grandes */}
+          <div className="hidden md:flex w-20 items-center justify-center h-full px-2">
             {pageNumber > 1 && (
               <button
                 onClick={handlePrevious}
@@ -135,64 +134,63 @@ const NotificationsView = () => {
               </button>
             )}
           </div>
-          
+
           {/* Notifications List */}
-          <div className="space-y-4">
-            {notifications.map((notification) => {
-              // const IconComponent = notification.icon;
-              return (
-                <div
-                  key={notification.id}
-                  className={`bg-gray-900 border border-gray-800 rounded-xl p-6 hover:border-gray-700 transition-colors`}
-                >
-                  <div className="flex items-start space-x-4">
-                    {/* <div className={`p-2 rounded-full bg-gray-800 ${notification.color}`}>
-                      <IconComponent className="h-5 w-5" />
-                    </div> */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          {/* <h3
-                            className={`text-lg font-semibold ${
-                              notification.fechaLeida === null ? 'text-white' : 'text-gray-300'
-                            }`}
-                          >
-                            {notification.title}
-                          </h3> */}
-                          <p className="text-gray-400 mt-1 leading-relaxed">
-                            {notification.mensaje}
-                          </p>
-                          <p className="text-gray-500 text-sm mt-2">{notification.fechaAlta}</p>
-                        </div>
-                        {notification.fechaLeida === null && (
-                          <div className="ml-4">
-                            <button onClick={() => marcarLeida(notification.id)}>
-                              <div className="w-3 h-3 bg-emerald-300 rounded-full cursor-pointer"></div>
-                            </button>
+          <div className="space-y-4 max-w-4xl w-full px-2 flex-1 min-h-[200px]">
+            {loading ? (
+              <div className="flex justify-center items-center py-12">
+                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-emerald-300"></div>
+              </div>
+            ) : (
+              notifications.map((notification) => {
+                // const IconComponent = notification.icon;
+                const isUnread = notification.fechaLeida === null;
+                return (
+                  <div
+                    key={notification.id}
+                    className={`bg-gray-900 border border-gray-800 rounded-xl p-6 hover:border-gray-700 transition-colors ${
+                      isUnread ? 'cursor-pointer' : 'cursor-default'
+                    }`}
+                    onClick={isUnread ? () => marcarLeida(notification.id) : undefined}
+                  >
+                    <div className="flex items-start space-x-4">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <p className="text-gray-400 mt-1 leading-relaxed">
+                              {notification.mensaje}
+                            </p>
+                            <p className="text-gray-500 text-sm mt-2">{notification.fechaAlta}</p>
                           </div>
-                        )}
+                          {isUnread && (
+                            <div className="ml-4">
+                              <div className="w-3 h-3 bg-emerald-300 rounded-full"></div>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })
+            )}
+
+            {/* Estado vacío */}
+            {notifications.length === 0 && !loading && (
+              <div className="text-center py-12">
+                <Bell className="h-16 w-16 text-gray-600 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-400 mb-2">
+                  No tienes notificaciones
+                </h3>
+                <p className="text-gray-500">
+                  Cuando tengas nuevas notificaciones, aparecerán aquí.
+                </p>
+              </div>
+            )}
           </div>
 
-          {/* Estado vacío */}
-          {notifications.length === 0 && (
-            <div className="text-center py-12">
-              <Bell className="h-16 w-16 text-gray-600 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-400 mb-2">
-                No tienes notificaciones
-              </h3>
-              <p className="text-gray-500">
-                Cuando tengas nuevas notificaciones, aparecerán aquí.
-              </p>
-            </div>
-          )}
-
-          <div>
+          {/* Flechas en desktop - solo visible en pantallas medianas y grandes */}
+          <div className="hidden md:flex w-20 items-center justify-center h-full px-2">
             {pageNumber < totalPages && (
               <button
                 onClick={handleNext}
@@ -202,6 +200,31 @@ const NotificationsView = () => {
               </button>
             )}
           </div>
+        </div>
+
+        {/* Flechas en móvil - solo visible en pantallas pequeñas */}
+        <div className="flex md:hidden justify-center items-center gap-4 py-4 bg-black">
+          {pageNumber > 1 && (
+            <button
+              onClick={handlePrevious}
+              className="rounded-full border border-gray-600 text-gray-300 hover:bg-gray-800 p-2"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </button>
+          )}
+
+          <span className="text-white text-sm mx-4">
+            Página {pageNumber} de {totalPages}
+          </span>
+
+          {pageNumber < totalPages && (
+            <button
+              onClick={handleNext}
+              className="rounded-full border border-gray-600 text-gray-300 hover:bg-gray-800 p-2"
+            >
+              <ArrowRight className="h-5 w-5" />
+            </button>
+          )}
         </div>
       </div>
     </div>
