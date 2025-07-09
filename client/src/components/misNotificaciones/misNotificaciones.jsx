@@ -52,7 +52,6 @@ const NotificationsView = () => {
         setTotalPages(response.total_pages);
         setUnreadCount(response.unread_count || 0);
         setLoading(false);
-        console.log(response.data)
       }
     } catch (error) {
       setLoading(false);

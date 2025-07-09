@@ -132,6 +132,22 @@ export const getReservasAnfitrion = async (anfitrionId, page) => {
     }
 }
 
+export const confirmarReserva = async (anfitrionId, reservaId) => {
+    try {
+        await axios.put(`${API_URL}/anfitrion/${anfitrionId}/confirmar/${reservaId}`);
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const cancelarReserva = async (huespedId, reservaId) => {
+    try {
+        await axios.put(`${API_URL}/huesped/${huespedId}/cancelar/${reservaId}`);
+    } catch (error) {
+        throw error;
+    }
+}
+
 export const getNotificacionesHuesped = async (usuarioId, leida, pageNumber) => {
     try {
         const response = await axios.get(`${API_URL}/huesped/${usuarioId}/notificaciones/${leida}`, {

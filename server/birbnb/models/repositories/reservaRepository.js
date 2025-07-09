@@ -133,8 +133,8 @@ export class ReservaRepository {
             })
     }
 
-    async findByAnfitrion(anfitrion) {
-        return await this.model.find({ 'alojamiento.anfitrion': anfitrion })
+    async findByAnfitrion(idAlojamientos) {
+        return await this.model.find({alojamiento: {$in: idAlojamientos}})
             .populate('huespedReservador')
             .populate({
                 path: 'alojamiento',

@@ -74,7 +74,10 @@ export class ReservaService {
             throw new NotFoundError("Anfitrion no existente")
         }
 
-        const reservas = await this.reservaRepository.findByAnfitrion(id)
+        const alojamientos = await this.alojamientoRepository.findByAnfitrion(id)
+        const alojamientosId = alojamientos.map(a => a.id)
+
+        const reservas = await this.reservaRepository.findByAnfitrion(alojamientosId)
         
         const total = reservas.length
         const total_pages = Math.ceil(total / limitNum);

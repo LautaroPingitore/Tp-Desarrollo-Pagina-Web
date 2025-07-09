@@ -40,7 +40,7 @@ export class ReservaController {
     async findByAnfitrion(req, res, next) {
         try {
             const id = req.params.id
-            const {page, limit } = req.query
+            const { page, limit } = req.query
             const reservas = await this.reservaService.findByAnfitrion(id, {page, limit})
             
             res.json(reservas)
