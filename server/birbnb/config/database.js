@@ -3,14 +3,10 @@ import mongoose from "mongoose";
 export class MongoDBClient {
     static async connect() {
         try {
-            const connectionString = process.env.MONGODB_URI || 'mongodb://localhost:27017/birbnb';
-            const conn = await mongoose.connect(connectionString, {
-                useNewUrlParser: true,
-                useUnifiedTopology: true
-            });
-            console.log(`MongoDB is connected: ${conn.connection.host}`);
+            const conn = await mongoose.connect(process.env.MONGODB_URI);
+            console.log(`✅ MongoDB conectado: ${conn.connection.host}`);
         } catch (error) {
-            console.error(`Error: ${error.message}`);
+            console.error(`❌ Error de conexión: ${error.message}`);
             process.exit(1);
         }
     }
