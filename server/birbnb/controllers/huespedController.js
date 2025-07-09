@@ -92,7 +92,7 @@ async marcarLeidaNotificacion(req, res, next) {
   
       await this.reservaService.modificarEstado(id, idReserva, "CANCELADA", motivo);
     
-      res.status(200)
+      res.status(200).send()
     } catch(error) {
       next(error)
     }

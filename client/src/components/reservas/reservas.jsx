@@ -69,22 +69,25 @@ const Reservas = () => {
     }
   }
 
-  // const getFilteredReservations = () => {
-  //   const today = new Date();
-  //   today.setHours(0, 0, 0, 0); // Normalizamos la fecha para comparar solo días
+    const aceptarReserva = async (idReserva) => {
+    try {
+      await confirmarReserva(id, idReserva)
 
-  //   return reservas.filter(reservation => {
-  //     const checkOut = new Date(reservation.rangoFechas.fechaFin);
-  //     checkOut.setHours(0, 0, 0, 0);
+      await cargarReservas()
+    } catch (error) {
+      console.error("Error al aceptar la reserva:", error);
+    }
+  }
 
-  //     if (activeTab === 'upcoming') {
-  //       return checkOut >= today;
-  //     } else if (activeTab === 'past') {
-  //       return checkOut < today;
-  //     }
-  //     return true;
-  //   });
-  // };
+  const rechazarReserva = async (idReserva) => {
+    try {
+      await cancelarReserva(id, idReserva)
+
+      await cargarReservas()
+    } catch (error) {
+      console.error("Error al rechazar la reserva:", error);
+    }
+  }
 
   const getStatusColor = (estado) => {
     switch (estado) {
@@ -104,25 +107,7 @@ const Reservas = () => {
     }
   }
 
-  const aceptarReserva = async (idReserva) => {
-    try {
-      await confirmarReserva(id, idReserva)
 
-      await cargarReservas()
-    } catch (error) {
-      console.error("Error al aceptar la reserva:", error);
-    }
-  }
-
-  const rechazarReserva = async (idReserva) => {
-    try {
-      await cancelarReserva(id, idReserva)
-
-      await cargarReservas()
-    } catch (error) {
-      console.error("Error al rechazar la reserva:", error);
-    }
-  }
 
   return (
     <div className="min-h-screen bg-black">

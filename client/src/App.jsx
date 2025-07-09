@@ -8,6 +8,8 @@ import AlojamientoDetail from './components/alojamientoDetail/AlojamientoDetail'
 import MisAlojamientos from './components/misAlojamientos/misAlojamientos';
 import Reservas from './components/reservas/reservas';
 import Notificaciones from './components/misNotificaciones/misNotificaciones';
+import CrearAlojamiento from './components/crearAlojamiento/crearAlojamiento';
+
 import { AuthProvider } from './context/authContext';
 
 const theme = createTheme({
@@ -30,6 +32,7 @@ function App() {
               <Route path="/misAlojamientos/:id" element={<MisAlojamientos />} />
               <Route path="/misReservas/:id" element={<Reservas />} />
               <Route path="/misNotificaciones/:id" element={<Notificaciones />} />
+              <Route path="/crearAlojamiento/:id" element={<CrearAlojamiento />} />
             </Route>
           </Routes>
         </BrowserRouter>

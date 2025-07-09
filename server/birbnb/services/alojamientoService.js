@@ -103,10 +103,15 @@ export class AlojamientoService {
             throw new ConflictError(`Alojamiento con nombre ${nombre} ya existe`)
         };
         
-        const anfitrionExistente = await this.anfitrionRepository.findByEmail(anfitrion);
+        /*  const anfitrionExistente = await this.anfitrionRepository.findByEmail(anfitrion);
         if(!anfitrionExistente) {
             throw new NotFoundError(`Anfitrion con email ${anfitrion} no encontrado`)
-        };
+         }; */
+
+        const anfitrionExistente = await this.anfitrionRepository.findById(anfitrion);
+        if(!anfitrionExistente) {
+            throw new NotFoundError(`Anfitrion con id ${anfitrion} no encontrado`);
+        }
 
         let paisExistente = await this.paisRepository.findByName(direccion.ciudad.pais.nombre)
         if(!paisExistente) {

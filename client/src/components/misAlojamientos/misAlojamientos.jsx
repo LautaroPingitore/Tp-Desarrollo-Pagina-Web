@@ -107,28 +107,16 @@ const AccommodationsView = () => {
                     alt={accommodation.nombre}
                     className="w-full h-full object-cover"
                   />
-                  <div className={`absolute top-3 right-3 px-2 py-1 rounded-full text-xs font-medium ${
-                    accommodation.status === 'active' 
-                      ? 'bg-emerald-300 text-black' 
-                      : 'bg-gray-700 text-gray-300'
-                  }`}>
-                    {accommodation.status === 'active' ? 'Activa' : 'Pausada'}
-                  </div>
                 </div>
 
                 {/* Content */}
                 <div className="p-6">
-                  <div className="flex items-start justify-between mb-3">
+                  <div className="border-b border-gray-500 flex items-center justify-center mb-3">
                     <div>
                       <h3 className="text-lg font-semibold text-white mb-1">
                         {accommodation.nombre}
                       </h3>
                       <p className="text-gray-400 text-sm">{accommodation.direccion.ciudad.nombre}, {accommodation.direccion.ciudad.pais}</p>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                      <span className="text-white text-sm">{accommodation.rating}</span>
-                      <span className="text-gray-400 text-sm">({accommodation.reviews})</span>
                     </div>
                   </div>
 
@@ -139,12 +127,8 @@ const AccommodationsView = () => {
                       <p className="text-white font-semibold">${accommodation.precioPorNoche}</p>
                     </div>
                     <div>
-                      <p className="text-gray-400 text-xs">Ocupación</p>
-                      <p className="text-white font-semibold">{accommodation.occupancy}%</p>
-                    </div>
-                    <div>
-                      <p className="text-gray-400 text-xs">Reservas</p>
-                      <p className="text-white font-semibold">{accommodation.bookings}</p>
+                      <p className="text-gray-400 text-xs">Cantidad huespedes</p>
+                      <p className="text-white font-semibold">{accommodation.cantHuespedesMax}</p>
                     </div>
                     {/* <div>
                       <p className="text-gray-400 text-xs">Ganancias</p>
@@ -159,7 +143,7 @@ const AccommodationsView = () => {
                       <Eye className="h-4 w-4" />
                       <span className="text-sm">Ver</span>
                     </button>
-                    <button className="flex-1 flex items-center justify-center space-x-2 py-2 bg-emerald-300 text-black rounded-lg hover:bg-emerald-400 transition-colors">
+                    <button className="flex-1 flex items-center justify-center space-x-2 py-2 bg-emerald-300 !text-black rounded-lg hover:bg-emerald-400 transition-colors">
                       <Edit className="h-4 w-4" />
                       <span className="text-sm">Editar</span>
                     </button>

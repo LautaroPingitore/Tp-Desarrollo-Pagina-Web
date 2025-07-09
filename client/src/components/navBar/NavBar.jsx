@@ -28,6 +28,12 @@ const NavBar = () => {
         });
     }
 
+    const onCrearAlojamiento = (idUsuario) => {
+        navigate(`/crearAlojamiento/${usuario.data.id}`, { 
+            state: { idUsuario } 
+        });
+    }
+
   const [menuOpen, setMenuOpen] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [modoApertura, setModoApertura] = useState(false)
@@ -151,6 +157,7 @@ const NavBar = () => {
                                 <span>Mis alojamientos</span>
                               </button>
                               <button
+                                onClick={() => onCrearAlojamiento(usuario.data.id)}
                                 className="w-full text-left px-4 py-3 text-white hover:bg-gray-900 transition-colors flex items-center space-x-3"
                               >
                                 <Plus className="h-4 w-4" />
