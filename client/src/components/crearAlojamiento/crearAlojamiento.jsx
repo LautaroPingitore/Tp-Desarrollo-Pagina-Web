@@ -22,7 +22,7 @@ const CreateAccommodationView = () => {
         nombre: '',
         descripcion: '',
         precioPorNoche: '',
-        moneda: 'USD',
+        moneda: 'DOLAR_USA',
         horarioCheckIn: '15:00',
         horarioCheckOut: '11:00',
         direccion: {
@@ -53,7 +53,7 @@ const CreateAccommodationView = () => {
             nombre: '',
             descripcion: '',
             precioPorNoche: '',
-            moneda: 'USD',
+            moneda: 'DOLAR_USA',
             horarioCheckIn: '15:00',
             horarioCheckOut: '11:00',
             direccion: {
